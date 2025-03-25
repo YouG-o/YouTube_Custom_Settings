@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Default Settings",
+  "version": "1.0.0",
+  "description": "A small web-browser Add-On allowing you to set default values to YouTube's video player (quality, speed)",
+  "icons": {
+    "48": "dist/assets/icons/icon.png",
+    "96": "dist/assets/icons/icon.png"
+  },
+
+  "action": {
+    "default_icon": {
+      "48": "dist/assets/icons/icon.png",
+      "96": "dist/assets/icons/icon.png"
+    },
+    "default_popup": "dist/popup/popup.html",
+    "default_title": "YDS"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.youtube-nocookie.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": ["dist/browser-polyfill.js", "dist/content/content.js"]
+    }
+  ],
+
+  "background": {
+    "scripts": ["dist/browser-polyfill.js", "dist/background/background.js"],
+    "type": "module"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{9a3104a2-02c2-464c-b069-82344e5ed4ec}",
+      "strict_min_version": "112.0"
+    }
+  },
+  
+  "web_accessible_resources": [{
+      "resources": [
+      ],
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ]
+  }]
+}
