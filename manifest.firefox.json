@@ -50,6 +50,7 @@
   
   "web_accessible_resources": [{
       "resources": [
+         "dist/content/scripts/playerSettings.js"
       ],
       "matches": [
         "*://*.youtube.com/*",
