@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./assets/icons/icon.webp" alt="Project description" height="120"/>
+    <img src="./assets/icons/icon.png" alt="Project description" height="120"/>
 </div>
 
 ###
