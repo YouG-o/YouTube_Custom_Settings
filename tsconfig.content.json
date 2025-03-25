@@ -22,7 +22,6 @@
     "src/types/global.d.ts",
     "src/config/constants.ts",
     "src/content/loggings.ts",
-    "src/content/utils.ts",
     "src/content/observers.ts",
     "src/content/index.ts"
   ]
