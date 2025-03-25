@@ -11,7 +11,7 @@
 </p>
 
 <div align="center">
-  <a href="" target="_blank">
+  <a href="https://addons.mozilla.org/fr/firefox/addon/youtube-default-settings/" target="_blank">
     <img src="./assets/images/firefox.png" height="40" alt="Available on Mozilla Firefox" title="Available on Mozilla Firefox"/>
   </a>  
   <br>
