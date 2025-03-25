@@ -1,0 +1,63 @@
+{
+  "name": "yds",
+  "version": "1.0.0",
+  "description": "A small web-browser Add-On allowing you to set default values to YouTube's video player (quality, speed)",
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "create-dirs": "mkdir -p dist/popup dist/content dist/background dist/styles dist/assets/icons",
+    "build": "npm run build:firefox && npm run build:chrome",
+    "build:firefox": "npm run clean && npm run create-dirs && npm run pre:web-ext:firefox && npm run build:common && npm run copy:assets",
+    "build:chrome": "npm run clean && npm run create-dirs && npm run pre:web-ext:chrome && npm run build:common && npm run copy:assets",
+    "build:common": "npm run build:polyfill && npm run build:content && npm run build:popup && npm run build:background && npm run build:css && npm run build:html && npm run copy:scripts && npm run post:build",
+    "build:content": "tsc -p tsconfig.content.json",
+    "build:popup": "tsc -p tsconfig.popup.json",
+    "build:background": "tsc -p tsconfig.background.json",
+    "build:css": "tailwindcss -i ./src/styles/main.css -o ./dist/styles/main.css",
+    "build:html": "cp src/popup/popup.html dist/popup/",
+    "build:polyfill": "cp node_modules/webextension-polyfill/dist/browser-polyfill.js dist/",
+    "watch": "concurrently \"npm run watch:ts\" \"npm run watch:css\"",
+    "watch:ts": "tsc --watch",
+    "watch:css": "tailwindcss -i ./src/styles/main.css -o ./dist/styles/main.css --watch",
+    "copy:assets": "cp -r assets/icons dist/assets/",
+    "copy:scripts": "mkdir -p dist/content/scripts",
+    "pre:web-ext:firefox": "cp manifest.firefox.json manifest.json",
+    "pre:web-ext:chrome": "cp manifest.chrome.json manifest.json",
+    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox",
+    "web-ext:chrome": "web-ext build --overwrite-dest -a web-ext-artifacts/chrome",
+    "post:web-ext": "rm manifest.json",
+    "package": "npm run package:firefox && npm run package:chrome && npm run post:web-ext",
+    "package:firefox": "npm run build:firefox && npm run web-ext:firefox",
+    "package:chrome": "npm run build:chrome && npm run web-ext:chrome",
+    "post:build": "rimraf dist/config dist/types"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YouG-o/YouTube_Default_Settings.git"
+  },
+  "keywords": [
+    "youtube",
+    "extension",
+    "addon",
+    "settings",
+    "default"
+  ],
+  "author": "YouGo",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/YouG-o/YouTube_Default_Settings/issues"
+  },
+  "homepage": "https://github.com/YouG-o/YouTube_Default_Settings",
+  "devDependencies": {
+    "@types/chrome": "^0.0.299",
+    "@types/webextension-polyfill": "^0.12.1",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
+    "postcss": "^8.4.49",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  }
+}

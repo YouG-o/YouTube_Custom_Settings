@@ -1,8 +1,5 @@
 <div align="center">
-  <a href="https://youtube-no-translation.vercel.app/" target="_blank">
     <img src="./assets/icons/icon.webp" alt="Project description" height="120"/>
-
-  </a>
 </div>
 
 ###
@@ -16,11 +13,7 @@
 <div align="center">
   <a href="" target="_blank">
     <img src="./assets/images/firefox.png" height="40" alt="Available on Mozilla Firefox" title="Available on Mozilla Firefox"/>
-  </a>
-  <a href="" target="_blank">
-    <img src="./assets/images/chrome.png" height="40" alt="Available on Chrome Web Store" title="Available on Chrome Web Store"/>
-  </a>
-  
+  </a>  
   <br>
 </div>
 
@@ -33,8 +26,6 @@
   - **Speed**: Set default speed value
 
 </div>
-
-
 
 
 ###
@@ -66,27 +57,24 @@
   ```
 ###
 
-<div align="center">
-<h1 align="center"> Support This Project </h1>
+<h1 align="center">Contribute</h1>
 
-  <a href="https://ko-fi.com/yougo" target="_blank">
-    <img src="./assets/images/ko-fi.png" alt="Support me on Ko-fi" height="40">
-  </a>
-  
-  <br>
-  
-  <a href="https://youtube-no-translation.vercel.app/?donate=crypto" target="_blank">
-    <img src="https://img.shields.io/badge/Donate-Cryptocurrency-8256D0?style=for-the-badge&logo=bitcoin&logoColor=white" alt="Donate Cryptocurrency" height="30">
-  </a>
-  
-</div>
+While this project may not receive regular feature updates, contributions are always welcome! If you have ideas for improvements or new features, feel free to:
+
+- Report bugs you encounter
+- Open an issue to discuss potential improvements
+- Fork the repository
+- Create a pull request with your changes
+
+
+All contributions, no matter how small, are greatly appreciated.
+
 
 ###
 
 <div align="center">
   <h2>License</h2>
-  This project is licensed under the <a href="LICENSE">GNU Affero General Public License v3.0</a>.
+  UNLICENSED 
   <br>
-  Any reuse, modification or distribution of this code must credit the original author.
-  <br>
+  Feel free to do whatever you want.
 </div>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../styles/main.css">
+        <title>YouTube Default Settings</title>
+    </head>
+    
+    <body class="w-[300px] bg-gray-700">
+        <div class="p-4">
+            <!-- Header -->
+            <header class="pb-4 border-b border-gray-600">
+                <h1 class="text-lg font-medium text-white flex items-center gap-2">
+                    <a href="https://github.com/YouG-o" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
+                        <img src="../assets/icons/icon.png" alt="Logo" class="w-5 h-5">
+                        YouTube Default Settings
+                    </a>
+                </h1>
+                <div class="text-xs text-gray-400 flex items-center gap-1">
+                    Created by YouGo
+                    <a href="https://github.com/YouG-o" target="_blank" rel="noopener noreferrer">
+                        <img src="../assets/icons/Github-Dark.svg" alt="GitHub" title="GitHub" class="w-4 h-4 hover:opacity-80 transition-opacity">
+                    </a>
+                </div>
+        </header>
+        <main class="py-4">
+            <div class="space-y-4">
+                <!-- Video Quality Feature -->
+                <div class="p-3 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-medium text-white">Video Quality</h2>
+                            <div class="relative group">
+                                <svg class="w-4 h-4 text-gray-400 cursor-help group hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-900 rounded-md whitespace-normal max-w-[250px] opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                                    Set your preferred video Quality
+                                </span>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" id="videoQualityFeature">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    <div class="mt-2 audio-language-container" id="videoQualityContainer">
+                        <select id="videoQuality" class="w-full bg-gray-800 text-white text-sm rounded-lg px-2 py-1 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">144p</option>
+                            <option value="">240p</option>
+                            <option value="">360p</option>
+                            <option value="">480p</option>
+                            <option value="">720p (HD)</option>
+                            <option value="">1080p (FHD)</option>
+                            <option value="">1440p (2K)</option>
+                            <option value="">2160p (4K)</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Video Speed Feature -->
+                <div class="p-3 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-medium text-white">Video Speed</h2>
+                            <div class="relative group">
+                                <svg class="w-4 h-4 text-gray-400 cursor-help group hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-900 rounded-md whitespace-normal max-w-[250px] opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                                    Choose your default video speed limit
+                                </span>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" id="videoSpeedFeature">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    <div class="mt-2 video-speed-language-container" id="videoSpeedContainer">
+                        <select id="videoSpeed" class="w-full bg-gray-800 text-white text-sm rounded-lg px-2 py-1 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">0.25</option>
+                            <option value="">0.5</option>
+                            <option value="">0.75</option>
+                            <option value="">Default</option>
+                            <option value="">1.25</option>
+                            <option value="">1.5</option>
+                            <option value="">1.75</option>
+                            <option value="">2</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="flex flex-col gap-4 pt-4 border-t border-gray-600">
+            <div class="flex justify-center">
+                <a href="https://ko-fi.com/yougo" target="_blank" rel="noopener noreferrer">
+                    <img src="../assets/icons/ko-fi.png" alt="Support me on Ko-fi" title="Support me on Ko-fi" class="max-h-10">
+                </a>
+            </div>
+            <div class="flex items-center justify-between">
+                <p class="text-xs text-gray-400">v1.0.0</p>
+                <a href="https://github.com/YouG-o/YouTube_Default_Settings/issues" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="text-xs text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    Report an issue
+                </a>
+            </div>
+        </footer>
+    </div>
+    <script src="../browser-polyfill.js"></script>
+    <script src="popup.js" type="module"></script>
+    </body>
+</html>
