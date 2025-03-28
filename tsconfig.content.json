@@ -22,6 +22,8 @@
     "src/types/global.d.ts",
     "src/config/constants.ts",
     "src/content/loggings.ts",
+    "src/content/VideoQuality/VideoQuality.ts",
+    "src/content/VideoSpeed/VideoSpeed.ts",
     "src/content/observers.ts",
     "src/content/index.ts"
   ]
