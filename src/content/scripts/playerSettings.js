@@ -45,6 +45,44 @@
         }
     };
 
+    // Check if current video is a live stream
+    function isLiveStream() {
+        try {
+            // Method 1: Check player data
+            let targetId = 'movie_player';
+            if (window.location.pathname.startsWith('/shorts')) {
+                targetId = 'shorts-player';
+            }
+            const player = document.getElementById(targetId);
+            
+            if (player && typeof player.getVideoData === 'function') {
+                const videoData = player.getVideoData();
+                if (videoData && videoData.isLive) {
+                    playerLog('Live stream detected via player data');
+                    return true;
+                }
+            }
+            
+            // Method 2: Check for live badge in the DOM
+            const liveBadge = document.querySelector('.ytp-live-badge');
+            if (liveBadge && window.getComputedStyle(liveBadge).display !== 'none') {
+                playerLog('Live stream detected via badge');
+                return true;
+            }
+            
+            // Method 3: Check URL patterns
+            if (window.location.href.includes('/live/')) {
+                playerLog('Live stream detected via URL');
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            playerErrorLog('Error checking if stream is live:', error);
+            return false;
+        }
+    }
+
     // Set playback quality
     function setVideoQuality(quality) {
         try {
@@ -83,6 +121,12 @@
     // Set playback speed
     function setPlaybackSpeed(speed) {
         try {
+            // Don't apply speed changes to live streams
+            if (isLiveStream()) {
+                playerLog('Not changing speed for live stream');
+                return false;
+            }
+            
             const video = document.querySelector('video');
             if (!video) {
                 playerErrorLog('Video element not found');
@@ -116,11 +160,20 @@
 
     // Apply all settings to current video
     function applySettings() {
-        if (storedSettings.videoSpeed.enabled) {
+        const isLive = isLiveStream();
+        playerLog('Applying settings, live stream:', isLive);
+        
+        if (storedSettings.videoSpeed.enabled && !isLive) {
+            // Don't apply speed settings to live streams
             setPlaybackSpeed(storedSettings.videoSpeed.value);
+        } else if (isLive) {
+            // Reset to normal speed for live streams
+            const video = document.querySelector('video');
+            if (video) video.playbackRate = 1;
         }
         
         if (storedSettings.videoQuality.enabled) {
+            // Quality can still be applied to live streams
             setVideoQuality(storedSettings.videoQuality.value);
         }
     }
@@ -149,7 +202,8 @@
                     localStorage.setItem('yds-speed-enabled', JSON.stringify(settings.videoSpeed.enabled));
                     localStorage.setItem('yds-speed-value', settings.videoSpeed.value.toString());
                     
-                    if (settings.videoSpeed.enabled) {
+                    const isLive = isLiveStream();
+                    if (settings.videoSpeed.enabled && !isLive) {
                         setPlaybackSpeed(settings.videoSpeed.value);
                     }
                 }

@@ -1,6 +1,6 @@
 {
   "name": "yds",
-  "version": "1.0.0",
+  "version": "1.0.01",
   "description": "A small web-browser Add-On allowing you to set default values to YouTube's video player (quality, speed)",
   "scripts": {
     "clean": "rimraf dist/*",
@@ -22,8 +22,8 @@
     "copy:scripts": "mkdir -p dist/content/scripts && cp src/content/scripts/playerSettings.js dist/content/scripts/",
     "pre:web-ext:firefox": "cp manifest.firefox.json manifest.json",
     "pre:web-ext:chrome": "cp manifest.chrome.json manifest.json",
-    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox",
-    "web-ext:chrome": "web-ext build --overwrite-dest -a web-ext-artifacts/chrome",
+    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=Firefox-YouTube_Default_Settings-${npm_package_version}.zip",
+    "web-ext:chrome": "web-ext build --overwrite-dest -a web-ext-artifacts/chrome --filename=Chrome-YouTube_Default_Settings-${npm_package_version}.zip",
     "post:web-ext": "rm manifest.json",
     "package": "npm run package:firefox && npm run package:chrome && npm run post:web-ext",
     "package:firefox": "npm run build:firefox && npm run web-ext:firefox",
