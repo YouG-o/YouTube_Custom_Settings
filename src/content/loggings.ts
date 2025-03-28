@@ -6,11 +6,11 @@ const LOG_STYLES = {
         color: '#c084fc'  // light purple
     },
     VIDEO_QUALITY: {
-        context: '[Main Title]',
+        context: '[Video Quality]',
         color: '#fcd34d'  // yellow
     },
     VIDEO_SPEED: {
-        context: '[Browsing Titles]',
+        context: '[Video Speed]',
         color: '#fca5a5'  // light red
     }
 } as const;

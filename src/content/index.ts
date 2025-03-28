@@ -16,24 +16,42 @@ async function fetchSettings() {
 async function initializeFeatures() {
     await fetchSettings();
     
-    // Inject player control script
-    injectPlayerScript();
-    
-    // Setup observers
-    setupLoadStartListener();
-    setupUrlObserver();
-    
     // Apply settings
     applyStoredSettings();
+
+    // Initialize features
+    currentSettings?.videoQuality.enabled && initializeVideoQuality();
+    
+    currentSettings?.videoSpeed.enabled && initializeVideoSpeed();
+
 }
 
-// Inject the player script
-function injectPlayerScript() {
-    const script = document.createElement('script');
-    script.src = browser.runtime.getURL('dist/content/scripts/playerSettings.js');
-    document.documentElement.appendChild(script);
-    coreLog('Player settings script injected');
+// Initialize functions
+let loadStartListenerInitialized = false;
+
+function initializeLoadStartListener() {
+    if (!loadStartListenerInitialized && (currentSettings?.videoQuality.enabled || currentSettings?.videoSpeed.enabled)) {
+            setupLoadStartListener();
+        loadStartListenerInitialized = true;
+    }
 }
+
+
+function initializeVideoQuality() {
+    videoQualityLog('Initializing Video Quality setting');
+    
+    handleVideoQuality();
+
+    initializeLoadStartListener();
+};
+
+function initializeVideoSpeed() {
+    videoSpeedLog('Initializing Video Speed setting');
+    
+    handleVideoSpeed();
+    
+    initializeLoadStartListener();
+};
 
 // Apply settings by sending them to the injected script
 function applyStoredSettings() {
