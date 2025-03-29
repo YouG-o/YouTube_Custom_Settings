@@ -61,6 +61,15 @@ function applyStoredSettings() {
         type: 'YDS_SETTINGS_UPDATE',
         settings: currentSettings
     }, '*');
+    
+    // Apply settings immediately to current video if it's playing
+    if (currentSettings.videoQuality.enabled) {
+        handleVideoQuality();
+    }
+    
+    if (currentSettings.videoSpeed.enabled) {
+        handleVideoSpeed();
+    }
 }
 
 // Message handler for settings updates

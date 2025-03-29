@@ -90,14 +90,29 @@
 
             const preferredSpeed = parseFloat(localStorage.getItem('yds-speed-value') || '1');
             
-            const video = document.querySelector('video');
-            if (!video) {
-                speedErrorLog('Video element not found');
-                return false;
+            // Get the player element
+            let targetId = 'movie_player';
+            if (window.location.pathname.startsWith('/shorts')) {
+                targetId = 'shorts-player';
+            }
+            const player = document.getElementById(targetId);
+            
+            if (!player || typeof player.setPlaybackRate !== 'function') {
+                // Fallback to direct video element manipulation if player API is not available
+                const video = document.querySelector('video');
+                if (!video) {
+                    speedErrorLog('Video element not found');
+                    return false;
+                }
+                
+                video.playbackRate = preferredSpeed;
+                speedLog('Playback speed set to (via HTML5 video element):', preferredSpeed);
+                return true;
             }
             
-            video.playbackRate = preferredSpeed;
-            speedLog('Playback speed set to:', preferredSpeed);
+            // Use YouTube player API to set playback rate
+            player.setPlaybackRate(preferredSpeed);
+            speedLog('Playback speed set to (via YouTube player API):', preferredSpeed);
             return true;
         } catch (error) {
             speedErrorLog(`Failed to set playback speed: ${error.message}`);
