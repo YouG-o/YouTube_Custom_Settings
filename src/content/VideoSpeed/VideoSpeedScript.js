@@ -90,7 +90,21 @@
 
             const preferredSpeed = parseFloat(localStorage.getItem('yds-speed-value') || '1');
             
-            // Get the player element
+            // For speeds above YouTube's limit (2.0), always use direct HTML5 video element manipulation
+            if (preferredSpeed > 2.0 || preferredSpeed < 0.25) {
+                speedLog('Speed value exceeds YouTube API limit (2.0), using direct video element manipulation');
+                const video = document.querySelector('video');
+                if (!video) {
+                    speedErrorLog('Video element not found');
+                    return false;
+                }
+                
+                video.playbackRate = preferredSpeed;
+                speedLog('Playback speed set to (via HTML5 video element):', preferredSpeed);
+                return true;
+            }
+            
+            // For normal speeds, try to use YouTube's player API first
             let targetId = 'movie_player';
             if (window.location.pathname.startsWith('/shorts')) {
                 targetId = 'shorts-player';
@@ -110,7 +124,7 @@
                 return true;
             }
             
-            // Use YouTube player API to set playback rate
+            // Use YouTube player API to set playback rate for normal speeds
             player.setPlaybackRate(preferredSpeed);
             speedLog('Playback speed set to (via YouTube player API):', preferredSpeed);
             return true;
