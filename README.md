@@ -11,9 +11,12 @@
 </p>
 
 <div align="center">
-  <a href="https://addons.mozilla.org/fr/firefox/addon/youtube-default-settings/" target="_blank">
+  <a href="https://addons.mozilla.org/firefox/addon/youtube-default-settings/" target="_blank">
     <img src="./assets/images/firefox.png" height="40" alt="Available on Mozilla Firefox" title="Available on Mozilla Firefox"/>
   </a>  
+   <a href="https://chromewebstore.google.com/detail/youtube-default-settings/dgbmcgmjlphkgepbmjlhohabmhlhhchn" target="_blank">
+    <img src="./assets/images/chrome.png" height="40" alt="Available on Chrome Web Store" title="Available on Chrome Web Store"/>
+  </a>
   <br>
 </div>
 
