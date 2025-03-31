@@ -8,7 +8,8 @@ async function fetchSettings() {
     const data = await browser.storage.local.get('settings');
     currentSettings = data.settings as ExtensionSettings || {
         videoQuality: { enabled: false, value: 'auto' },
-        videoSpeed: { enabled: false, value: 1 }
+        videoSpeed: { enabled: false, value: 1 },
+        subtitlePreference: { enabled: false, value: 'original' }
     };
 }
 
@@ -23,19 +24,19 @@ async function initializeFeatures() {
     currentSettings?.videoQuality.enabled && initializeVideoQuality();
     
     currentSettings?.videoSpeed.enabled && initializeVideoSpeed();
-
+    
+    currentSettings?.subtitlesPreference.enabled && initializeSubtitlesPreference();
 }
 
 // Initialize functions
 let loadStartListenerInitialized = false;
 
 function initializeLoadStartListener() {
-    if (!loadStartListenerInitialized && (currentSettings?.videoQuality.enabled || currentSettings?.videoSpeed.enabled)) {
-            setupLoadStartListener();
+    if (!loadStartListenerInitialized && (currentSettings?.videoQuality.enabled || currentSettings?.videoSpeed.enabled || currentSettings?.subtitlesPreference.enabled)) {
+        setupLoadStartListener();
         loadStartListenerInitialized = true;
     }
 }
-
 
 function initializeVideoQuality() {
     videoQualityLog('Initializing Video Quality setting');
@@ -46,9 +47,17 @@ function initializeVideoQuality() {
 };
 
 function initializeVideoSpeed() {
-    videoSpeedLog('Initializing Video Speed setting');
+    videoSpeedLog('Initializing Video Playback Speed setting');
     
     handleVideoSpeed();
+    
+    initializeLoadStartListener();
+};
+
+function initializeSubtitlesPreference() {
+    subtitlesLog('Initializing Subtitles setting');
+    
+    handleSubtitlesPreference();
     
     initializeLoadStartListener();
 };
@@ -69,6 +78,10 @@ function applyStoredSettings() {
     
     if (currentSettings.videoSpeed.enabled) {
         handleVideoSpeed();
+    }
+    
+    if (currentSettings.subtitlesPreference.enabled) {
+        handleSubtitlesPreference();
     }
 }
 

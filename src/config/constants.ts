@@ -7,5 +7,9 @@ const DEFAULT_SETTINGS: ExtensionSettings = {
     videoSpeed: {
         enabled: false,
         value: 1
+    },
+    subtitlesPreference: {
+        enabled: false,
+        value: 'original'
     }
 };

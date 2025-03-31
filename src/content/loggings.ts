@@ -12,6 +12,10 @@ const LOG_STYLES = {
     VIDEO_SPEED: {
         context: '[Video Speed]',
         color: '#fca5a5'  // light red
+    },
+    SUBTITLES: {
+        context: '[Subtitles]',
+        color: '#FF9800'  // orange
     }
 } as const;
 
@@ -49,3 +53,6 @@ const videoQualityErrorLog = createErrorLogger(LOG_STYLES.VIDEO_QUALITY);
 
 const videoSpeedLog = createLogger(LOG_STYLES.VIDEO_SPEED);
 const videoSpeedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
+
+const subtitlesLog = createLogger(LOG_STYLES.SUBTITLES);
+const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
