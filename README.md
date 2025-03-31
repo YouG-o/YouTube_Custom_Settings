@@ -77,7 +77,9 @@ All contributions, no matter how small, are greatly appreciated.
 
 <div align="center">
   <h2>License</h2>
-  UNLICENSED 
+  This project is licensed under the <a href="LICENSE">GNU Affero General Public License v3.0</a>.
   <br>
-  Feel free to do whatever you want.
+  Any reuse, modification or distribution of this code must credit the original author.
+  <br>
 </div>
+

@@ -11,6 +11,10 @@ const videoSpeedFeature = document.getElementById('videoSpeedFeature') as HTMLIn
 const videoSpeedSelect = document.getElementById('videoSpeed') as HTMLSelectElement;
 const videoSpeedContainer = document.getElementById('videoSpeedContainer') as HTMLDivElement;
 
+const subtitlesToggle = document.getElementById('subtitlesTranslation') as HTMLInputElement;
+const subtitlesPreferenceSelect = document.getElementById('subtitlesLanguage') as HTMLSelectElement;
+const subtitlesPreferenceContainer = document.getElementById('subtitlesLanguageContainer') as HTMLDivElement;
+
 // Default settings
 const defaultSettings: ExtensionSettings = {
     videoQuality: {
@@ -20,6 +24,10 @@ const defaultSettings: ExtensionSettings = {
     videoSpeed: {
         enabled: false,
         value: 1
+    },
+    subtitlesPreference: {
+        enabled: false,
+        value: 'original'
     }
 };
 
@@ -37,6 +45,10 @@ async function loadSettings() {
         videoSpeedFeature.checked = settings.videoSpeed.enabled;
         videoSpeedSelect.value = String(settings.videoSpeed.value);
         toggleContainer(videoSpeedContainer, videoSpeedFeature.checked);
+
+        subtitlesToggle.checked = settings.subtitlesPreference.enabled;
+        subtitlesPreferenceSelect.value = settings.subtitlesPreference.value;
+        toggleContainer(subtitlesPreferenceContainer, subtitlesToggle.checked);
     } catch (error) {
         console.error('Failed to load settings:', error);
     }
@@ -52,6 +64,10 @@ async function saveSettings() {
         videoSpeed: {
             enabled: videoSpeedFeature.checked,
             value: parseFloat(videoSpeedSelect.value)
+        },
+        subtitlesPreference: {
+            enabled: subtitlesToggle.checked,
+            value: subtitlesPreferenceSelect.value
         }
     };
     
@@ -96,10 +112,16 @@ function initEventListeners() {
         toggleContainer(videoSpeedContainer, videoSpeedFeature.checked);
         saveSettings();
     });
+
+    subtitlesToggle.addEventListener('change', () => {
+        toggleContainer(subtitlesPreferenceContainer, subtitlesToggle.checked);
+        saveSettings();
+    });
     
     // Value changes
     videoQualitySelect.addEventListener('change', saveSettings);
     videoSpeedSelect.addEventListener('change', saveSettings);
+    subtitlesPreferenceSelect.addEventListener('change', saveSettings);
 }
 
 // Initialize on page load

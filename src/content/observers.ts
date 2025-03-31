@@ -10,7 +10,10 @@ function setupLoadStartListener() {
         coreLog('Video source changed - applying settings');
         
         currentSettings?.videoQuality.enabled && handleVideoQuality();
+
         currentSettings?.videoSpeed.enabled && handleVideoSpeed();
+
+        currentSettings?.subtitlesPreference.enabled && handleSubtitlesPreference();
 
     };
 

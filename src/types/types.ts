@@ -10,6 +10,7 @@ interface FeatureSetting<T> {
 interface ExtensionSettings {
     videoQuality: FeatureSetting<string>;
     videoSpeed: FeatureSetting<number>;
+    subtitlesPreference: FeatureSetting<string>;
 }
 
 interface Message {

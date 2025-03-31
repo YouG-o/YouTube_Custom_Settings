@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "YouTube Default Settings",
-    "version": "1.0.12",
+    "version": "1.1.0",
     "description": "A small web-browser Add-On allowing you to set default values to YouTube's video player (quality, speed)",
     "icons": {
       "48": "dist/assets/icons/icon.png",
@@ -43,7 +43,8 @@
     "web_accessible_resources": [{
         "resources": [
           "dist/content/scripts/VideoQualityScript.js",
-          "dist/content/scripts/VideoSpeedScript.js"
+          "dist/content/scripts/VideoSpeedScript.js",
+          "dist/content/scripts/SubtitlesScript.js"
         ],
         "matches": [
           "*://*.youtube.com/*",
