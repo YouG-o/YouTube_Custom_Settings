@@ -15,6 +15,8 @@ const subtitlesToggle = document.getElementById('subtitlesTranslation') as HTMLI
 const subtitlesPreferenceSelect = document.getElementById('subtitlesLanguage') as HTMLSelectElement;
 const subtitlesPreferenceContainer = document.getElementById('subtitlesLanguageContainer') as HTMLDivElement;
 
+const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
+
 // Default settings
 const defaultSettings: ExtensionSettings = {
     videoQuality: {
@@ -23,7 +25,8 @@ const defaultSettings: ExtensionSettings = {
     },
     videoSpeed: {
         enabled: false,
-        value: 1
+        value: 1,
+        applyToShorts: true
     },
     subtitlesPreference: {
         enabled: false,
@@ -45,6 +48,7 @@ async function loadSettings() {
         videoSpeedFeature.checked = settings.videoSpeed.enabled;
         videoSpeedSelect.value = String(settings.videoSpeed.value);
         toggleContainer(videoSpeedContainer, videoSpeedFeature.checked);
+        applyShortsSpeed.checked = settings.videoSpeed.applyToShorts !== false; // Default to true if undefined
 
         subtitlesToggle.checked = settings.subtitlesPreference.enabled;
         subtitlesPreferenceSelect.value = settings.subtitlesPreference.value;
@@ -63,7 +67,8 @@ async function saveSettings() {
         },
         videoSpeed: {
             enabled: videoSpeedFeature.checked,
-            value: parseFloat(videoSpeedSelect.value)
+            value: parseFloat(videoSpeedSelect.value),
+            applyToShorts: applyShortsSpeed.checked
         },
         subtitlesPreference: {
             enabled: subtitlesToggle.checked,
@@ -122,6 +127,20 @@ function initEventListeners() {
     videoQualitySelect.addEventListener('change', saveSettings);
     videoSpeedSelect.addEventListener('change', saveSettings);
     subtitlesPreferenceSelect.addEventListener('change', saveSettings);
+
+    // Fix for the Apply to Shorts toggle - Add click handler to the parent div
+    const applyShortsSpeedParent = applyShortsSpeed.parentElement;
+    if (applyShortsSpeedParent) {
+        applyShortsSpeedParent.addEventListener('click', (e) => {
+            // Toggle the checkbox state
+            applyShortsSpeed.checked = !applyShortsSpeed.checked;
+            // Trigger a change event to run event handlers
+            applyShortsSpeed.dispatchEvent(new Event('change'));
+        });
+    }
+
+    // Add listener for the checkbox itself as well
+    applyShortsSpeed.addEventListener('change', saveSettings);
 }
 
 // Initialize on page load
