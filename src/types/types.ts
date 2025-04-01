@@ -7,9 +7,13 @@ interface FeatureSetting<T> {
     value: T;
 }
 
+interface SpeedSetting extends FeatureSetting<number> {
+    applyToShorts: boolean;
+}
+
 interface ExtensionSettings {
     videoQuality: FeatureSetting<string>;
-    videoSpeed: FeatureSetting<number>;
+    videoSpeed: SpeedSetting;
     subtitlesPreference: FeatureSetting<string>;
 }
 
