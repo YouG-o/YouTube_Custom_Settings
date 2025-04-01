@@ -6,11 +6,24 @@ let loadStartListener: ((e: Event) => void) | null = null;
 // Fetch settings once and store them in currentSettings
 async function fetchSettings() {
     const data = await browser.storage.local.get('settings');
-    currentSettings = data.settings as ExtensionSettings || {
+    
+    // Complete default settings
+    const defaultSettings = {
         videoQuality: { enabled: false, value: 'auto' },
-        videoSpeed: { enabled: false, value: 1 },
-        subtitlePreference: { enabled: false, value: 'original' }
+        videoSpeed: { enabled: false, value: 1, applyToShorts: true },
+        subtitlesPreference: { enabled: false, value: 'original' } // Changed from subtitlePreference to subtitlesPreference
     };
+    
+    // If no settings, use defaults
+    if (!data.settings) {
+        currentSettings = defaultSettings as ExtensionSettings;
+        return;
+    }
+    
+    // Migrate settings: ensure all required properties exist
+    const settings = migrateSettings(data.settings, defaultSettings);
+    
+    currentSettings = settings as ExtensionSettings;
 }
 
 // Initialize features based on settings
