@@ -7,36 +7,27 @@
 
 (() => {
     const LOG_PREFIX = '[YDS]';
-    const LOG_STYLES = {
-        VIDEO_SPEED: { context: '[VIDEO SPEED]', color: '#fca5a5' }
-    };
-
-    function createLogger(category) {
-        return (message, ...args) => {
-            console.log(
-                `%c${LOG_PREFIX}${category.context} ${message}`,
-                `color: ${category.color}`,
-                ...args
-            );
-        };
-    }
-
-    // Create error logger function
+    const LOG_CONTEXT = '[VIDEO SPEED]';
+    const LOG_COLOR = '#fca5a5';  // Light red
     const ERROR_COLOR = '#F44336';  // Red
 
-    function createErrorLogger(category) {
-        return (message, ...args) => {
-            console.log(
-                `%c${LOG_PREFIX}${category.context} %c${message}`,
-                `color: ${category.color}`,  // Keep category color for prefix
-                `color: ${ERROR_COLOR}`,     // Red color for error message
-                ...args
-            );
-        };
+    // Simplified logger functions
+    function log(message, ...args) {
+        console.log(
+            `%c${LOG_PREFIX}${LOG_CONTEXT} ${message}`,
+            `color: ${LOG_COLOR}`,
+            ...args
+        );
     }
 
-    const speedLog = createLogger(LOG_STYLES.VIDEO_SPEED);
-    const speedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
+    function errorLog(message, ...args) {
+        console.log(
+            `%c${LOG_PREFIX}${LOG_CONTEXT} %c${message}`,
+            `color: ${LOG_COLOR}`,  // Keep context color for prefix
+            `color: ${ERROR_COLOR}`,  // Red color for error message
+            ...args
+        );
+    }
 
     // Check if current video is a live stream
     function isLiveStream() {
@@ -45,13 +36,15 @@
             let targetId = 'movie_player';
             if (window.location.pathname.startsWith('/shorts')) {
                 targetId = 'shorts-player';
+            } else if (window.location.pathname.startsWith('/@')) {
+                targetId = 'c4-player'; // player for channels main video
             }
             const player = document.getElementById(targetId);
             
             if (player && typeof player.getVideoData === 'function') {
                 const videoData = player.getVideoData();
                 if (videoData && videoData.isLive) {
-                    speedLog('Live stream detected via player data');
+                    log('Live stream detected via player data');
                     return true;
                 }
             }
@@ -59,19 +52,19 @@
             // Method 2: Check for live badge in the DOM
             const liveBadge = document.querySelector('.ytp-live-badge');
             if (liveBadge && window.getComputedStyle(liveBadge).display !== 'none') {
-                speedLog('Live stream detected via badge');
+                log('Live stream detected via badge');
                 return true;
             }
             
             // Method 3: Check URL patterns
             if (window.location.href.includes('/live/')) {
-                speedLog('Live stream detected via URL');
+                log('Live stream detected via URL');
                 return true;
             }
             
             return false;
         } catch (error) {
-            speedErrorLog(`Error checking if stream is live: ${error.message}`);
+            errorLog(`Error checking if stream is live: ${error.message}`);
             return false;
         }
     }
@@ -80,7 +73,7 @@
         try {
             // Don't apply speed changes to live streams
             if (isLiveStream()) {
-                speedLog('Not changing speed for live stream');
+                log('Not changing speed for live stream');
                 return false;
             }
             
@@ -92,15 +85,15 @@
             
             // For speeds above YouTube's limit (2.0), always use direct HTML5 video element manipulation
             if (preferredSpeed > 2.0 || preferredSpeed < 0.25) {
-                speedLog('Speed value exceeds YouTube API limit (2.0), using direct video element manipulation');
+                log('Speed value exceeds YouTube API limit (2.0), using direct video element manipulation');
                 const video = document.querySelector('video');
                 if (!video) {
-                    speedErrorLog('Video element not found');
+                    errorLog('Video element not found');
                     return false;
                 }
                 
                 video.playbackRate = preferredSpeed;
-                speedLog('Playback speed set to (via HTML5 video element):', preferredSpeed);
+                log('Playback speed set to (via HTML5 video element):', preferredSpeed);
                 return true;
             }
             
@@ -115,21 +108,21 @@
                 // Fallback to direct video element manipulation if player API is not available
                 const video = document.querySelector('video');
                 if (!video) {
-                    speedErrorLog('Video element not found');
+                    errorLog('Video element not found');
                     return false;
                 }
                 
                 video.playbackRate = preferredSpeed;
-                speedLog('Playback speed set to (via HTML5 video element):', preferredSpeed);
+                log('Playback speed set to (via HTML5 video element):', preferredSpeed);
                 return true;
             }
             
             // Use YouTube player API to set playback rate for normal speeds
             player.setPlaybackRate(preferredSpeed);
-            speedLog('Playback speed set to (via YouTube player API):', preferredSpeed);
+            log('Playback speed set to (via YouTube player API):', preferredSpeed);
             return true;
         } catch (error) {
-            speedErrorLog(`Failed to set playback speed: ${error.message}`);
+            errorLog(`Failed to set playback speed: ${error.message}`);
             return false;
         }
     }
