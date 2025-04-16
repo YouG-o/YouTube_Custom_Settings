@@ -24,3 +24,19 @@ async function initializeSettings() {
 
 // Initialize settings when extension is installed or updated
 api.runtime.onInstalled.addListener(initializeSettings);
+
+
+// Function to open the welcome page in a new tab
+function openWelcomePage(details: InstalledDetails) {
+    if (details.reason === 'install') {
+        api.tabs.create({
+            url: api.runtime.getURL('dist/popup/welcome.html')
+        });
+    }
+}
+
+// Initialize settings when extension is installed or updated
+api.runtime.onInstalled.addListener((details: InstalledDetails) => {
+    initializeSettings();
+    openWelcomePage(details);
+});
