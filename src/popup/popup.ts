@@ -17,6 +17,7 @@ const subtitlesPreferenceContainer = document.getElementById('subtitlesLanguageC
 
 const audioNormalizerFeature = document.getElementById('audioNormalizerFeature') as HTMLInputElement;
 const audioNormalizerSelect = document.getElementById('audioNormalizerValue') as HTMLSelectElement;
+const audioNormalizerManual = document.getElementById('audioNormalizerManual') as HTMLInputElement;
 const audioNormalizerContainer = document.getElementById('audioNormalizerContainer') as HTMLDivElement;
 
 const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
@@ -38,7 +39,8 @@ const defaultSettings: ExtensionSettings = {
     },
     audioNormalizer: {
         enabled: false,
-        value: 'medium'
+        value: 'medium',
+        manualActivation: false
     }
 };
 
@@ -66,6 +68,7 @@ async function loadSettings() {
         if (settings.audioNormalizer) {
             audioNormalizerFeature.checked = settings.audioNormalizer.enabled;
             audioNormalizerSelect.value = settings.audioNormalizer.value;
+            audioNormalizerManual.checked = settings.audioNormalizer.manualActivation || false;
             toggleContainer(audioNormalizerContainer, audioNormalizerFeature.checked);
         }
     } catch (error) {
@@ -91,7 +94,8 @@ async function saveSettings() {
         },
         audioNormalizer: {
             enabled: audioNormalizerFeature.checked,
-            value: audioNormalizerSelect.value
+            value: audioNormalizerSelect.value,
+            manualActivation: audioNormalizerManual.checked
         }
     };
     
@@ -166,6 +170,20 @@ function initEventListeners() {
 
     // Add listener for the checkbox itself as well
     applyShortsSpeed.addEventListener('change', saveSettings);
+
+    // Manual activation toggle
+    audioNormalizerManual.addEventListener('change', saveSettings);
+
+    // Fix for the Audio Normalizer Manual toggle - Add click handler to the parent div
+    const audioNormalizerManualParent = audioNormalizerManual.parentElement;
+    if (audioNormalizerManualParent) {
+        audioNormalizerManualParent.addEventListener('click', (e) => {
+            // Toggle the checkbox state
+            audioNormalizerManual.checked = !audioNormalizerManual.checked;
+            // Trigger a change event to run event handlers
+            audioNormalizerManual.dispatchEvent(new Event('change'));
+        });
+    }
 }
 
 // Initialize on page load

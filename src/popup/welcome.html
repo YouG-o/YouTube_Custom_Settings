@@ -171,6 +171,7 @@
                                 <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </div>
+
                         <!-- Intensity selector -->
                         <div class="mt-4 audio-normalizer-container" id="audioNormalizerContainer">
                             <select id="audioNormalizerValue" class="w-full bg-gray-800 text-white text-base rounded-lg px-4 py-2 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
@@ -178,7 +179,26 @@
                                 <option value="medium">Medium</option>
                                 <option value="strong">Strong</option>
                             </select>
+                            
+                            <div class="mt-4 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <label for="audioNormalizerManual" class="text-base text-gray-300">
+                                        Activate only when I click the button
+                                    </label>
+                                    <!-- Button preview -->
+                                    <div class="flex items-center px-2 py-1 bg-gray-800 rounded" title="Button appears like this in player">
+                                        <svg height="20" version="1.1" viewBox="0 0 36 36" width="20" class="text-white">
+                                            <path d="M8,21 L12,21 L12,16 L8,16 L8,21 Z M14,21 L18,21 L18,9 L14,9 L14,21 Z M20,21 L24,21 L24,3 L20,3 L20,21 Z M26,21 L30,21 L30,11 L26,11 L26,21 Z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" id="audioNormalizerManual">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
                     </div>
                 </div>
             </main>

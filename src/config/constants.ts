@@ -15,7 +15,8 @@ const DEFAULT_SETTINGS: ExtensionSettings = {
     },
     audioNormalizer: {
         enabled: false,
-        value: 'medium'  // Options: 'light', 'medium', 'strong'
+        value: 'medium',
+        manualActivation: false // Default to manual activation for better user experience
     }
 };
 

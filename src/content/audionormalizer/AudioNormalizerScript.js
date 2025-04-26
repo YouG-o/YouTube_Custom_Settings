@@ -34,9 +34,12 @@
     let currentVideoElement = null;
     let originalVolumeHandler = null;
     let volumeObserver = null;
+    let normalizerButton = null;
+    let videoUrl = null;  // Track current video URL to detect changes
 
     // Settings state
     let currentIntensity = 'medium';
+    let manualActivation = false;
     
     // Clean up existing audio processing
     function cleanupAudioProcessing() {
@@ -45,6 +48,15 @@
                 // Restore original volume behavior
                 if (originalVolumeHandler) {
                     Object.defineProperty(currentVideoElement, 'volume', originalVolumeHandler);
+                }
+                
+                // Important: Reset volume to user's intended value
+                const userVolume = localStorage.getItem('yds-user-volume') || '1';
+                try {
+                    currentVideoElement.volume = parseFloat(userVolume);
+                } catch (e) {
+                    // Fallback to default volume if there's an error
+                    currentVideoElement.volume = 1.0;
                 }
                 
                 // Remove any volume observer
@@ -58,6 +70,9 @@
             
             isProcessingActive = false;
             log('Audio processing cleaned up');
+            
+            // Update button state if it exists
+            updateButtonState(false);
         } catch (error) {
             errorLog(`Error cleaning up audio: ${error.message}`);
         }
@@ -95,20 +110,41 @@
     }
     
     // Setup the audio normalizer using volume property override
-    function setupAudioNormalizer() {
+    function setupAudioNormalizer(forceActivate = false) {
         try {
-            // Check if normalization is enabled
+            // Check if normalization is enabled in extension settings
             const isEnabled = localStorage.getItem('yds-audio-normalizer-enabled') === 'true';
             if (!isEnabled) {
                 if (isProcessingActive) {
                     cleanupAudioProcessing();
                     log('Audio normalizer disabled');
                 }
+                // Remove button if feature is disabled completely
+                removeNormalizerButton();
                 return false;
             }
             
-            // Get the normalization intensity
+            // Get the normalization settings
             currentIntensity = localStorage.getItem('yds-audio-normalizer-value') || 'medium';
+            manualActivation = localStorage.getItem('yds-audio-normalizer-manual') === 'true';
+            
+            // Handle manual activation - just add the button, don't process audio yet
+            if (manualActivation) {
+                addNormalizerButton();
+                
+                // Only proceed if force activate or already active
+                const isActive = localStorage.getItem('yds-audio-normalizer-active') === 'true';
+                if (!forceActivate && !isActive) {
+                    // Clean up any existing processing
+                    if (isProcessingActive) {
+                        cleanupAudioProcessing();
+                    }
+                    return false;
+                }
+            } else {
+                // Auto mode - remove button if exists
+                removeNormalizerButton();
+            }
             
             // Find the video element
             const video = document.querySelector('video');
@@ -117,9 +153,13 @@
                 return false;
             }
             
+            // Store current URL (for detecting changes)
+            videoUrl = window.location.href;
+            
             // If we're already processing this video element, just update settings
             if (video === currentVideoElement && isProcessingActive) {
                 log(`Audio normalizer already active with intensity: ${currentIntensity}`);
+                updateButtonState(true);
                 return true;
             }
             
@@ -143,6 +183,9 @@
             
             // Create our wrapped volume property
             let rawVolume = video.volume;
+
+            // Save the user's intended volume level for restoration later
+            localStorage.setItem('yds-user-volume', rawVolume.toString());
             
             // Override the volume property
             Object.defineProperty(video, 'volume', {
@@ -152,6 +195,10 @@
                 set: function(newVolume) {
                     // Store the raw volume value
                     rawVolume = newVolume;
+                    
+                    // Update the saved user volume whenever volume is changed
+                    // This ensures we restore to the correct level when disabling
+                    localStorage.setItem('yds-user-volume', newVolume.toString());
                     
                     // Apply our audio normalization when the user or YouTube sets volume
                     if (isProcessingActive) {
@@ -245,7 +292,16 @@
                 });
             }
             
+            // Update button state to indicate it's active
+            updateButtonState(true);
+            
             log('Audio normalizer setup complete');
+            
+            // Show a confirmation message to the user
+            if (manualActivation && forceActivate) {
+                showNormalizerStatus(true);
+            }
+            
             return true;
             
         } catch (error) {
@@ -255,80 +311,164 @@
         }
     }
     
-    // Handle page navigation and video changes
-    function handleVideoChanges() {
-        // YouTube navigation doesn't always reload the page, so we need to detect video changes
-        const observer = new MutationObserver((mutations) => {
-            // Check if video has changed
-            const videoNow = document.querySelector('video');
-            if (videoNow && videoNow !== currentVideoElement) {
-                log('Video element changed - reapplying normalizer');
-                setupAudioNormalizer();
+    // Add normalizer button to YouTube player
+    function addNormalizerButton() {
+        // If button already exists, don't add it again
+        if (normalizerButton && document.body.contains(normalizerButton)) {
+            return;
+        }
+        
+        // Remove any existing button to avoid duplicates
+        removeNormalizerButton();
+        
+        // Look for YouTube player controls
+        const rightControls = document.querySelector('.ytp-right-controls');
+        if (!rightControls) {
+            return;
+        }
+        
+        try {
+            // Create the button
+            normalizerButton = document.createElement('button');
+            normalizerButton.className = 'ytp-button yds-audio-normalizer-button';
+            normalizerButton.title = 'Toggle Audio Normalizer';
+            
+            // Safer way to create the icon without using innerHTML (avoids TrustedHTML issues)
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("height", "100%");
+            svg.setAttribute("version", "1.1");
+            svg.setAttribute("viewBox", "0 0 36 36");
+            svg.setAttribute("width", "100%");
+            
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M8,21 L12,21 L12,16 L8,16 L8,21 Z M14,21 L18,21 L18,9 L14,9 L14,21 Z M20,21 L24,21 L24,3 L20,3 L20,21 Z M26,21 L30,21 L30,11 L26,11 L26,21 Z");
+            path.setAttribute("fill", "#fff");
+            
+            svg.appendChild(path);
+            normalizerButton.appendChild(svg);
+            
+            // Add click handler
+            normalizerButton.addEventListener('click', () => {
+                // Toggle the state
+                const currentState = localStorage.getItem('yds-audio-normalizer-active') === 'true';
+                const newState = !currentState;
+                
+                // Store the new state
+                localStorage.setItem('yds-audio-normalizer-active', JSON.stringify(newState));
+                
+                // Apply the new state
+                if (newState) {
+                    setupAudioNormalizer(true);
+                    showNormalizerStatus(true);
+                } else {
+                    cleanupAudioProcessing();
+                    showNormalizerStatus(false);
+                }
+            });
+            
+            // Add the button to the controls
+            rightControls.insertBefore(normalizerButton, rightControls.firstChild);
+            
+            // Initialize button state
+            updateButtonState(localStorage.getItem('yds-audio-normalizer-active') === 'true');
+            
+        } catch (error) {
+            errorLog(`Failed to create normalizer button: ${error.message}`);
+        }
+    }
+    
+    // Remove normalizer button from YouTube player
+    function removeNormalizerButton() {
+        const buttons = document.querySelectorAll('.yds-audio-normalizer-button');
+        buttons.forEach(button => {
+            if (button && button.parentNode) {
+                button.parentNode.removeChild(button);
             }
         });
+        normalizerButton = null;
+    }
+    
+    // Update the button state (active/inactive)
+    function updateButtonState(isActive) {
+        if (!normalizerButton) return;
         
-        // Observe changes to the DOM for new video elements
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        if (isActive) {
+            normalizerButton.classList.add('yds-audio-normalizer-active');
+            // Use !important to override YouTube's styles
+            normalizerButton.style.cssText = 'color: #4ade80 !important'; // Green when active
+        } else {
+            normalizerButton.classList.remove('yds-audio-normalizer-active');
+            normalizerButton.style.cssText = ''; // Default color when inactive
+        }
+    }
+    
+    // Provide visual feedback to the user
+    function showNormalizerStatus(isActive = true) {
+        const intensity = localStorage.getItem('yds-audio-normalizer-value') || 'medium';
         
-        // Also handle loadstart events on video elements
+        // Create or update status indicator
+        let indicator = document.getElementById('yds-audio-normalizer-indicator');
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'yds-audio-normalizer-indicator';
+            indicator.style.position = 'absolute';
+            indicator.style.bottom = '60px';
+            indicator.style.right = '20px';
+            indicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            indicator.style.color = isActive ? '#4ade80' : '#f87171'; // Green if active, red if disabled
+            indicator.style.padding = '5px 10px';
+            indicator.style.borderRadius = '3px';
+            indicator.style.fontSize = '12px';
+            indicator.style.zIndex = '10000';
+            indicator.style.transition = 'opacity 0.3s';
+            document.body.appendChild(indicator);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                indicator.style.opacity = '0';
+                setTimeout(() => {
+                    if (indicator.parentNode) {
+                        indicator.parentNode.removeChild(indicator);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        indicator.style.color = isActive ? '#4ade80' : '#f87171';
+        
+        indicator.textContent = isActive 
+            ? `Audio Normalizer: ON (${intensity})` 
+            : 'Audio Normalizer: OFF';
+        indicator.style.opacity = '1';
+    }
+    
+    // Initialize everything
+    function initialize() {
+        // When in manual mode, always start inactive
+        if (localStorage.getItem('yds-audio-normalizer-manual') === 'true') {
+            localStorage.setItem('yds-audio-normalizer-active', 'false');
+        }
+        
+        // Initial setup
+        setupAudioNormalizer();
+        
+        // Listen for loadstart events - This replaces our custom observer
         document.addEventListener('loadstart', (e) => {
             if (e.target instanceof HTMLMediaElement) {
+                log('Video loadstart detected - updating normalizer');
+                
+                // When in manual mode and video changes, reset active state
+                if (localStorage.getItem('yds-audio-normalizer-manual') === 'true') {
+                    localStorage.setItem('yds-audio-normalizer-active', 'false');
+                    cleanupAudioProcessing();
+                }
+                
                 // Small delay to ensure video has loaded
                 setTimeout(() => {
                     setupAudioNormalizer();
                 }, 100);
             }
         }, true);
-    }
-    
-    // Provide visual feedback to the user
-    function showNormalizerStatus() {
-        const isEnabled = localStorage.getItem('yds-audio-normalizer-enabled') === 'true';
-        const intensity = localStorage.getItem('yds-audio-normalizer-value') || 'medium';
-        
-        if (isEnabled) {
-            // Create or update status indicator
-            let indicator = document.getElementById('yds-audio-normalizer-indicator');
-            if (!indicator) {
-                indicator = document.createElement('div');
-                indicator.id = 'yds-audio-normalizer-indicator';
-                indicator.style.position = 'absolute';
-                indicator.style.bottom = '60px';
-                indicator.style.right = '20px';
-                indicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-                indicator.style.color = '#4ade80';
-                indicator.style.padding = '5px 10px';
-                indicator.style.borderRadius = '3px';
-                indicator.style.fontSize = '12px';
-                indicator.style.zIndex = '10000';
-                indicator.style.transition = 'opacity 0.3s';
-                document.body.appendChild(indicator);
-                
-                // Hide after 3 seconds
-                setTimeout(() => {
-                    indicator.style.opacity = '0';
-                    setTimeout(() => {
-                        if (indicator.parentNode) {
-                            indicator.parentNode.removeChild(indicator);
-                        }
-                    }, 300);
-                }, 3000);
-            }
-            
-            indicator.textContent = `Audio Normalizer: ON (${intensity})`;
-        }
-    }
-    
-    // Initialize everything
-    function initialize() {
-        setupAudioNormalizer();
-        handleVideoChanges();
-        
-        // Show status to the user
-        showNormalizerStatus();
         
         // Listen for messages from the content script
         window.addEventListener('message', (event) => {
@@ -338,8 +478,19 @@
             }
             
             log('Received update message');
-            setupAudioNormalizer();
-            showNormalizerStatus();
+            
+            if (event.data.toggleState !== undefined) {
+                if (event.data.toggleState) {
+                    setupAudioNormalizer(true);
+                    showNormalizerStatus(true);
+                } else {
+                    cleanupAudioProcessing();
+                    showNormalizerStatus(false);
+                }
+            } else {
+                // Just regular update
+                setupAudioNormalizer();
+            }
         });
     }
     
