@@ -12,6 +12,18 @@ const DEFAULT_SETTINGS: ExtensionSettings = {
     subtitlesPreference: {
         enabled: false,
         value: 'original'
+    },
+    audioNormalizer: {
+        enabled: false,
+        value: 'medium',
+        manualActivation: false,
+        customSettings: {
+            threshold: -30,
+            boost: 1.2,
+            ratio: 4,
+            attack: 0.01,
+            release: 0.25
+        }
     }
 };
 

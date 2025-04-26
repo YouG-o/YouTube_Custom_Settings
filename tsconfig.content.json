@@ -23,9 +23,10 @@
     "src/config/constants.ts",
     "src/content/utils.ts",
     "src/content/loggings.ts",
-    "src/content/VideoQuality/VideoQuality.ts",
-    "src/content/VideoSpeed/VideoSpeed.ts",
-    "src/content/Subtitles/SubtitlesPreference.ts",
+    "src/content/videoquality/VideoQuality.ts",
+    "src/content/videospeed/VideoSpeed.ts",
+    "src/content/subtitles/SubtitlesPreference.ts",
+    "src/content/audionormalizer/AudioNormalizer.ts",
     "src/content/observers.ts",
     "src/content/index.ts"
   ]

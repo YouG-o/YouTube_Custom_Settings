@@ -15,6 +15,19 @@ const subtitlesToggle = document.getElementById('subtitlesTranslation') as HTMLI
 const subtitlesPreferenceSelect = document.getElementById('subtitlesLanguage') as HTMLSelectElement;
 const subtitlesPreferenceContainer = document.getElementById('subtitlesLanguageContainer') as HTMLDivElement;
 
+const audioNormalizerFeature = document.getElementById('audioNormalizerFeature') as HTMLInputElement;
+const audioNormalizerSelect = document.getElementById('audioNormalizerValue') as HTMLSelectElement;
+const audioNormalizerManual = document.getElementById('audioNormalizerManual') as HTMLInputElement;
+const audioNormalizerContainer = document.getElementById('audioNormalizerContainer') as HTMLDivElement;
+
+// Custom settings
+const audioNormalizerCustomContainer = document.getElementById('audioNormalizerCustomContainer') as HTMLDivElement;
+const customThreshold = document.getElementById('customThreshold') as HTMLInputElement;
+const customBoost = document.getElementById('customBoost') as HTMLInputElement;
+const customRatio = document.getElementById('customRatio') as HTMLInputElement;
+const customAttack = document.getElementById('customAttack') as HTMLInputElement;
+const customRelease = document.getElementById('customRelease') as HTMLInputElement;
+
 const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
 
 // Default settings
@@ -31,6 +44,18 @@ const defaultSettings: ExtensionSettings = {
     subtitlesPreference: {
         enabled: false,
         value: 'original'
+    },
+    audioNormalizer: {
+        enabled: false,
+        value: 'medium',
+        manualActivation: false,
+        customSettings: {
+            threshold: -30,
+            boost: 1.2,
+            ratio: 4,
+            attack: 0.01,
+            release: 0.25
+        }
     }
 };
 
@@ -53,7 +78,30 @@ async function loadSettings() {
         subtitlesToggle.checked = settings.subtitlesPreference.enabled;
         subtitlesPreferenceSelect.value = settings.subtitlesPreference.value;
         toggleContainer(subtitlesPreferenceContainer, subtitlesToggle.checked);
+        
+        // Audio normalizer settings
+        if (settings.audioNormalizer) {
+            audioNormalizerFeature.checked = settings.audioNormalizer.enabled;
+            // Set dropdown value directly from loaded settings
+            audioNormalizerSelect.value = settings.audioNormalizer.value; 
+            audioNormalizerManual.checked = settings.audioNormalizer.manualActivation || false;
+
+            // Toggle visibility based on the loaded state
+            toggleContainer(audioNormalizerContainer, audioNormalizerFeature.checked);
+            // Show custom container ONLY if the loaded value is 'custom'
+            toggleContainer(audioNormalizerCustomContainer, audioNormalizerSelect.value === 'custom'); 
+
+            // Load custom input values if the mode is 'custom' AND custom settings exist
+            if (audioNormalizerSelect.value === 'custom' && settings.audioNormalizer.customSettings) {
+                customThreshold.value = settings.audioNormalizer.customSettings.threshold.toString();
+                customBoost.value = settings.audioNormalizer.customSettings.boost.toString();
+                customRatio.value = settings.audioNormalizer.customSettings.ratio.toString();
+                customAttack.value = settings.audioNormalizer.customSettings.attack.toString();
+                customRelease.value = settings.audioNormalizer.customSettings.release.toString();
+            }
+        }
     } catch (error) {
+        // Log error if loading settings fails
         console.error('Failed to load settings:', error);
     }
 }
@@ -73,6 +121,19 @@ async function saveSettings() {
         subtitlesPreference: {
             enabled: subtitlesToggle.checked,
             value: subtitlesPreferenceSelect.value
+        },
+        audioNormalizer: {
+            enabled: audioNormalizerFeature.checked,
+            value: audioNormalizerSelect.value,
+            manualActivation: audioNormalizerManual.checked,
+            // Add custom settings if using custom intensity
+            customSettings: audioNormalizerSelect.value === 'custom' ? {
+                threshold: parseFloat(customThreshold.value),
+                boost: parseFloat(customBoost.value),
+                ratio: parseFloat(customRatio.value),
+                attack: parseFloat(customAttack.value),
+                release: parseFloat(customRelease.value)
+            } : undefined
         }
     };
     
@@ -95,6 +156,23 @@ async function updateActiveTabs(settings: ExtensionSettings) {
     
     for (const tab of tabs) {
         if (tab.id) {
+            // Send special message for custom settings ONLY if custom mode is selected
+            if (settings.audioNormalizer.value === 'custom' && settings.audioNormalizer.customSettings) {
+                await browser.tabs.sendMessage(tab.id, {
+                    feature: 'audioNormalizer',
+                    enabled: settings.audioNormalizer.enabled,
+                    value: settings.audioNormalizer.value,
+                    manualActivation: settings.audioNormalizer.manualActivation,
+                    customSettings: settings.audioNormalizer.customSettings
+                }).catch(error => {
+                    console.error(`Failed to update audio normalizer settings for tab ${tab.id}:`, error);
+                });
+                
+                // Important: Wait for a moment to ensure the first message is processed
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+            
+            // Then update all other settings
             browser.tabs.sendMessage(tab.id, {
                 action: 'updateSettings',
                 settings: settings
@@ -123,10 +201,16 @@ function initEventListeners() {
         saveSettings();
     });
     
+    audioNormalizerFeature.addEventListener('change', () => {
+        toggleContainer(audioNormalizerContainer, audioNormalizerFeature.checked);
+        saveSettings();
+    });
+    
     // Value changes
     videoQualitySelect.addEventListener('change', saveSettings);
     videoSpeedSelect.addEventListener('change', saveSettings);
     subtitlesPreferenceSelect.addEventListener('change', saveSettings);
+    audioNormalizerSelect.addEventListener('change', saveSettings);
 
     // Fix for the Apply to Shorts toggle - Add click handler to the parent div
     const applyShortsSpeedParent = applyShortsSpeed.parentElement;
@@ -141,6 +225,33 @@ function initEventListeners() {
 
     // Add listener for the checkbox itself as well
     applyShortsSpeed.addEventListener('change', saveSettings);
+
+    // Manual activation toggle
+    audioNormalizerManual.addEventListener('change', saveSettings);
+
+    // Fix for the Audio Normalizer Manual toggle - Add click handler to the parent div
+    const audioNormalizerManualParent = audioNormalizerManual.parentElement;
+    if (audioNormalizerManualParent) {
+        audioNormalizerManualParent.addEventListener('click', (e) => {
+            // Toggle the checkbox state
+            audioNormalizerManual.checked = !audioNormalizerManual.checked;
+            // Trigger a change event to run event handlers
+            audioNormalizerManual.dispatchEvent(new Event('change'));
+        });
+    }
+
+    // Show/hide custom settings when intensity changes
+    audioNormalizerSelect.addEventListener('change', () => {
+        toggleContainer(audioNormalizerCustomContainer, audioNormalizerSelect.value === 'custom');
+        saveSettings();
+    });
+
+    // Add change listeners for all custom settings
+    customThreshold.addEventListener('change', saveSettings);
+    customBoost.addEventListener('change', saveSettings);
+    customRatio.addEventListener('change', saveSettings);
+    customAttack.addEventListener('change', saveSettings);
+    customRelease.addEventListener('change', saveSettings);
 }
 
 // Initialize on page load
