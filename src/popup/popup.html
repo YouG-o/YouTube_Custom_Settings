@@ -146,6 +146,34 @@
                         </select>
                     </div>
                 </div>
+                <!-- Audio Normalizer Feature -->
+                <div class="p-3 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-medium text-white">Normalize Audio</h2>
+                            <div class="relative group">
+                                <svg class="w-4 h-4 text-gray-400 cursor-help group hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                </svg>
+                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-900 rounded-md whitespace-normal max-w-[250px] opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                                    Balance the sound volume to make quiet parts louder and loud parts quieter
+                                </span>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" id="audioNormalizerFeature">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    <!-- Intensity selector -->
+                    <div class="mt-2 audio-normalizer-container" id="audioNormalizerContainer">
+                        <select id="audioNormalizerValue" class="w-full bg-gray-800 text-white text-sm rounded-lg px-2 py-1 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="light">Light</option>
+                            <option value="medium">Medium</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </main>
         <footer class="flex flex-col gap-4 pt-4 border-t border-gray-600">

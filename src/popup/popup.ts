@@ -15,6 +15,10 @@ const subtitlesToggle = document.getElementById('subtitlesTranslation') as HTMLI
 const subtitlesPreferenceSelect = document.getElementById('subtitlesLanguage') as HTMLSelectElement;
 const subtitlesPreferenceContainer = document.getElementById('subtitlesLanguageContainer') as HTMLDivElement;
 
+const audioNormalizerFeature = document.getElementById('audioNormalizerFeature') as HTMLInputElement;
+const audioNormalizerSelect = document.getElementById('audioNormalizerValue') as HTMLSelectElement;
+const audioNormalizerContainer = document.getElementById('audioNormalizerContainer') as HTMLDivElement;
+
 const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
 
 // Default settings
@@ -31,6 +35,10 @@ const defaultSettings: ExtensionSettings = {
     subtitlesPreference: {
         enabled: false,
         value: 'original'
+    },
+    audioNormalizer: {
+        enabled: false,
+        value: 'medium'
     }
 };
 
@@ -53,6 +61,13 @@ async function loadSettings() {
         subtitlesToggle.checked = settings.subtitlesPreference.enabled;
         subtitlesPreferenceSelect.value = settings.subtitlesPreference.value;
         toggleContainer(subtitlesPreferenceContainer, subtitlesToggle.checked);
+        
+        // Audio normalizer settings
+        if (settings.audioNormalizer) {
+            audioNormalizerFeature.checked = settings.audioNormalizer.enabled;
+            audioNormalizerSelect.value = settings.audioNormalizer.value;
+            toggleContainer(audioNormalizerContainer, audioNormalizerFeature.checked);
+        }
     } catch (error) {
         console.error('Failed to load settings:', error);
     }
@@ -73,6 +88,10 @@ async function saveSettings() {
         subtitlesPreference: {
             enabled: subtitlesToggle.checked,
             value: subtitlesPreferenceSelect.value
+        },
+        audioNormalizer: {
+            enabled: audioNormalizerFeature.checked,
+            value: audioNormalizerSelect.value
         }
     };
     
@@ -123,10 +142,16 @@ function initEventListeners() {
         saveSettings();
     });
     
+    audioNormalizerFeature.addEventListener('change', () => {
+        toggleContainer(audioNormalizerContainer, audioNormalizerFeature.checked);
+        saveSettings();
+    });
+    
     // Value changes
     videoQualitySelect.addEventListener('change', saveSettings);
     videoSpeedSelect.addEventListener('change', saveSettings);
     subtitlesPreferenceSelect.addEventListener('change', saveSettings);
+    audioNormalizerSelect.addEventListener('change', saveSettings);
 
     // Fix for the Apply to Shorts toggle - Add click handler to the parent div
     const applyShortsSpeedParent = applyShortsSpeed.parentElement;

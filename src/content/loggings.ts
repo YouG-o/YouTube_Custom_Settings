@@ -16,6 +16,10 @@ const LOG_STYLES = {
     SUBTITLES: {
         context: '[Subtitles]',
         color: '#FF9800'  // orange
+    },
+    AUDIO_NORMALIZER: {
+        context: '[Audio Normalizer]',
+        color: '#4ade80'  // green
     }
 } as const;
 
@@ -56,3 +60,6 @@ const videoSpeedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
 
 const subtitlesLog = createLogger(LOG_STYLES.SUBTITLES);
 const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
+
+const audioNormalizerLog = createLogger(LOG_STYLES.AUDIO_NORMALIZER);
+const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMALIZER);

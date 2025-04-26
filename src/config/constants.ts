@@ -12,6 +12,10 @@ const DEFAULT_SETTINGS: ExtensionSettings = {
     subtitlesPreference: {
         enabled: false,
         value: 'original'
+    },
+    audioNormalizer: {
+        enabled: false,
+        value: 'medium'  // Options: 'light', 'medium', 'strong'
     }
 };
 

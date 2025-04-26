@@ -15,6 +15,7 @@ interface ExtensionSettings {
     videoQuality: FeatureSetting<string>;
     videoSpeed: SpeedSetting;
     subtitlesPreference: FeatureSetting<string>;
+    audioNormalizer: FeatureSetting<string>; // Utilisation directe sans extension
 }
 
 interface Message {
