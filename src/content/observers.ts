@@ -43,6 +43,7 @@ function setupLoadStartListener() {
         currentSettings?.videoQuality.enabled && handleVideoQuality();
         currentSettings?.videoSpeed.enabled && handleVideoSpeed();
         currentSettings?.subtitlesPreference.enabled && handleSubtitlesPreference();
+        currentSettings?.audioNormalizer.enabled && handleAudioNormalizer();
     };
 
     document.addEventListener('loadstart', loadStartListener, true);

@@ -27,14 +27,15 @@
   
   - **Quality**: Set preferred quality
   - **Speed**: Set default speed value
+  - **Subtitles**: Set default subtitles language preference
+  - **Normalize Volume**: Balance sound volume with automatic or manual activation (via player button)
 
 </div>
 
 
 ###
-
-<div>
-  <h1 align="center">Build it yourself</h1>
+<details>
+  <summary align="center"><h1>Build it yourself</h1></summary>
   
   ### Prerequisites
   - Node.js
@@ -58,6 +59,8 @@
   # Build for both browsers
   npm run package
   ```
+</details>
+
 ###
 
 <h1 align="center">Contribute</h1>

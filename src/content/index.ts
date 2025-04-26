@@ -11,7 +11,8 @@ async function fetchSettings() {
     const defaultSettings = {
         videoQuality: { enabled: false, value: 'auto' },
         videoSpeed: { enabled: false, value: 1, applyToShorts: true },
-        subtitlesPreference: { enabled: false, value: 'original' } // Changed from subtitlePreference to subtitlesPreference
+        subtitlesPreference: { enabled: false, value: 'original' },
+        audioNormalizer: { enabled: false, value: 'medium' }
     };
     
     // If no settings, use defaults
@@ -39,13 +40,20 @@ async function initializeFeatures() {
     currentSettings?.videoSpeed.enabled && initializeVideoSpeed();
     
     currentSettings?.subtitlesPreference.enabled && initializeSubtitlesPreference();
+
+    currentSettings?.audioNormalizer.enabled && initializeAudioNormalizer();
 }
 
 // Initialize functions
 let loadStartListenerInitialized = false;
 
 function initializeLoadStartListener() {
-    if (!loadStartListenerInitialized && (currentSettings?.videoQuality.enabled || currentSettings?.videoSpeed.enabled || currentSettings?.subtitlesPreference.enabled)) {
+    if (!loadStartListenerInitialized && (
+        currentSettings?.videoQuality.enabled || 
+        currentSettings?.videoSpeed.enabled || 
+        currentSettings?.subtitlesPreference.enabled ||
+        currentSettings?.audioNormalizer.enabled
+    )) {
         setupLoadStartListener();
         loadStartListenerInitialized = true;
     }
@@ -75,6 +83,14 @@ function initializeSubtitlesPreference() {
     initializeLoadStartListener();
 };
 
+function initializeAudioNormalizer() {
+    audioNormalizerLog('Initializing Audio Normalizer setting');
+    
+    handleAudioNormalizer();
+    
+    initializeLoadStartListener();
+};
+
 // Apply settings by sending them to the injected script
 function applyStoredSettings() {
     if (!currentSettings) return;
@@ -95,6 +111,10 @@ function applyStoredSettings() {
     
     if (currentSettings.subtitlesPreference.enabled) {
         handleSubtitlesPreference();
+    }
+
+    if (currentSettings.audioNormalizer.enabled) {
+        handleAudioNormalizer();
     }
 }
 
