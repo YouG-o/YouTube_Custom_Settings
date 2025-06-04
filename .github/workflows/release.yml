@@ -1,0 +1,88 @@
+name: Build and Release Extensions
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-web-extensions:
+    name: Build Chrome and Firefox Extensions
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Build Firefox extension
+      run: npm run package:firefox
+      
+    - name: Build Chrome extension
+      run: npm run package:chrome
+      
+    - name: Get package version
+      id: package_version
+      run: echo "PACKAGE_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      
+    - name: Clean Firefox ZIP
+      run: |
+        cd web-ext-artifacts/firefox
+        unzip firefox-yds-*.zip -d temp-firefox
+        rm firefox-yds-*.zip
+        cd temp-firefox
+        # Keep only necessary files
+        mkdir cleaned
+        cp -r dist cleaned/
+        cp LICENSE cleaned/
+        cp manifest.json cleaned/
+        cd cleaned
+        zip -r ../../firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip .
+        cd ../..
+        rm -rf temp-firefox
+        
+    - name: Clean Chrome ZIP
+      run: |
+        cd web-ext-artifacts/chrome
+        unzip chrome-yds-*.zip -d temp-chrome
+        rm chrome-yds-*.zip
+        cd temp-chrome
+        # Keep only necessary files
+        mkdir cleaned
+        cp -r dist cleaned/
+        cp LICENSE cleaned/
+        cp manifest.json cleaned/
+        cd cleaned
+        zip -r ../../chrome-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip .
+        cd ../..
+        rm -rf temp-chrome
+
+    - name: Upload Firefox extension to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./web-ext-artifacts/firefox/firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_content_type: application/zip
+        
+    - name: Upload Chrome extension to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./web-ext-artifacts/chrome/chrome-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: chrome-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_content_type: application/zip

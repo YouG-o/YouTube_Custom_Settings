@@ -34,47 +34,36 @@
 
 
 ###
-<details>
-  <summary align="center"><h1>Build it yourself</h1></summary>
-  
+
+<div>
+  <h1 align="center" id="build-it-yourself">Build it yourself</h1>
+
+  While the extension is available through the official stores, you can also build it from source:
+
   ### Prerequisites
   - Node.js
   - npm
-  
+
   ### Installation
   ```bash
   # Clone the repository
   git clone https://github.com/YouG-o/YouTube_Default_Settings.git
   cd YouTube_Default_Settings
-  
+
   # Install dependencies
   npm install
+  ```
 
+  ```bash
   # Build for Firefox
   npm run package:firefox
+  ```
 
+  ```bash
   # Build for Chromium
   npm run package:chrome
-
-  # Build for both browsers
-  npm run package
   ```
-</details>
-
-###
-
-<h1 align="center">Contribute</h1>
-
-While this project may not receive regular feature updates, contributions are always welcome! If you have ideas for improvements or new features, feel free to:
-
-- Report bugs you encounter
-- Open an issue to discuss potential improvements
-- Fork the repository
-- Create a pull request with your changes
-
-
-All contributions, no matter how small, are greatly appreciated.
-
+</div>
 
 ###
 
