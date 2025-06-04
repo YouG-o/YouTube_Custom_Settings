@@ -27,7 +27,6 @@ const customBoost = document.getElementById('customBoost') as HTMLInputElement;
 const customRatio = document.getElementById('customRatio') as HTMLInputElement;
 const customAttack = document.getElementById('customAttack') as HTMLInputElement;
 const customRelease = document.getElementById('customRelease') as HTMLInputElement;
-
 const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
 
 // Default settings
@@ -74,7 +73,7 @@ async function loadSettings() {
         videoSpeedSelect.value = String(settings.videoSpeed.value);
         toggleContainer(videoSpeedContainer, videoSpeedFeature.checked);
         applyShortsSpeed.checked = settings.videoSpeed.applyToShorts !== false; // Default to true if undefined
-
+        
         subtitlesToggle.checked = settings.subtitlesPreference.enabled;
         subtitlesPreferenceSelect.value = settings.subtitlesPreference.value;
         toggleContainer(subtitlesPreferenceContainer, subtitlesToggle.checked);
@@ -85,12 +84,12 @@ async function loadSettings() {
             // Set dropdown value directly from loaded settings
             audioNormalizerSelect.value = settings.audioNormalizer.value; 
             audioNormalizerManual.checked = settings.audioNormalizer.manualActivation || false;
-
+            
             // Toggle visibility based on the loaded state
             toggleContainer(audioNormalizerContainer, audioNormalizerFeature.checked);
             // Show custom container ONLY if the loaded value is 'custom'
             toggleContainer(audioNormalizerCustomContainer, audioNormalizerSelect.value === 'custom'); 
-
+            
             // Load custom input values if the mode is 'custom' AND custom settings exist
             if (audioNormalizerSelect.value === 'custom' && settings.audioNormalizer.customSettings) {
                 customThreshold.value = settings.audioNormalizer.customSettings.threshold.toString();
@@ -195,7 +194,7 @@ function initEventListeners() {
         toggleContainer(videoSpeedContainer, videoSpeedFeature.checked);
         saveSettings();
     });
-
+    
     subtitlesToggle.addEventListener('change', () => {
         toggleContainer(subtitlesPreferenceContainer, subtitlesToggle.checked);
         saveSettings();
@@ -211,7 +210,7 @@ function initEventListeners() {
     videoSpeedSelect.addEventListener('change', saveSettings);
     subtitlesPreferenceSelect.addEventListener('change', saveSettings);
     audioNormalizerSelect.addEventListener('change', saveSettings);
-
+    
     // Fix for the Apply to Shorts toggle - Add click handler to the parent div
     const applyShortsSpeedParent = applyShortsSpeed.parentElement;
     if (applyShortsSpeedParent) {
@@ -222,13 +221,13 @@ function initEventListeners() {
             applyShortsSpeed.dispatchEvent(new Event('change'));
         });
     }
-
+    
     // Add listener for the checkbox itself as well
     applyShortsSpeed.addEventListener('change', saveSettings);
-
+    
     // Manual activation toggle
     audioNormalizerManual.addEventListener('change', saveSettings);
-
+    
     // Fix for the Audio Normalizer Manual toggle - Add click handler to the parent div
     const audioNormalizerManualParent = audioNormalizerManual.parentElement;
     if (audioNormalizerManualParent) {
@@ -239,13 +238,13 @@ function initEventListeners() {
             audioNormalizerManual.dispatchEvent(new Event('change'));
         });
     }
-
+    
     // Show/hide custom settings when intensity changes
     audioNormalizerSelect.addEventListener('change', () => {
         toggleContainer(audioNormalizerCustomContainer, audioNormalizerSelect.value === 'custom');
         saveSettings();
     });
-
+    
     // Add change listeners for all custom settings
     customThreshold.addEventListener('change', saveSettings);
     customBoost.addEventListener('change', saveSettings);
@@ -258,4 +257,18 @@ function initEventListeners() {
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     initEventListeners();
+});
+
+
+// Adjust tooltip positions if they overflow the viewport
+const tooltipGroups = document.querySelectorAll('.tooltip') as NodeListOf<HTMLDivElement>;
+
+tooltipGroups.forEach((group) => {
+    const bodyWidth = document.body.clientWidth;  
+    const tooltip = group.querySelector('span') as HTMLSpanElement;
+    const tooltipRect = tooltip.getBoundingClientRect();
+    
+    if (tooltipRect.right > bodyWidth) {
+        tooltip.style.marginLeft = `-${tooltipRect.right - bodyWidth + 20}px`;
+    }
 });

@@ -22,8 +22,8 @@
     "copy:scripts": "mkdir -p dist/content/scripts && cp src/content/videoquality/VideoQualityScript.js dist/content/scripts/ && cp src/content/videospeed/VideoSpeedScript.js dist/content/scripts/ && cp src/content/subtitles/SubtitlesScript.js dist/content/scripts/ && cp src/content/audionormalizer/AudioNormalizerScript.js dist/content/scripts/",
     "pre:web-ext:firefox": "cp manifest.firefox.json manifest.json",
     "pre:web-ext:chrome": "cp manifest.chrome.json manifest.json",
-    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=Firefox-YouTube_Default_Settings-${npm_package_version}.zip",
-    "web-ext:chrome": "web-ext build --overwrite-dest -a web-ext-artifacts/chrome --filename=Chrome-YouTube_Default_Settings-${npm_package_version}.zip",
+    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=Firefox-YDS-${npm_package_version}.zip",
+    "web-ext:chrome": "web-ext build --overwrite-dest -a web-ext-artifacts/chrome --filename=Chrome-YDS-${npm_package_version}.zip",
     "post:web-ext": "rm manifest.json",
     "package": "npm run package:firefox && npm run package:chrome && npm run post:web-ext",
     "package:firefox": "npm run build:firefox && npm run web-ext:firefox",
@@ -55,7 +55,8 @@
     "postcss": "^8.4.49",
     "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "web-ext": "^8.7.1"
   },
   "dependencies": {
     "webextension-polyfill": "^0.12.0"
