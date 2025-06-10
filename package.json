@@ -1,6 +1,6 @@
 {
   "name": "yds",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "A small web-browser Add-On allowing you to set default values to YouTube's video player (quality, speed)",
   "scripts": {
     "clean": "rimraf dist/*",
