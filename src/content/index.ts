@@ -78,7 +78,9 @@ function initializeVideoSpeed() {
 function initializeSubtitlesPreference() {
     subtitlesLog('Initializing Subtitles setting');
     
-    handleSubtitlesPreference();
+    setTimeout(() => {
+        handleSubtitlesPreference();
+    }, 500);
     
     initializeLoadStartListener();
 };
