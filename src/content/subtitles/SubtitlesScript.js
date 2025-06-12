@@ -195,7 +195,7 @@
         if (!player) return false;
 
         // Get language preference from localStorage
-        const subtitlesLanguage = localStorage.getItem('subtitlesLanguage') || 'original';
+        const subtitlesLanguage = localStorage.getItem('yds-subtitlesLanguage') || 'original';
         //log(`Using preferred language: ${subtitlesLanguage}`);
 
         // Check if subtitles are disabled
