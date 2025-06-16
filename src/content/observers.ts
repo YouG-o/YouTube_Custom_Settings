@@ -3,21 +3,33 @@ let userInitiatedChange = false;
 // Timeout ID for resetting the user initiated flag
 let userChangeTimeout: number | null = null;
 
-// Setup observer for video loading events
-function setupLoadStartListener() {
-    cleanupLoadStartListener();
+// Video playing listener (for SPA navigation)
+let videoPlayerListener: ((e: Event) => void) | null = null;
+let hasInitialPlayerLoadTriggered = false;
 
-    coreLog('Setting up loadstart listener');
+// Many events, needed to apply settings as soon as possible on initial load
+const allVideoEvents = [
+    'loadstart',
+    'loadedmetadata', 
+    'canplay',
+    'playing',
+    'play',
+    'timeupdate',
+    'seeked'
+];
+let videoEvents = allVideoEvents;
 
-    // First, listen for user interactions with quality menu
+function setupVideoPlayerListener() {
+    cleanUpVideoPlayerListener();
+
+    coreLog('Setting up video player listener');
+
+    // Listen for user interactions with quality menu
     document.addEventListener('click', (e) => {
-        // Check if the click is on the quality menu or its children
         const target = e.target as HTMLElement;
         if (target.closest('.ytp-settings-menu')) {
-            // Set flag when user interacts with settings menu
             userInitiatedChange = true;
             
-            // Reset the flag after a delay (giving time for the loadstart to trigger)
             if (userChangeTimeout) {
                 window.clearTimeout(userChangeTimeout);
             }
@@ -25,38 +37,57 @@ function setupLoadStartListener() {
             userChangeTimeout = window.setTimeout(() => {
                 userInitiatedChange = false;
                 userChangeTimeout = null;
-            }, 2000); // 2 seconds should be enough for the change to take effect
+            }, 2000);
         }
     }, true);
 
-    loadStartListener = function(e: Event) {
+    videoPlayerListener = function(e: Event) {
         if (!(e.target instanceof HTMLVideoElement)) return;
+        if ((e.target as any).srcValue === e.target.src) return;
         
-        // If this loadstart was triggered by a user quality change, don't override it
+        // Skip if user initiated quality change
         if (userInitiatedChange) {
-            coreLog('User initiated quality change detected - not applying default settings');
+            coreLog('User initiated quality change detected - skipping default settings');
             return;
         }
         
-        coreLog('Video source changed - applying settings');
-        
-        currentSettings?.videoQuality.enabled && handleVideoQuality();
-        currentSettings?.videoSpeed.enabled && handleVideoSpeed();
-        currentSettings?.subtitlesPreference.enabled && handleSubtitlesPreference();
-        currentSettings?.audioNormalizer.enabled && handleAudioNormalizer();
-    };
+        coreLog('Video source changed.');
+        coreLog('🎥 Event:', e.type);
 
-    document.addEventListener('loadstart', loadStartListener, true);
+        // Optimize event list after first successful trigger
+        if (!hasInitialPlayerLoadTriggered) {
+            hasInitialPlayerLoadTriggered = true;
+            
+            // Clean up current listeners
+            cleanUpVideoPlayerListener();
+            
+            // Keeps only the essential events for SPA navigation
+            videoEvents = ['loadstart'];
+            coreLog('Optimized video events for SPA navigation');
+            
+            // Re-setup with optimized events for next navigation
+            setupVideoPlayerListener();
+        }
+        
+        applyVideoPlayerSettings();
+    };
+    
+    videoEvents.forEach(eventType => {
+        if (videoPlayerListener) {
+            document.addEventListener(eventType, videoPlayerListener, true);
+        }
+    });
 }
 
-// Cleanup the loadstart listener
-function cleanupLoadStartListener() {
-    if (loadStartListener) {
-        document.removeEventListener('loadstart', loadStartListener, true);
-        loadStartListener = null;
+function cleanUpVideoPlayerListener() {
+    if (videoPlayerListener) {
+        allVideoEvents.forEach(eventType => {
+            document.removeEventListener(eventType, videoPlayerListener!, true);
+        });
+        videoPlayerListener = null;
     }
     
-    // Also clear any timeout and reset flag
+    // Clean up user change tracking
     if (userChangeTimeout) {
         window.clearTimeout(userChangeTimeout);
         userChangeTimeout = null;

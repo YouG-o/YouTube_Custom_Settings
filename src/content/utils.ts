@@ -35,3 +35,10 @@ function migrateSettings(userSettings: any, defaultSettings: any): any {
     
     return settings;
 }
+
+function applyVideoPlayerSettings(): void {
+    currentSettings?.videoQuality.enabled && handleVideoQuality();
+    currentSettings?.videoSpeed.enabled && handleVideoSpeed();
+    currentSettings?.subtitlesPreference.enabled && handleSubtitlesPreference();
+    currentSettings?.audioNormalizer.enabled && handleAudioNormalizer();
+}
