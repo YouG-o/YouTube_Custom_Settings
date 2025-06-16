@@ -11,7 +11,7 @@ async function fetchSettings() {
         videoQuality: { enabled: false, value: 'auto' },
         videoSpeed: { enabled: false, value: 1, applyToShorts: true },
         subtitlesPreference: { enabled: false, value: 'original' },
-        audioNormalizer: { enabled: false, value: 'medium' }
+        audioNormalizer: { enabled: false, value: 'medium', manualActivation: false }
     };
     
     // If no settings, use defaults
@@ -33,14 +33,7 @@ async function initializeFeatures() {
     // Apply settings
     applyStoredSettings();
 
-    // Initialize features
-    currentSettings?.videoQuality.enabled && initializeVideoQuality();
-    
-    currentSettings?.videoSpeed.enabled && initializeVideoSpeed();
-    
-    currentSettings?.subtitlesPreference.enabled && initializeSubtitlesPreference();
-
-    currentSettings?.audioNormalizer.enabled && initializeAudioNormalizer();
+    initializeVideoPlayerListener();
 }
 
 // Initialize functions
@@ -57,38 +50,6 @@ function initializeVideoPlayerListener() {
         videoPlayerListenerInitialized = true;
     }
 }
-
-function initializeVideoQuality() {
-    videoQualityLog('Initializing Video Quality setting');
-    
-    handleVideoQuality();
-
-    initializeVideoPlayerListener();
-};
-
-function initializeVideoSpeed() {
-    videoSpeedLog('Initializing Video Playback Speed setting');
-    
-    handleVideoSpeed();
-    
-    initializeVideoPlayerListener();
-};
-
-function initializeSubtitlesPreference() {
-    subtitlesLog('Initializing Subtitles setting');
-    
-    handleSubtitlesPreference();
-
-    initializeVideoPlayerListener();
-};
-
-function initializeAudioNormalizer() {
-    audioNormalizerLog('Initializing Audio Normalizer setting');
-    
-    handleAudioNormalizer();
-
-    initializeVideoPlayerListener();
-};
 
 // Apply settings by sending them to the injected script
 function applyStoredSettings() {
