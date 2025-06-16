@@ -28,6 +28,15 @@ const customRatio = document.getElementById('customRatio') as HTMLInputElement;
 const customAttack = document.getElementById('customAttack') as HTMLInputElement;
 const customRelease = document.getElementById('customRelease') as HTMLInputElement;
 const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
+const extensionVersionElement = document.getElementById('extensionVersion') as HTMLSpanElement; // Add this line
+
+// Function to display the extension version
+function displayExtensionVersion() {
+    if (extensionVersionElement) {
+        const manifest = browser.runtime.getManifest();
+        extensionVersionElement.textContent = manifest.version;
+    }
+}
 
 // Default settings
 const defaultSettings: ExtensionSettings = {
@@ -255,6 +264,7 @@ function initEventListeners() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    displayExtensionVersion();
     loadSettings();
     initEventListeners();
 });

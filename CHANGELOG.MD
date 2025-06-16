@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Improved subtitle language preference storage by using a consistent, prefixed key (`yds-subtitlesLanguage`) in localStorage to prevent conflicts and ensure reliability.
+- Display the extension version dynamically in the popup and welcome page.
 
 ## [1.2.12] - 2025-06-11
 
