@@ -45,6 +45,7 @@ jobs:
         mkdir cleaned
         cp -r dist cleaned/
         cp LICENSE cleaned/
+        cp CHANGELOG.md cleaned/
         cp manifest.json cleaned/
         cd cleaned
         zip -r ../../firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip .
@@ -61,6 +62,7 @@ jobs:
         mkdir cleaned
         cp -r dist cleaned/
         cp LICENSE cleaned/
+        cp CHANGELOG.md cleaned/
         cp manifest.json cleaned/
         cd cleaned
         zip -r ../../chrome-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip .
