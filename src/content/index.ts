@@ -1,7 +1,6 @@
 coreLog('Content script starting to load...');
 
 let currentSettings: ExtensionSettings | null = null;
-let loadStartListener: ((e: Event) => void) | null = null;
 
 // Fetch settings once and store them in currentSettings
 async function fetchSettings() {
@@ -45,17 +44,17 @@ async function initializeFeatures() {
 }
 
 // Initialize functions
-let loadStartListenerInitialized = false;
+let videoPlayerListenerInitialized = false;
 
-function initializeLoadStartListener() {
-    if (!loadStartListenerInitialized && (
+function initializeVideoPlayerListener() {
+    if (!videoPlayerListenerInitialized && (
         currentSettings?.videoQuality.enabled || 
         currentSettings?.videoSpeed.enabled || 
         currentSettings?.subtitlesPreference.enabled ||
         currentSettings?.audioNormalizer.enabled
     )) {
-        setupLoadStartListener();
-        loadStartListenerInitialized = true;
+        setupVideoPlayerListener();
+        videoPlayerListenerInitialized = true;
     }
 }
 
@@ -64,7 +63,7 @@ function initializeVideoQuality() {
     
     handleVideoQuality();
 
-    initializeLoadStartListener();
+    initializeVideoPlayerListener();
 };
 
 function initializeVideoSpeed() {
@@ -72,23 +71,23 @@ function initializeVideoSpeed() {
     
     handleVideoSpeed();
     
-    initializeLoadStartListener();
+    initializeVideoPlayerListener();
 };
 
 function initializeSubtitlesPreference() {
     subtitlesLog('Initializing Subtitles setting');
     
     handleSubtitlesPreference();
-    
-    initializeLoadStartListener();
+
+    initializeVideoPlayerListener();
 };
 
 function initializeAudioNormalizer() {
     audioNormalizerLog('Initializing Audio Normalizer setting');
     
     handleAudioNormalizer();
-    
-    initializeLoadStartListener();
+
+    initializeVideoPlayerListener();
 };
 
 // Apply settings by sending them to the injected script
