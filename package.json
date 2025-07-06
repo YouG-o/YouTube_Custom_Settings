@@ -12,7 +12,7 @@
     "build": "npm run build:firefox && npm run build:chrome",
     "build:firefox": "npm run clean && npm run create-dirs && npm run pre:web-ext:firefox && npm run build:common && npm run copy:assets",
     "build:chrome": "npm run clean && npm run create-dirs && npm run pre:web-ext:chrome && npm run build:common && npm run copy:assets",
-    "build:common": "npm run build:polyfill && npm run bundle:all && npm run build:css && npm run build:html && npm run copy:scripts && npm run post:build",
+    "build:common": "npm run build:ts && npm run build:polyfill && npm run bundle:all && npm run build:css && npm run build:html && npm run copy:scripts && npm run post:build",
     "build:ts": "tsc -p tsconfig.json",
     "build:css": "tailwindcss -i ./src/styles/main.css -o ./dist/styles/main.css",
     "build:html": "cp src/popup/popup.html dist/popup/ && cp src/popup/welcome.html dist/popup/",
@@ -41,23 +41,24 @@
     "extension",
     "addon",
     "settings",
-    "default"
+    "default",
+    "player"
   ],
   "author": "YouGo",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/YouG-o/YouTube_Default_Settings/issues"
   },
   "homepage": "https://github.com/YouG-o/YouTube_Default_Settings",
   "devDependencies": {
-    "@types/chrome": "^0.0.299",
-    "@types/webextension-polyfill": "^0.12.1",
-    "autoprefixer": "^10.4.20",
+    "@types/chrome": "^0.0.326",
+    "@types/webextension-polyfill": "^0.12.3",
+    "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.2",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.6",
     "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2",
+    "typescript": "^5.8.3",
     "web-ext": "^8.7.1",
     "esbuild": "^0.25.5"
   },

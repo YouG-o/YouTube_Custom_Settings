@@ -1,3 +1,16 @@
+/* 
+ * Copyright (C) 2025-present YouGo (https://github.com/youg-o)
+ * This program is licensed under the GNU Affero General Public License v3.0.
+ * You may redistribute it and/or modify it under the terms of the license.
+ * 
+ * Attribution must be given to the original author.
+ * This program is distributed without any warranty; see the license for details.
+ */
+
+import { coreLog } from "../utils/logger";
+import { applyVideoPlayerSettings } from "../utils/utils";
+
+
 // Flag to track if a quality change was initiated by the user
 let userInitiatedChange = false;
 // Timeout ID for resetting the user initiated flag
@@ -19,7 +32,7 @@ const allVideoEvents = [
 ];
 let videoEvents = allVideoEvents;
 
-function setupVideoPlayerListener() {
+export function setupVideoPlayerListener() {
     cleanUpVideoPlayerListener();
 
     coreLog('Setting up video player listener');
