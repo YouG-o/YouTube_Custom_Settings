@@ -1,3 +1,16 @@
+/* 
+ * Copyright (C) 2025-present YouGo (https://github.com/youg-o)
+ * This program is licensed under the GNU Affero General Public License v3.0.
+ * You may redistribute it and/or modify it under the terms of the license.
+ * 
+ * Attribution must be given to the original author.
+ * This program is distributed without any warranty; see the license for details.
+ */
+
+import { ExtensionSettings } from '../types/types';
+import { DEFAULT_SETTINGS } from '../config/constants';
+
+
 /**
  * This file handles the popup UI interactions and saves settings to storage
  */
@@ -39,33 +52,7 @@ function displayExtensionVersion() {
 }
 
 // Default settings
-const defaultSettings: ExtensionSettings = {
-    videoQuality: {
-        enabled: false,
-        value: 'auto'
-    },
-    videoSpeed: {
-        enabled: false,
-        value: 1,
-        applyToShorts: true
-    },
-    subtitlesPreference: {
-        enabled: false,
-        value: 'original'
-    },
-    audioNormalizer: {
-        enabled: false,
-        value: 'medium',
-        manualActivation: false,
-        customSettings: {
-            threshold: -30,
-            boost: 1.2,
-            ratio: 4,
-            attack: 0.01,
-            release: 0.25
-        }
-    }
-};
+const defaultSettings: ExtensionSettings = DEFAULT_SETTINGS;
 
 // Load saved settings from storage
 async function loadSettings() {

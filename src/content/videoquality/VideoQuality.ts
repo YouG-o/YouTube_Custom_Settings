@@ -1,3 +1,16 @@
+/* 
+ * Copyright (C) 2025-present YouGo (https://github.com/youg-o)
+ * This program is licensed under the GNU Affero General Public License v3.0.
+ * You may redistribute it and/or modify it under the terms of the license.
+ * 
+ * Attribution must be given to the original author.
+ * This program is distributed without any warranty; see the license for details.
+ */
+
+import { ExtensionSettings } from "../../types/types";
+import { videoQualityLog, videoQualityErrorLog } from "../../utils/logger";
+
+
 async function syncVideoQualityPreference() {
     try {
         const result = await browser.storage.local.get('settings');
@@ -14,7 +27,7 @@ async function syncVideoQualityPreference() {
 }
 
 // Call this function during initialization
-async function handleVideoQuality() {   
+export async function handleVideoQuality() {   
     //videoQualityLog('Initializing video quality management');
     await syncVideoQualityPreference(); // Sync quality preference
     const script = document.createElement('script');

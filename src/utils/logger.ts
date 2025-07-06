@@ -1,3 +1,12 @@
+/* 
+ * Copyright (C) 2025-present YouGo (https://github.com/youg-o)
+ * This program is licensed under the GNU Affero General Public License v3.0.
+ * You may redistribute it and/or modify it under the terms of the license.
+ * 
+ * Attribution must be given to the original author.
+ * This program is distributed without any warranty; see the license for details.
+ */
+
 const LOG_PREFIX = '[YPS]';
 
 const LOG_STYLES = {
@@ -49,17 +58,17 @@ function createErrorLogger(category: { context: string; color: string }) {
 }
 
 // Create standard loggers
-const coreLog = createLogger(LOG_STYLES.CORE);
-const coreErrorLog = createErrorLogger(LOG_STYLES.CORE);
+export const coreLog = createLogger(LOG_STYLES.CORE);
+export const coreErrorLog = createErrorLogger(LOG_STYLES.CORE);
 
-const videoQualityLog = createLogger(LOG_STYLES.VIDEO_QUALITY);
-const videoQualityErrorLog = createErrorLogger(LOG_STYLES.VIDEO_QUALITY);
+export const videoQualityLog = createLogger(LOG_STYLES.VIDEO_QUALITY);
+export const videoQualityErrorLog = createErrorLogger(LOG_STYLES.VIDEO_QUALITY);
 
-const videoSpeedLog = createLogger(LOG_STYLES.VIDEO_SPEED);
-const videoSpeedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
+export const videoSpeedLog = createLogger(LOG_STYLES.VIDEO_SPEED);
+export const videoSpeedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
 
-const subtitlesLog = createLogger(LOG_STYLES.SUBTITLES);
-const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
+export const subtitlesLog = createLogger(LOG_STYLES.SUBTITLES);
+export const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
 
-const audioNormalizerLog = createLogger(LOG_STYLES.AUDIO_NORMALIZER);
-const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMALIZER);
+export const audioNormalizerLog = createLogger(LOG_STYLES.AUDIO_NORMALIZER);
+export const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMALIZER);
