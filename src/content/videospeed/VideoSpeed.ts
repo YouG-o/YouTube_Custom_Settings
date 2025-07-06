@@ -1,3 +1,16 @@
+/* 
+ * Copyright (C) 2025-present YouGo (https://github.com/youg-o)
+ * This program is licensed under the GNU Affero General Public License v3.0.
+ * You may redistribute it and/or modify it under the terms of the license.
+ * 
+ * Attribution must be given to the original author.
+ * This program is distributed without any warranty; see the license for details.
+ */
+
+import { ExtensionSettings } from "../../types/types";
+import { videoSpeedLog, videoSpeedErrorLog } from "../../utils/logger";
+
+
 async function syncVideoSpeedPreference() {
     try {
         const result = await browser.storage.local.get('settings');
@@ -15,7 +28,7 @@ async function syncVideoSpeedPreference() {
 }
 
 // Call this function during initialization
-async function handleVideoSpeed() {   
+export async function handleVideoSpeed() {   
     await syncVideoSpeedPreference(); // Sync speed preference
     
     // Check if we should apply speed to current page
