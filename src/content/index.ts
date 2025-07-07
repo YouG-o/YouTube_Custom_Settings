@@ -8,7 +8,7 @@
  */
 
 import { coreLog } from '../utils/logger';
-import { migrateSettings } from '../utils/utils';
+import { loadExtensionSettings } from '../utils/settings';
 import { ExtensionSettings, Message } from '../types/types';
 import { handleVideoSpeed } from './videospeed/VideoSpeed';
 import { handleVideoQuality } from './videoquality/VideoQuality';
@@ -21,34 +21,10 @@ coreLog('Content script starting to load...');
 
 export let currentSettings: ExtensionSettings | null = null;
 
-// Fetch settings once and store them in currentSettings
-async function fetchSettings() {
-    const data = await browser.storage.local.get('settings');
-    
-    // Complete default settings
-    const defaultSettings = {
-        videoQuality: { enabled: false, value: 'auto' },
-        videoSpeed: { enabled: false, value: 1, applyToShorts: true },
-        subtitlesPreference: { enabled: false, value: 'original' },
-        audioNormalizer: { enabled: false, value: 'medium', manualActivation: false }
-    };
-    
-    // If no settings, use defaults
-    if (!data.settings) {
-        currentSettings = defaultSettings as ExtensionSettings;
-        return;
-    }
-    
-    // Migrate settings: ensure all required properties exist
-    const settings = migrateSettings(data.settings, defaultSettings);
-    
-    currentSettings = settings as ExtensionSettings;
-}
-
 // Initialize features based on settings
 async function initializeFeatures() {
-    await fetchSettings();
-    
+    currentSettings = await loadExtensionSettings();
+
     // Apply settings
     applyStoredSettings();
 
