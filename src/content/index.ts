@@ -15,6 +15,7 @@ import { handleVideoQuality } from './videoquality/VideoQuality';
 import { handleSubtitlesPreference } from './subtitles/SubtitlesPreference';
 import { handleAudioNormalizer } from './audionormalizer/AudioNormalizer';
 import { setupVideoPlayerListener } from './observers';
+import { handleVolume } from './volume/Volume';
 
 
 coreLog('Content script starting to load...');
@@ -39,7 +40,8 @@ function initializeVideoPlayerListener() {
         currentSettings?.videoQuality.enabled || 
         currentSettings?.videoSpeed.enabled || 
         currentSettings?.subtitlesPreference.enabled ||
-        currentSettings?.audioNormalizer.enabled
+        currentSettings?.audioNormalizer.enabled ||
+        currentSettings?.volume?.enabled
     )) {
         setupVideoPlayerListener();
         videoPlayerListenerInitialized = true;
@@ -67,9 +69,13 @@ function applyStoredSettings() {
     if (currentSettings.subtitlesPreference.enabled) {
         handleSubtitlesPreference();
     }
-
+    
     if (currentSettings.audioNormalizer.enabled) {
         handleAudioNormalizer();
+    }
+
+    if (currentSettings?.volume?.enabled) {
+        handleVolume();
     }
 }
 
@@ -89,8 +95,8 @@ browser.runtime.onMessage.addListener((message: unknown) => {
 // Type guard for settings messages
 function isSettingsMessage(message: any): message is Message {
     return message && 
-           message.action === 'updateSettings' && 
-           typeof message.settings === 'object';
+    message.action === 'updateSettings' && 
+    typeof message.settings === 'object';
 }
 
 // Start initialization

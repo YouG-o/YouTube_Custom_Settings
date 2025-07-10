@@ -55,7 +55,7 @@ export async function handleAudioNormalizer() {
     }
     
     // If we get here, we need to inject the script
-    audioNormalizerLog('Injecting audio normalizer script');
+    //audioNormalizerLog('Injecting audio normalizer script');
     const script = document.createElement('script');
     script.src = browser.runtime.getURL('dist/content/scripts/AudioNormalizerScript.js');
     document.documentElement.appendChild(script);

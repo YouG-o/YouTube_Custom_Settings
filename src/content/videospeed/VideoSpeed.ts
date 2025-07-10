@@ -51,7 +51,7 @@ export async function handleVideoSpeed() {
     }
     
     // If we get here, we need to inject the script
-    videoSpeedLog('Injecting speed script');
+    //videoSpeedLog('Injecting speed script');
     const script = document.createElement('script');
     script.src = browser.runtime.getURL('dist/content/scripts/VideoSpeedScript.js');
     document.documentElement.appendChild(script);

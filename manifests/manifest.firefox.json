@@ -53,7 +53,8 @@
         "dist/content/scripts/VideoQualityScript.js",
         "dist/content/scripts/VideoSpeedScript.js",
         "dist/content/scripts/SubtitlesScript.js",
-        "dist/content/scripts/AudioNormalizerScript.js"
+        "dist/content/scripts/AudioNormalizerScript.js",
+        "dist/content/scripts/VolumeScript.js"
       ],
       "matches": [
         "*://*.youtube.com/*",

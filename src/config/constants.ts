@@ -35,6 +35,10 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
             attack: 0.01,
             release: 0.25
         }
+    },
+    volume: {
+        enabled: false,
+        value: 100
     }
 };
 
