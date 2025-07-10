@@ -8,7 +8,7 @@
  */
 
 import { ExtensionSettings } from '../types/types';
-import { DEFAULT_SETTINGS } from '../config/constants';
+import { loadExtensionSettings } from '../utils/settings';
 
 
 /**
@@ -51,14 +51,10 @@ function displayExtensionVersion() {
     }
 }
 
-// Default settings
-const defaultSettings: ExtensionSettings = DEFAULT_SETTINGS;
-
 // Load saved settings from storage
 async function loadSettings() {
     try {
-        const data = await browser.storage.local.get('settings');
-        const settings = data.settings as ExtensionSettings || defaultSettings;
+        const settings = await loadExtensionSettings();
         
         // Apply saved settings to UI
         videoQualityFeature.checked = settings.videoQuality.enabled;
@@ -68,7 +64,7 @@ async function loadSettings() {
         videoSpeedFeature.checked = settings.videoSpeed.enabled;
         videoSpeedSelect.value = String(settings.videoSpeed.value);
         toggleContainer(videoSpeedContainer, videoSpeedFeature.checked);
-        applyShortsSpeed.checked = settings.videoSpeed.applyToShorts !== false; // Default to true if undefined
+        applyShortsSpeed.checked = settings.videoSpeed.applyToShorts !== false;
         
         subtitlesToggle.checked = settings.subtitlesPreference.enabled;
         subtitlesPreferenceSelect.value = settings.subtitlesPreference.value;

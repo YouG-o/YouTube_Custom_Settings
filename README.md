@@ -1,42 +1,45 @@
 <div align="center">
-    <img src="./assets/icons/icon.png" alt="Project description" height="120"/>
+
+  ![Add-On icon](./assets/images/icon.png)
+
+  ###
+
+  # YouTube Default Settings
+
+  A small web-browser Add-On allowing you to set default values to YouTube's video player.
+
+  <br>
+
+
+  [![Available on Mozzila](./assets/images/firefox.png)](https://addons.mozilla.org/firefox/addon/youtube-default-settings/)
+  [![Available on Chrome Web Store](./assets/images/chrome.png)](https://chromewebstore.google.com/detail/youtube-default-settings/dgbmcgmjlphkgepbmjlhohabmhlhhchn)
+
+
 </div>
 
+
 ###
-
-<h1 align="center">YouTube Default Settings</h1>
-
-<p align="center">
-  A small web-browser Add-On allowing you to set default values to YouTube's video player.
-</p>
 
 <div align="center">
-  <a href="https://addons.mozilla.org/firefox/addon/youtube-default-settings/" target="_blank">
-    <img src="./assets/images/firefox.png" height="40" alt="Available on Mozilla Firefox" title="Available on Mozilla Firefox"/>
-  </a>  
-   <a href="https://chromewebstore.google.com/detail/youtube-default-settings/dgbmcgmjlphkgepbmjlhohabmhlhhchn" target="_blank">
-    <img src="./assets/images/chrome.png" height="40" alt="Available on Chrome Web Store" title="Available on Chrome Web Store"/>
-  </a>
-  <br>
+
+  ## Features:
+
 </div>
-
-###
-
-<div>
-  <h1 align="center">Features :</h1>
   
   - **Quality**: Set preferred quality
   - **Speed**: Set default speed value
   - **Subtitles**: Set default subtitles language preference
   - **Normalize Volume**: Balance sound volume with automatic or manual activation (via player button)
 
-</div>
-
 
 ###
 
-<div>
-  <h1 align="center" id="build-it-yourself">Build it yourself</h1>
+
+<div align="center">
+  
+  ## Build it yourself
+
+</div>
 
   While the extension is available through the official stores, you can also build it from source:
 
@@ -63,15 +66,15 @@
   # Build for Chromium
   npm run package:chrome
   ```
-</div>
+
 
 ###
 
 <div align="center">
-  <h2>License</h2>
-  This project is licensed under the <a href="LICENSE">GNU Affero General Public License v3.0</a>.
-  <br>
-  Any reuse, modification or distribution of this code must credit the original author.
-  <br>
-</div>
 
+  # LICENSE
+
+
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE)
+
+</div>
