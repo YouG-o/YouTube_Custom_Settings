@@ -26,10 +26,11 @@
 
 </div>
   
-  - **Quality**: Set preferred quality
-  - **Speed**: Set default speed value
-  - **Subtitles**: Set default subtitles language preference
-  - **Normalize Volume**: Balance sound volume with automatic or manual activation (via player button)
+  - **Quality**
+  - **Speed**
+  - **Subtitles**
+  - **Audio Normalizer**: Balance sound volume with automatic or manual activation (via player button)
+  - **Volume**
 
 
 ###

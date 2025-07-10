@@ -33,6 +33,10 @@ const audioNormalizerSelect = document.getElementById('audioNormalizerValue') as
 const audioNormalizerManual = document.getElementById('audioNormalizerManual') as HTMLInputElement;
 const audioNormalizerContainer = document.getElementById('audioNormalizerContainer') as HTMLDivElement;
 
+const volumeFeature = document.getElementById('volumeFeature') as HTMLInputElement;
+const volumeValue = document.getElementById('volumeValue') as HTMLInputElement;
+const volumeContainer = document.getElementById('volumeContainer') as HTMLDivElement;
+
 // Custom settings
 const audioNormalizerCustomContainer = document.getElementById('audioNormalizerCustomContainer') as HTMLDivElement;
 const customThreshold = document.getElementById('customThreshold') as HTMLInputElement;
@@ -91,6 +95,13 @@ async function loadSettings() {
                 customRelease.value = settings.audioNormalizer.customSettings.release.toString();
             }
         }
+
+        // Volume settings
+        if (settings.volume) {
+            volumeFeature.checked = settings.volume.enabled;
+            volumeValue.value = String(settings.volume.value);
+            toggleContainer(volumeContainer, volumeFeature.checked);
+        }
     } catch (error) {
         // Log error if loading settings fails
         console.error('Failed to load settings:', error);
@@ -125,6 +136,10 @@ async function saveSettings() {
                 attack: parseFloat(customAttack.value),
                 release: parseFloat(customRelease.value)
             } : undefined
+        },
+        volume: {
+            enabled: volumeFeature.checked,
+            value: parseFloat(volumeValue.value)
         }
     };
     
@@ -197,12 +212,18 @@ function initEventListeners() {
         saveSettings();
     });
     
+    volumeFeature.addEventListener('change', () => {
+        toggleContainer(volumeContainer, volumeFeature.checked);
+        saveSettings();
+    });
+
     // Value changes
     videoQualitySelect.addEventListener('change', saveSettings);
     videoSpeedSelect.addEventListener('change', saveSettings);
     subtitlesPreferenceSelect.addEventListener('change', saveSettings);
     audioNormalizerSelect.addEventListener('change', saveSettings);
-    
+    volumeValue.addEventListener('change', saveSettings);
+
     // Fix for the Apply to Shorts toggle - Add click handler to the parent div
     const applyShortsSpeedParent = applyShortsSpeed.parentElement;
     if (applyShortsSpeedParent) {
