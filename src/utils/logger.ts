@@ -29,6 +29,10 @@ const LOG_STYLES = {
     AUDIO_NORMALIZER: {
         context: '[Audio Normalizer]',
         color: '#4ade80'  // green
+    },
+    VOLUME: {
+        context: '[Volume]',
+        color: '#60a5fa'  // light blue
     }
 } as const;
 
@@ -72,3 +76,6 @@ export const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
 
 export const audioNormalizerLog = createLogger(LOG_STYLES.AUDIO_NORMALIZER);
 export const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMALIZER);
+
+export const volumeLog = createLogger(LOG_STYLES.VOLUME);
+export const volumeErrorLog = createErrorLogger(LOG_STYLES.VOLUME);
