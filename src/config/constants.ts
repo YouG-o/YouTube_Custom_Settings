@@ -38,7 +38,7 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     },
     volume: {
         enabled: false,
-        value: 100
+        value: 50
     }
 };
 
