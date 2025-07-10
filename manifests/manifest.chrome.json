@@ -1,56 +1,57 @@
 {
-    "manifest_version": 3,
-    "name": "YouTube Default Settings",
-    "version": "1.2.20",
-    "description": "Allows you to set default values to YouTube's video player (quality, speed, subtitles, audio normalizer)",
-    "icons": {
+  "manifest_version": 3,
+  "name": "YouTube Default Settings",
+  "version": "1.2.20",
+  "description": "Allows you to set default values to YouTube's video player (quality, speed, subtitles, audio normalizer)",
+  "icons": {
+    "48": "dist/assets/icons/icon.png",
+    "96": "dist/assets/icons/icon.png"
+  },
+
+  "action": {
+    "default_icon": {
       "48": "dist/assets/icons/icon.png",
       "96": "dist/assets/icons/icon.png"
     },
-  
-    "action": {
-      "default_icon": {
-        "48": "dist/assets/icons/icon.png",
-        "96": "dist/assets/icons/icon.png"
-      },
-      "default_popup": "dist/popup/popup.html",
-      "default_title": "YDS"
-    },
-  
-    "permissions": [
-      "storage"
-    ],
-  
-    "host_permissions": [
-      "*://*.youtube.com/*",
-      "*://*.youtube-nocookie.com/*"
-    ],
-  
-    "content_scripts": [
-      {
-        "matches": [
-          "*://*.youtube.com/*",
-          "*://*.youtube-nocookie.com/*"
-        ],
-        "js": ["dist/browser-polyfill.js", "dist/content/content.js"]
-      }
-    ],
-  
-    "background": {
-      "service_worker": "dist/background/background.js"
-    },
-  
-    "web_accessible_resources": [{
-        "resources": [
-          "dist/content/scripts/VideoQualityScript.js",
-          "dist/content/scripts/VideoSpeedScript.js",
-          "dist/content/scripts/SubtitlesScript.js",
-          "dist/content/scripts/AudioNormalizerScript.js",
-          "dist/content/scripts/VolumeScript.js"
-        ],
-        "matches": [
-          "*://*.youtube.com/*",
-          "*://*.youtube-nocookie.com/*"
-        ]
-    }]
+    "default_popup": "dist/popup/popup.html",
+    "default_title": "YDS"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.youtube-nocookie.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ],
+      "js": ["dist/browser-polyfill.js", "dist/content/content.js"]
+    }
+  ],
+
+  "background": {
+    "service_worker": "dist/background/background.js"
+  },
+
+  "web_accessible_resources": [{
+      "resources": [
+        "dist/content/scripts/VideoQualityScript.js",
+        "dist/content/scripts/VideoSpeedScript.js",
+        "dist/content/scripts/SubtitlesScript.js",
+        "dist/content/scripts/AudioNormalizerScript.js",
+        "dist/content/scripts/VolumeScript.js"
+      ],
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.youtube-nocookie.com/*"
+      ]
+  }],
+  "options_page": "dist/popup/settings.html"
 }

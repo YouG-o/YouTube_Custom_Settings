@@ -10,23 +10,26 @@
     <body class="bg-gray-700 text-white">
         <div class="max-w-3xl mx-auto p-6">
             <!-- Header -->
-            <header class="pb-6 border-b border-gray-600 mb-8">
-                <h1 class="text-2xl font-medium text-white flex items-center gap-3 justify-center mb-4">
-                    <a href="https://github.com/YouG-o" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
-                        <img src="../assets/icons/icon.png" alt="Logo" class="w-8 h-8">
-                        YouTube Default Settings
-                    </a>
-                </h1>
-                <p class="text-center text-gray-300 mb-6">
-                    Thank you for installing YouTube Default Settings! Please configure your preferences below.
+        <header class="pb-4 border-b border-gray-600">
+            <h1 class="text-2xl font-semibold text-white flex items-center gap-2 mb-2" id="pageTitle">
+                <img src="../assets/icons/icon.png" alt="Logo" class="w-8 h-8">
+                YouTube Default Settings
+            </h1>
+            <div id="welcomeMessage" class="hidden">
+                <p class="text-md text-gray-300 mb-1">
+                    Thanks for installing! Here you can configure how the extension behaves.
                 </p>
-                <div class="text-sm text-gray-400 flex items-center justify-center gap-2">
-                    Created by YouGo
-                    <a href="https://github.com/YouG-o" target="_blank" rel="noopener noreferrer">
-                        <img src="../assets/icons/Github-Dark.svg" alt="GitHub" title="GitHub" class="w-5 h-5 hover:opacity-80 transition-opacity">
-                    </a>
-                </div>
-            </header>
+                <p class="text-sm text-gray-400">
+                    These settings will help you keep YouTube content in its original form.
+                </p>
+            </div>
+            <div class="mt-3 text-xs text-gray-400 flex items-center gap-1">
+                Created by YouGo
+                <a href="https://github.com/YouG-o" target="_blank" rel="noopener noreferrer">
+                    <img src="../assets/icons/Github-Dark.svg" alt="GitHub" title="GitHub" class="w-4 h-4 hover:opacity-80 transition-opacity">
+                </a>
+            </div>
+        </header>
 
             <main>
                 <div class="space-y-6">
@@ -236,29 +239,38 @@
                             </div>
                         </div>
                     </div>
-                    </div>
+                    
                     <!-- Default Volume Feature -->
-                    <div class="p-3 rounded-lg border border-gray-600 hover:bg-gray-600 transition-colors">
+                    <div class="p-5 rounded-lg border border-gray-600 hover:bg-gray-600/30 transition-colors">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <h2 class="text-sm font-medium text-white">Default Volume</h2>
+                                <h2 class="text-lg font-medium text-white">Default Volume</h2>
                                 <div class="relative group tooltip">
-                                    <svg class="w-4 h-4 text-gray-400 cursor-help group hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                    <svg class="w-5 h-5 text-gray-400 cursor-help group hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                                     </svg>
-                                    <span class="absolute z-20 bottom-full left-0 ml-[-20px] mb-2 w-[220px] px-3 py-2 text-xs text-white bg-gray-900/95 rounded-md shadow-lg whitespace-normal opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
-                                        Set your default volume level
+                                    <span class="absolute z-20 bottom-full left-0 ml-[-20px] mb-2 w-[220px] px-3 py-2 text-sm text-white bg-gray-900/95 rounded-md shadow-lg whitespace-normal opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                                        Set your default volume level (as a percentage)
                                     </span>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" class="sr-only peer" id="volumeFeature">
-                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </div>
-                        <div class="mt-2" id="volumeContainer">
-                            <input type="number" id="volumeValue" min="0" max="100" value="100" class="w-full bg-gray-800 text-white text-sm rounded-lg px-2 py-1 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                        <div class="mt-4 relative w-full" id="volumeContainer">
+                            <input 
+                                type="number" 
+                                id="volumeValue" 
+                                min="0" 
+                                max="100" 
+                                value="100" 
+                                class="w-full bg-gray-800 text-white text-base rounded-lg px-4 py-2 pr-10 border border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 text-base pointer-events-none select-none">%</span>
                         </div>
+                    </div>
                     </div>
                 </div>
             </main>
