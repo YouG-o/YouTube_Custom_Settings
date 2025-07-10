@@ -32,6 +32,10 @@ export interface ExtensionSettings {
     videoSpeed: SpeedSetting;
     subtitlesPreference: FeatureSetting<string>;
     audioNormalizer: AudioNormalizerSetting;
+    volume: {
+        enabled: boolean;
+        value: number;
+    };
 }
 
 export interface Message {

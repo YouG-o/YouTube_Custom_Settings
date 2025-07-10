@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Feat
+- Add a Default Volume feature
+
 ### Changed
 - Refactored the entire codebase to use explicit ES module imports/exports in all files.
 
