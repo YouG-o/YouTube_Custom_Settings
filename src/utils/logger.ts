@@ -7,7 +7,7 @@
  * This program is distributed without any warranty; see the license for details.
  */
 
-const LOG_PREFIX = '[YPS]';
+const LOG_PREFIX = '[YDS]';
 
 const LOG_STYLES = {
     CORE: {
