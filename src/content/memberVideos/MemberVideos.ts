@@ -21,15 +21,16 @@ export function hideMembersOnlyVideos() {
         if (membersBadge) {
             // Hide the parent grid item to avoid breaking the grid layout
             const parentItem = item.closest('ytd-rich-item-renderer');
-            if (parentItem) {
-                (parentItem as HTMLElement).style.display = 'none';
-            } else {
-                (item as HTMLElement).style.display = 'none';
+            const target = parentItem ? parentItem as HTMLElement : item as HTMLElement;
+            if (target.style.display !== 'none') {
+                target.style.display = 'none';
+                hiddenCount++;
             }
-            hiddenCount++;
         }
     });
 
     // Log how many videos were hidden (for debugging)
-    memberVideosLog(`Hidden ${hiddenCount} members-only videos`);
+    if (hiddenCount > 0) {
+        memberVideosLog(`Hidden ${hiddenCount} members-only videos`);
+    }
 }
