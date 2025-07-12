@@ -16,6 +16,7 @@ import { handleSubtitlesPreference } from './subtitles/SubtitlesPreference';
 import { handleAudioNormalizer } from './audionormalizer/AudioNormalizer';
 import { setupVideoPlayerListener } from './observers';
 import { handleVolume } from './volume/Volume';
+import { setupUrlObserver, setupVisibilityChangeListener } from './observers';
 
 
 coreLog('Content script starting to load...');
@@ -30,6 +31,11 @@ async function initializeFeatures() {
     applyStoredSettings();
 
     initializeVideoPlayerListener();
+
+    if(currentSettings.hideMembersOnlyVideos.enabled){
+        setupUrlObserver();
+        setupVisibilityChangeListener();
+    }
 }
 
 // Initialize functions

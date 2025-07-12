@@ -39,6 +39,9 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     volume: {
         enabled: false,
         value: 50
+    },
+    hideMembersOnlyVideos: {
+        enabled: false
     }
 };
 

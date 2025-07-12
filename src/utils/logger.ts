@@ -33,6 +33,10 @@ const LOG_STYLES = {
     VOLUME: {
         context: '[Volume]',
         color: '#60a5fa'  // light blue
+    },
+    MEMBER_VIDEOS: {
+        context: '[Member Videos]',
+        color: '#8b5cf6'  // indigo
     }
 } as const;
 
@@ -79,3 +83,6 @@ export const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMAL
 
 export const volumeLog = createLogger(LOG_STYLES.VOLUME);
 export const volumeErrorLog = createErrorLogger(LOG_STYLES.VOLUME);
+
+export const memberVideosLog = createLogger(LOG_STYLES.MEMBER_VIDEOS);
+export const memberVideosErrorLog = createErrorLogger(LOG_STYLES.MEMBER_VIDEOS);
