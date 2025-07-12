@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-07-12
+
+### Feat
+- New feature : Hide members only videos
+
 ## [1.3.0] - 2025-07-10
 
 ### Feat
@@ -39,7 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Default_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.3.0
 [1.2.2]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.2.2
 [1.2.12]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.0...v1.2.12

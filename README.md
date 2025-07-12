@@ -10,7 +10,6 @@
 
   <br>
 
-
   [![Available on Mozzila](./assets/images/firefox.png)](https://addons.mozilla.org/firefox/addon/youtube-default-settings/)
   [![Available on Chrome Web Store](./assets/images/chrome.png)](https://chromewebstore.google.com/detail/youtube-default-settings/dgbmcgmjlphkgepbmjlhohabmhlhhchn)
 
