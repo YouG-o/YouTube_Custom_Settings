@@ -47,6 +47,8 @@ const customRelease = document.getElementById('customRelease') as HTMLInputEleme
 const applyShortsSpeed = document.getElementById('applyShortsSpeed') as HTMLInputElement;
 const extensionVersionElement = document.getElementById('extensionVersion') as HTMLSpanElement; // Add this line
 
+const hideMembersOnlyVideosFeature = document.getElementById('hideMembersOnlyVideosFeature') as HTMLInputElement;
+
 // Function to display the extension version
 function displayExtensionVersion() {
     if (extensionVersionElement) {
@@ -102,6 +104,11 @@ async function loadSettings() {
             volumeValue.value = String(settings.volume.value);
             toggleContainer(volumeContainer, volumeFeature.checked);
         }
+
+        // Hide Members Only Videos setting
+        if (settings.hideMembersOnlyVideos) {
+            hideMembersOnlyVideosFeature.checked = settings.hideMembersOnlyVideos.enabled;
+        }
     } catch (error) {
         // Log error if loading settings fails
         console.error('Failed to load settings:', error);
@@ -140,7 +147,10 @@ async function saveSettings() {
         volume: {
             enabled: volumeFeature.checked,
             value: parseFloat(volumeValue.value)
-        }
+        },
+        hideMembersOnlyVideos: {
+            enabled: hideMembersOnlyVideosFeature.checked
+        },
     };
     
     try {
@@ -264,6 +274,9 @@ function initEventListeners() {
     customRatio.addEventListener('change', saveSettings);
     customAttack.addEventListener('change', saveSettings);
     customRelease.addEventListener('change', saveSettings);
+
+    // Hide Members Only Videos feature
+    hideMembersOnlyVideosFeature.addEventListener('change', saveSettings);
 }
 
 // Initialize on page load

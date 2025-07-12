@@ -8,6 +8,7 @@
  */
 
 import { coreLog } from "../utils/logger";
+import { currentSettings } from "./index";
 import { applyVideoPlayerSettings } from "../utils/utils";
 import { hideMembersOnlyVideos } from "./memberVideos/MemberVideos";
 
@@ -109,6 +110,9 @@ function cleanUpVideoPlayerListener() {
     userInitiatedChange = false;
 }
 
+
+
+
 let homeObserver: MutationObserver | null = null;
 let lastHomeRefresh = 0;
 const THROTTLE_DELAY = 500;
@@ -174,8 +178,6 @@ function cleanupPageVideosObserver() {
     lastHomeRefresh = 0;
 }
 
-setupUrlObserver()
-
 // URL OBSERVER -----------------------------------------------------------
 export function setupUrlObserver() {
     coreLog('Setting up URL observer');    
@@ -232,7 +234,7 @@ function handleUrlChange() {
     if (isChannelPage) {
         // --- Handle all new channel page types (videos, featured, shorts, etc.)
         coreLog(`[URL] Detected channel page`);
-        pageVideosObserver();
+        currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
         return;
     }
     
@@ -242,15 +244,15 @@ function handleUrlChange() {
         break;
         case '/': // --- Home page
             coreLog(`[URL] Detected home page`);
-            pageVideosObserver();
+            currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
             break;        
         case '/feed/subscriptions': // --- Subscriptions page
             coreLog(`[URL] Detected subscriptions page`);
-            pageVideosObserver();
+            currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
             break;
         case '/feed/trending':  // --- Trending page
             coreLog(`[URL] Detected trending page`);
-            pageVideosObserver();
+            currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
             break;
         case '/feed/history':  // --- History page
             coreLog(`[URL] Detected history page`);
@@ -264,5 +266,34 @@ function handleUrlChange() {
         case '/embed': // --- Embed video page
             coreLog(`[URL] Detected embed video page`);
             break;
+    }
+}
+
+
+// --- Visibility change listener to refresh titles when tab becomes visible
+let visibilityChangeListener: ((event: Event) => void) | null = null;
+
+export function setupVisibilityChangeListener(): void {
+    // Clean up existing listener first
+    cleanupVisibilityChangeListener();
+    
+    coreLog('Setting up visibility change listener');
+    
+    visibilityChangeListener = () => {
+        // Only execute when tab becomes visible again
+        if (document.visibilityState === 'visible') {
+            coreLog('Tab became visible, refreshing titles to fix potential duplicates');
+            currentSettings?.hideMembersOnlyVideos.enabled && hideMembersOnlyVideos();
+        }
+    };
+    
+    // Add the event listener
+    document.addEventListener('visibilitychange', visibilityChangeListener);
+}
+
+function cleanupVisibilityChangeListener(): void {
+    if (visibilityChangeListener) {
+        document.removeEventListener('visibilitychange', visibilityChangeListener);
+        visibilityChangeListener = null;
     }
 }
