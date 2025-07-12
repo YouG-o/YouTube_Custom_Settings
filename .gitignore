@@ -37,3 +37,7 @@ web-ext-artifacts/
 
 # Dev tests manifest
 /manifest.json
+
+# Reviewer source package for Mozilla
+reviewer-source*.zip
+/reviewer-source

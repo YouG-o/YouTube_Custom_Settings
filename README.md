@@ -30,6 +30,7 @@
   - **Subtitles**
   - **Audio Normalizer**: Balance sound volume with automatic or manual activation (via player button)
   - **Volume**
+  - **Members-Only videos**: Hide members-only videos
 
 
 ###
@@ -67,6 +68,26 @@
   npm run package:chrome
   ```
 
+
+###
+
+<div align="center">
+  
+  # Support This Project
+
+</div>  
+
+This extension is completely free and open-source. If you find it valuable, you can support its development with a pay-what-you-want contribution!
+
+<br>
+
+<div align="center">
+
+  [![Support me on Ko-Fi](./assets/images/support_me_on_kofi.png)](https://ko-fi.com/yougo)
+    
+  [![Support with Cryptocurrency](https://img.shields.io/badge/Support-Cryptocurrency-8256D0?style=for-the-badge&logo=bitcoin&logoColor=white)](https://youtube-no-translation.vercel.app/?donate=crypto)
+
+</div>
 
 ###
 
