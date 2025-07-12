@@ -36,6 +36,9 @@ export interface ExtensionSettings {
         enabled: boolean;
         value: number;
     };
+    hideMembersOnlyVideos: {
+        enabled: boolean;
+    }
 }
 
 export interface Message {
