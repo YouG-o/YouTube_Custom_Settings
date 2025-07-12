@@ -1,7 +1,6 @@
 {
   "manifest_version": 3,
   "name": "YouTube Default Settings",
-  "version": "1.3.0",
   "description": "Allows you to set default values to YouTube's video player (quality, speed, subtitles, audio normalizer)",
   "icons": {
     "48": "dist/assets/icons/icon.png",
