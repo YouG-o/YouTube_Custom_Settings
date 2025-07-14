@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-web-extensions:
-    name: Build Chrome and Firefox Extensions
+    name: Build Chromium and Firefox Extensions
     runs-on: ubuntu-latest
     
     steps:
@@ -28,8 +28,8 @@ jobs:
     - name: Build Firefox extension
       run: npm run package:firefox
       
-    - name: Build Chrome extension
-      run: npm run package:chrome
+    - name: Build Chromium extension
+      run: npm run package:chromium
       
     - name: Get package version
       id: package_version
@@ -44,13 +44,13 @@ jobs:
         asset_path: ./web-ext-artifacts/firefox/firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
         asset_name: firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
         asset_content_type: application/zip
-        
-    - name: Upload Chrome extension to release
+
+    - name: Upload Chromium extension to release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./web-ext-artifacts/chrome/chrome-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
-        asset_name: chrome-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_path: ./web-ext-artifacts/chromium/chromium-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: chromium-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
         asset_content_type: application/zip
