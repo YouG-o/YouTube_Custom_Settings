@@ -64,8 +64,8 @@
   ```
 
   ```bash
-  # Build for Chromium
-  npm run package:chrome
+  # Build for Chromium Browsers
+  npm run package:chromium
   ```
 
 

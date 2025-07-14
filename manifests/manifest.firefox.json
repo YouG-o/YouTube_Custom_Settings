@@ -1,5 +1,6 @@
 {
   "manifest_version": 3,
+  "author": "YouGo",
   "name": "YouTube Default Settings",
   "description": "Allows you to set default values to YouTube's video player (quality, speed, subtitles, audio normalizer)",
   "icons": {
