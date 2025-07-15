@@ -8,10 +8,9 @@
 (() => {
     const LOG_PREFIX = '[YDS]';
     const LOG_CONTEXT = '[VIDEO QUALITY]';
-    const LOG_COLOR = '#fcd34d';  // Light yellow
-    const ERROR_COLOR = '#F44336';  // Red
+    const LOG_COLOR = '#fcd34d';
+    const ERROR_COLOR = '#F44336';
 
-    // Simplified logger functions
     function log(message, ...args) {
         console.log(
             `%c${LOG_PREFIX}${LOG_CONTEXT} ${message}`,
@@ -23,43 +22,89 @@
     function errorLog(message, ...args) {
         console.log(
             `%c${LOG_PREFIX}${LOG_CONTEXT} %c${message}`,
-            `color: ${LOG_COLOR}`,  // Keep context color for prefix
-            `color: ${ERROR_COLOR}`,  // Red color for error message
+            `color: ${LOG_COLOR}`,
+            `color: ${ERROR_COLOR}`,
             ...args
         );
     }
 
+    // Ordered list of quality levels from lowest to highest
+    const QUALITY_ORDER = [
+        'tiny',    // 144p
+        'small',   // 240p
+        'medium',  // 360p
+        'large',   // 480p
+        'hd720',   // 720p
+        'hd1080',  // 1080p
+        'hd1440',  // 1440p
+        'hd2160',  // 2160p (4K)
+    ];
+
+    /**
+     * Get the closest available quality to the preferred one.
+     * If the preferred quality is not available, returns the next lower available quality.
+     * @param {string} preferred - The preferred quality label.
+     * @param {string[]} available - The list of available quality labels.
+     * @returns {string|null} The closest available quality label, or null if none found.
+     */
+    function getClosestAvailableQuality(preferred, available) {
+        if (available.includes(preferred)) return preferred;
+        const prefIndex = QUALITY_ORDER.indexOf(preferred);
+        if (prefIndex === -1) return available[0] || null;
+        for (let i = prefIndex - 1; i >= 0; i--) {
+            if (available.includes(QUALITY_ORDER[i])) {
+                return QUALITY_ORDER[i];
+            }
+        }
+        return available[0] || null;
+    }
+
+    /**
+     * Set the video quality to the preferred or closest available quality.
+     * Reads user preference from localStorage.
+     * Logs the result in the console.
+     * @returns {boolean} True if a quality was set, false otherwise.
+     */
     function setVideoQuality() {
-        // Try to get the specified player
         let targetId = 'movie_player';
         if (window.location.pathname.startsWith('/shorts')) {
             targetId = 'shorts-player';
         } else if (window.location.pathname.startsWith('/@')) {
-            targetId = 'c4-player'; // player for channels main video
-        } 
+            targetId = 'c4-player';
+        }
         const player = document.getElementById(targetId);
         if (!player) return false;
 
-        // Get quality preference from localStorage
         const qualityEnabled = localStorage.getItem('yds-quality-enabled') === 'true';
         if (!qualityEnabled) return false;
 
         const preferredQuality = localStorage.getItem('yds-quality-value') || 'auto';
-        
+
         try {
-            // Quality values: 'tiny', 'small', 'medium', 'large', 'hd720', 'hd1080', 'hd1440', 'hd2160'
             if (preferredQuality === 'auto') {
                 log('Setting quality to auto (not restricting)');
                 return true;
             }
-            
-            // Set quality for both current video and future ones
+
+            if (typeof player.getAvailableQualityLevels !== 'function') {
+                errorLog('Player does not support quality listing.');
+                return false;
+            }
+            const availableQualities = player.getAvailableQualityLevels();
+            //log('Available qualities:', availableQualities);
+
+            const qualityToSet = getClosestAvailableQuality(preferredQuality, availableQualities);
+            if (!qualityToSet) {
+                errorLog('No available quality to set.');
+                return false;
+            }
+
             if (player.setPlaybackQualityRange) {
-                player.setPlaybackQualityRange(preferredQuality, preferredQuality);
-                log('Quality set to:', preferredQuality);
+                player.setPlaybackQualityRange(qualityToSet, qualityToSet);
+                log('Quality set to:', qualityToSet);
                 return true;
             }
-            
+
             return false;
         } catch (error) {
             errorLog(`Failed to set quality: ${error.message}`);
@@ -67,6 +112,5 @@
         }
     }
 
-    // Execute immediately when script is injected
     setVideoQuality();
 })();
