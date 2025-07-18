@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-07-18
+
 ### Changed
 - Now applies the closest available video quality if the preferred quality is unavailable.
+
+### Added
+- Add request interception method to filter members-only videos before DOM rendering.
 
 ## [1.4.0] - 2025-07-12
 
@@ -47,7 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Default_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.3.0
 [1.2.2]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.2.2
