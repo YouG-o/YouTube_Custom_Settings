@@ -34,3 +34,10 @@ export function hideMembersOnlyVideos() {
         memberVideosLog(`Hidden ${hiddenCount} members-only videos`);
     }
 }
+
+export function injectFetchInterceptor() {
+    const script = document.createElement('script');
+    script.src = browser.runtime.getURL('dist/content/scripts/MembersFetchInterceptorScript.js');
+    document.documentElement.appendChild(script);
+    script.remove();
+}

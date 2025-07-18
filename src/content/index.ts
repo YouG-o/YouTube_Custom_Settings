@@ -7,7 +7,7 @@
  * This program is distributed without any warranty; see the license for details.
  */
 
-import { coreLog } from '../utils/logger';
+import { coreLog, coreErrorLog } from '../utils/logger';
 import { loadExtensionSettings } from '../utils/settings';
 import { ExtensionSettings, Message } from '../types/types';
 import { handleVideoSpeed } from './videospeed/VideoSpeed';
@@ -17,6 +17,7 @@ import { handleAudioNormalizer } from './audionormalizer/AudioNormalizer';
 import { setupVideoPlayerListener } from './observers';
 import { handleVolume } from './volume/Volume';
 import { setupUrlObserver, setupVisibilityChangeListener } from './observers';
+import { injectFetchInterceptor } from './memberVideos/MemberVideos';
 
 
 coreLog('Content script starting to load...');
@@ -33,6 +34,7 @@ async function initializeFeatures() {
     initializeVideoPlayerListener();
 
     if(currentSettings.hideMembersOnlyVideos.enabled){
+        injectFetchInterceptor();
         setupUrlObserver();
         setupVisibilityChangeListener();
     }
@@ -105,5 +107,8 @@ function isSettingsMessage(message: any): message is Message {
     typeof message.settings === 'object';
 }
 
-// Start initialization
-initializeFeatures();
+initializeFeatures().then(() => {
+    coreLog('Content script loaded successfully.');
+}).catch((error) => {
+    coreErrorLog('Error loading content script:', error);
+});
