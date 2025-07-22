@@ -31,7 +31,7 @@
             </div>
         </header>
 
-            <main>
+            <main class="pb-[110px]">
                 <div class="space-y-6">
                     <!-- Video Quality Feature -->
                     <div class="p-5 rounded-lg border border-gray-600 hover:bg-gray-600/30 transition-colors">
@@ -296,19 +296,22 @@
                 </div>
             </main>
 
-            <footer class="flex flex-col gap-4 pt-6 mt-10 border-t border-gray-600">
-                <div class="flex justify-center">
+            <footer class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[600px] flex flex-col gap-4 pt-4 pb-4 bg-gray-700 border-t border-gray-600 z-50">
+                <div class="flex flex-col items-center">
+                    <span class="mb-1 text-sm text-orange-300 font-semibold text-center">
+                        Your support makes this project possible. Every contribution helps, thank you!
+                    </span>
                     <a href="https://ko-fi.com/yougo" target="_blank" rel="noopener noreferrer">
-                        <img src="../assets/icons/ko-fi.png" alt="Support me on Ko-fi" title="Support me on Ko-fi" class="max-h-12">
+                        <img src="../assets/icons/ko-fi.png" alt="Support me on Ko-fi" title="Support me on Ko-fi" class="max-h-10">
                     </a>
                 </div>
                 <div class="flex items-center justify-between">
-                <p class="text-xs text-gray-400">v<span id="extensionVersion"></span></p>
+                    <p class="text-xs text-gray-400">v<span id="extensionVersion"></span></p>
                     <a href="https://github.com/YouG-o/YouTube_Default_Settings/issues" 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        class="text-sm text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-1">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        class="text-xs text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-1">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                         </svg>
                         Report an issue

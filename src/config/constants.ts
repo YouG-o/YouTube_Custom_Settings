@@ -13,7 +13,7 @@ import { ExtensionSettings } from "../types/types";
 export const DEFAULT_SETTINGS: ExtensionSettings = {
     videoQuality: {
         enabled: false,
-        value: 'auto'
+        value: 'hd2160'
     },
     videoSpeed: {
         enabled: false,
@@ -26,8 +26,8 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     },
     audioNormalizer: {
         enabled: false,
-        value: 'medium',
-        manualActivation: false,
+        value: 'custom',
+        manualActivation: true,
         customSettings: {
             threshold: -30,
             boost: 1.2,
