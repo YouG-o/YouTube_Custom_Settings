@@ -42,6 +42,10 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     },
     hideMembersOnlyVideos: {
         enabled: false
+    },
+    audioTrack: {
+        enabled: false,
+        language: 'original',
     }
 };
 

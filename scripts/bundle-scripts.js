@@ -11,7 +11,8 @@ const scripts = [
   'subtitles/SubtitlesScript.js',
   'audionormalizer/AudioNormalizerScript.js',
   'volume/VolumeScript.js',
-  'memberVideos/MembersFetchInterceptorScript.ts'
+  'memberVideos/MembersFetchInterceptorScript.ts',
+  'audioTrack/AudioTrackScript.js'
 ];
 
 if (!fs.existsSync(outDir)) {

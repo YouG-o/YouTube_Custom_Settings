@@ -17,8 +17,8 @@ import { handleAudioNormalizer } from './audionormalizer/AudioNormalizer';
 import { setupVideoPlayerListener } from './observers';
 import { handleVolume } from './volume/Volume';
 import { setupUrlObserver, setupVisibilityChangeListener } from './observers';
-import { injectFetchInterceptor } from './memberVideos/MemberVideos';
-
+import { injectFetchInterceptor, hideMembersOnlyVideos } from './memberVideos/MemberVideos';
+import { handleAudioTrack } from './audioTrack/AudioTrack';
 
 coreLog('Content script starting to load...');
 
@@ -49,7 +49,8 @@ function initializeVideoPlayerListener() {
         currentSettings?.videoSpeed.enabled || 
         currentSettings?.subtitlesPreference.enabled ||
         currentSettings?.audioNormalizer.enabled ||
-        currentSettings?.volume?.enabled
+        currentSettings?.volume?.enabled ||
+        currentSettings?.audioTrack?.enabled
     )) {
         setupVideoPlayerListener();
         videoPlayerListenerInitialized = true;
@@ -82,8 +83,16 @@ function applyStoredSettings() {
         handleAudioNormalizer();
     }
 
-    if (currentSettings?.volume?.enabled) {
+    if (currentSettings?.volume.enabled) {
         handleVolume();
+    }
+
+    if (currentSettings?.hideMembersOnlyVideos.enabled) {
+        hideMembersOnlyVideos();
+    }
+
+    if (currentSettings.audioTrack.enabled) {
+        handleAudioTrack();
     }
 }
 

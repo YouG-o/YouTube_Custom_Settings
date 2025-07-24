@@ -13,6 +13,7 @@ import { handleVideoSpeed } from "../content/videospeed/VideoSpeed";
 import { handleSubtitlesPreference } from "../content/subtitles/SubtitlesPreference";
 import { handleAudioNormalizer } from "../content/audionormalizer/AudioNormalizer";
 import { handleVolume } from "../content/volume/Volume";
+import { handleAudioTrack } from "../content/audioTrack/AudioTrack";
 
 
 export function applyVideoPlayerSettings(): void {
@@ -21,4 +22,5 @@ export function applyVideoPlayerSettings(): void {
     currentSettings?.subtitlesPreference.enabled && handleSubtitlesPreference();
     currentSettings?.audioNormalizer.enabled && handleAudioNormalizer();
     currentSettings?.volume.enabled && handleVolume();
+    currentSettings?.audioTrack.enabled && handleAudioTrack();
 }
