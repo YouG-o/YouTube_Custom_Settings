@@ -1,7 +1,7 @@
 {
   "name": "yds",
-  "version": "1.5.0",
-  "description": "Web-browser Add-On allowing you to set default values to YouTube (quality, speed, subtitles), also includes an audio normalizer and a members-only video filter.",
+  "version": "1.6.0",
+  "description": "Set default values to YouTube (quality, speed, subtitles, audio track / dubb), also includes an audio normalizer and a members-only video filter.",
   "scripts": {
     "clean": "rm -rf dist && rm -f manifest.json",
     "create-dirs": "mkdir -p dist/popup dist/content dist/background dist/styles dist/assets/icons",
