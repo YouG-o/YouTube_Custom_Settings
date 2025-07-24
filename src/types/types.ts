@@ -38,10 +38,31 @@ export interface ExtensionSettings {
     };
     hideMembersOnlyVideos: {
         enabled: boolean;
-    }
+    },
+    audioTrack: {
+        enabled: boolean;
+        language: string;
+    };
 }
 
 export interface Message {
     action: string;
     settings: ExtensionSettings;
+}
+
+/**
+ * Represents a YouTube audio track object.
+ */
+export interface YouTubeAudioTrack {
+    id: string;
+    [key: string]: any; // Allow extra properties
+}
+
+/**
+ * Represents a YouTube player element with audio track API.
+ */
+export interface YouTubePlayer extends HTMLElement {
+    getAvailableAudioTracks: () => YouTubeAudioTrack[];
+    getAudioTrack: () => YouTubeAudioTrack | null;
+    setAudioTrack: (track: YouTubeAudioTrack) => void;
 }

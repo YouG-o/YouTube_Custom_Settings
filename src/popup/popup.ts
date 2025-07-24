@@ -49,6 +49,10 @@ const extensionVersionElement = document.getElementById('extensionVersion') as H
 
 const hideMembersOnlyVideosFeature = document.getElementById('hideMembersOnlyVideosFeature') as HTMLInputElement;
 
+const audioTrackFeature = document.getElementById('audioTrackFeature') as HTMLInputElement;
+const audioTrackLanguageSelect = document.getElementById('audioTrackLanguage') as HTMLSelectElement;
+const audioTrackContainer = document.getElementById('audioTrackContainer') as HTMLDivElement;
+
 // Function to display the extension version
 function displayExtensionVersion() {
     if (extensionVersionElement) {
@@ -109,6 +113,13 @@ async function loadSettings() {
         if (settings.hideMembersOnlyVideos) {
             hideMembersOnlyVideosFeature.checked = settings.hideMembersOnlyVideos.enabled;
         }
+
+        // Audio track settings
+        if (settings.audioTrack) {
+            audioTrackFeature.checked = settings.audioTrack.enabled;
+            audioTrackLanguageSelect.value = settings.audioTrack.language;
+            toggleContainer(audioTrackContainer, audioTrackFeature.checked);
+        }
     } catch (error) {
         // Log error if loading settings fails
         console.error('Failed to load settings:', error);
@@ -151,6 +162,10 @@ async function saveSettings() {
         hideMembersOnlyVideos: {
             enabled: hideMembersOnlyVideosFeature.checked
         },
+        audioTrack: {
+            enabled: audioTrackFeature.checked,
+            language: audioTrackLanguageSelect.value
+        }
     };
     
     try {
@@ -172,23 +187,23 @@ async function updateActiveTabs(settings: ExtensionSettings) {
     
     for (const tab of tabs) {
         if (tab.id) {
-            // Send special message for custom settings ONLY if custom mode is selected
-            if (settings.audioNormalizer.value === 'custom' && settings.audioNormalizer.customSettings) {
+            // Only send the audioNormalizer message if enabled and custom
+            if (
+                settings.audioNormalizer.enabled &&
+                settings.audioNormalizer.value === 'custom' &&
+                settings.audioNormalizer.customSettings
+            ) {
                 await browser.tabs.sendMessage(tab.id, {
                     feature: 'audioNormalizer',
                     enabled: settings.audioNormalizer.enabled,
                     value: settings.audioNormalizer.value,
                     manualActivation: settings.audioNormalizer.manualActivation,
                     customSettings: settings.audioNormalizer.customSettings
-                }).catch(error => {
-                    console.error(`Failed to update audio normalizer settings for tab ${tab.id}:`, error);
                 });
-                
-                // Important: Wait for a moment to ensure the first message is processed
                 await new Promise(resolve => setTimeout(resolve, 50));
             }
             
-            // Then update all other settings
+            // Always send the global settings update
             browser.tabs.sendMessage(tab.id, {
                 action: 'updateSettings',
                 settings: settings
@@ -227,12 +242,18 @@ function initEventListeners() {
         saveSettings();
     });
 
+    audioTrackFeature.addEventListener('change', () => {
+        toggleContainer(audioTrackContainer, audioTrackFeature.checked);
+        saveSettings();
+    });
+
     // Value changes
     videoQualitySelect.addEventListener('change', saveSettings);
     videoSpeedSelect.addEventListener('change', saveSettings);
     subtitlesPreferenceSelect.addEventListener('change', saveSettings);
     audioNormalizerSelect.addEventListener('change', saveSettings);
     volumeValue.addEventListener('change', saveSettings);
+    audioTrackLanguageSelect.addEventListener('change', saveSettings);
 
     // Fix for the Apply to Shorts toggle - Add click handler to the parent div
     const applyShortsSpeedParent = applyShortsSpeed.parentElement;

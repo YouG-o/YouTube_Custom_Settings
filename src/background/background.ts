@@ -30,7 +30,7 @@ async function toDoOnFirstInstall(details: InstalledDetails) {
             url: api.runtime.getURL('dist/popup/settings.html')
         });
 
-        // Find all open YouTube and YouTube No-Cookie tabs and refresh them
+        /*// Find all open YouTube and YouTube No-Cookie tabs and refresh them
         const youtubeTabs = await api.tabs.query({ 
             url: [
                 '*://*.youtube.com/*',
@@ -46,7 +46,7 @@ async function toDoOnFirstInstall(details: InstalledDetails) {
                     console.error(`[YDS-Debug] Failed to reload tab ${tab.id}:`, error);
                 }
             }
-        }
+        }*/
     }
 }
 
