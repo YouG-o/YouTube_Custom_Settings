@@ -53,6 +53,10 @@ const audioTrackFeature = document.getElementById('audioTrackFeature') as HTMLIn
 const audioTrackLanguageSelect = document.getElementById('audioTrackLanguage') as HTMLSelectElement;
 const audioTrackContainer = document.getElementById('audioTrackContainer') as HTMLDivElement;
 
+const durationRuleEnabled = document.getElementById('durationRuleEnabled') as HTMLInputElement;
+const durationRuleType = document.getElementById('durationRuleType') as HTMLSelectElement;
+const durationRuleMinutes = document.getElementById('durationRuleMinutes') as HTMLInputElement;
+
 // Function to display the extension version
 function displayExtensionVersion() {
     if (extensionVersionElement) {
@@ -120,6 +124,11 @@ async function loadSettings() {
             audioTrackLanguageSelect.value = settings.audioTrack.language;
             toggleContainer(audioTrackContainer, audioTrackFeature.checked);
         }
+
+        // Duration rule settings
+        durationRuleEnabled.checked = settings.videoSpeed.durationRuleEnabled ?? false;
+        durationRuleType.value = settings.videoSpeed.durationRuleType ?? 'less';
+        durationRuleMinutes.value = String(settings.videoSpeed.durationRuleMinutes ?? 5);
     } catch (error) {
         // Log error if loading settings fails
         console.error('Failed to load settings:', error);
@@ -136,7 +145,10 @@ async function saveSettings() {
         videoSpeed: {
             enabled: videoSpeedFeature.checked,
             value: parseFloat(videoSpeedSelect.value),
-            applyToShorts: applyShortsSpeed.checked
+            applyToShorts: applyShortsSpeed.checked,
+            durationRuleEnabled: durationRuleEnabled.checked,
+            durationRuleType: durationRuleType.value as 'greater' | 'less',
+            durationRuleMinutes: parseInt(durationRuleMinutes.value, 10)
         },
         subtitlesPreference: {
             enabled: subtitlesToggle.checked,
@@ -246,6 +258,10 @@ function initEventListeners() {
         toggleContainer(audioTrackContainer, audioTrackFeature.checked);
         saveSettings();
     });
+
+    durationRuleEnabled.addEventListener('change', saveSettings);
+    durationRuleType.addEventListener('change', saveSettings);
+    durationRuleMinutes.addEventListener('change', saveSettings);
 
     // Value changes
     videoQualitySelect.addEventListener('change', saveSettings);

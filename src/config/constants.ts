@@ -18,7 +18,10 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     videoSpeed: {
         enabled: false,
         value: 1,
-        applyToShorts: true
+        applyToShorts: true,
+        durationRuleEnabled: false,
+        durationRuleType: 'less',
+        durationRuleMinutes: 5
     },
     subtitlesPreference: {
         enabled: false,
