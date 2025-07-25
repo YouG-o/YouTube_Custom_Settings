@@ -20,7 +20,11 @@ async function syncVideoSpeedPreference() {
             localStorage.setItem('yds-speed-enabled', JSON.stringify(settings.videoSpeed.enabled));
             localStorage.setItem('yds-speed-value', settings.videoSpeed.value.toString());
             localStorage.setItem('yds-speed-apply-to-shorts', JSON.stringify(settings.videoSpeed.applyToShorts));
-            videoSpeedLog(`Synced video speed preference from extension storage: ${settings.videoSpeed.value}`);
+            // Synchronize duration rule settings
+            localStorage.setItem('yds-speed-duration-rule-enabled', JSON.stringify(settings.videoSpeed.durationRuleEnabled ?? false));
+            localStorage.setItem('yds-speed-duration-rule-type', settings.videoSpeed.durationRuleType ?? 'greater');
+            localStorage.setItem('yds-speed-duration-rule-minutes', (settings.videoSpeed.durationRuleMinutes ?? 5).toString());
+            //videoSpeedLog(`Synced video speed preference from extension storage: ${settings.videoSpeed.value}`);
         }
     } catch (error) {
         videoSpeedErrorLog('Error syncing video speed preference:', error);

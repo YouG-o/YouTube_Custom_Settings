@@ -14,6 +14,9 @@ export interface FeatureSetting<T> {
 
 export interface SpeedSetting extends FeatureSetting<number> {
     applyToShorts: boolean;
+    durationRuleEnabled?: boolean;
+    durationRuleType?: 'greater' | 'less';
+    durationRuleMinutes?: number;
 }
 
 export interface AudioNormalizerSetting extends FeatureSetting<string> {

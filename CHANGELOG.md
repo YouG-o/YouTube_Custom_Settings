@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-07-25
+
+### Feature
+- Added a "duration rule" feature for video speed: you can now specify a rule so that videos longer or shorter than a chosen duration will always play at normal speed (x1), ignoring your custom speed setting.
+
+
 ## [1.6.0] - 2025-07-24
 
 ### Feature
@@ -57,8 +63,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Default_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.6.0...HEAD
-[1.5.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.5.0...v1.6.0
+[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.6.0...v1.7.0
+[1.6.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.3.0

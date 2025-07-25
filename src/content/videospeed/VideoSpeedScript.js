@@ -69,6 +69,28 @@
         }
     }
 
+    function shouldApplySpeed() {
+        const ruleEnabled = localStorage.getItem('yds-speed-duration-rule-enabled') === 'true';
+        if (!ruleEnabled) return true;
+        const ruleType = localStorage.getItem('yds-speed-duration-rule-type') || 'less';
+        const ruleMinutes = parseInt(localStorage.getItem('yds-speed-duration-rule-minutes') || '60', 10);
+
+        let targetId = 'movie_player';
+        if (window.location.pathname.startsWith('/shorts')) {
+            targetId = 'shorts-player';
+        } else if (window.location.pathname.startsWith('/@')) {
+            targetId = 'c4-player';
+        }
+        const player = document.getElementById(targetId);
+        if (!player || typeof player.getDuration !== 'function') return true;
+        const durationSeconds = player.getDuration();
+        const durationMinutes = durationSeconds / 60;
+
+        if (ruleType === 'greater' && durationMinutes > ruleMinutes) return false;
+        if (ruleType === 'less' && durationMinutes < ruleMinutes) return false;
+        return true;
+    }
+
     function setPlaybackSpeed() {
         try {
             // Don't apply speed changes to live streams
@@ -85,16 +107,40 @@
             
             // For speeds above YouTube's limit (2.0), always use direct HTML5 video element manipulation
             if (preferredSpeed > 2.0 || preferredSpeed < 0.25) {
-                log('Speed value exceeds YouTube API limit (2.0), using direct video element manipulation');
-                const video = document.querySelector('video');
-                if (!video) {
-                    errorLog('Video element not found');
-                    return false;
+                //log('Speed value outside YouTube API limit, using direct video element manipulation');
+                // Check duration rule before applying speed
+                const ruleEnabled = localStorage.getItem('yds-speed-duration-rule-enabled') === 'true';
+                if (ruleEnabled) {
+                    const ruleType = localStorage.getItem('yds-speed-duration-rule-type') || 'greater';
+                    const ruleMinutes = parseInt(localStorage.getItem('yds-speed-duration-rule-minutes') || '60', 10);
+
+                    const video = document.querySelector('video');
+                    if (!video) {
+                        errorLog('Video element not found');
+                        return false;
+                    }
+                    const durationSeconds = video.duration;
+                    const durationMinutes = durationSeconds / 60;
+                    //log(`Video duration: ${durationMinutes} minutes (raw: ${durationSeconds} seconds)`);
+                    if ((ruleType === 'greater' && durationMinutes > ruleMinutes) ||
+                        (ruleType === 'less' && durationMinutes < ruleMinutes)) {
+                        log('Duration rule matched, not applying speed (using x1)');
+                        video.playbackRate = 1;
+                        return true;
+                    }
+                    video.playbackRate = preferredSpeed;
+                    log('Playback speed set to (via HTML5 video element):', preferredSpeed);
+                    return true;
+                } else {
+                    const video = document.querySelector('video');
+                    if (!video) {
+                        errorLog('Video element not found');
+                        return false;
+                    }
+                    video.playbackRate = preferredSpeed;
+                    log('Playback speed set to (via HTML5 video element):', preferredSpeed);
+                    return true;
                 }
-                
-                video.playbackRate = preferredSpeed;
-                log('Playback speed set to (via HTML5 video element):', preferredSpeed);
-                return true;
             }
             
             // For normal speeds, try to use YouTube's player API first
@@ -115,6 +161,26 @@
                 video.playbackRate = preferredSpeed;
                 log('Playback speed set to (via HTML5 video element):', preferredSpeed);
                 return true;
+            }
+            
+            // Check duration rule before applying speed
+            const ruleEnabled = localStorage.getItem('yds-speed-duration-rule-enabled') === 'true';
+            if (ruleEnabled) {
+                const ruleType = localStorage.getItem('yds-speed-duration-rule-type') || 'greater';
+                const ruleMinutes = parseInt(localStorage.getItem('yds-speed-duration-rule-minutes') || '60', 10);
+
+                if (player.getDuration) {
+                    const durationSeconds = player.getDuration();
+                    const durationMinutes = durationSeconds / 60;
+                    //log(`Video duration: ${durationMinutes} minutes (raw: ${durationSeconds} seconds)`);
+                    if ((ruleType === 'greater' && durationMinutes > ruleMinutes) ||
+                        (ruleType === 'less' && durationMinutes < ruleMinutes)) {
+                        log(`Duration rule matched ${durationMinutes}, not applying speed (using x1)`);
+                        const video = document.querySelector('video');
+                        if (video) video.playbackRate = 1;
+                        return true;
+                    }
+                }
             }
             
             // Use YouTube player API to set playback rate for normal speeds
