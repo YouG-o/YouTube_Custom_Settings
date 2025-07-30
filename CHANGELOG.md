@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2025-07-30
+
+### Feature
+- Added a "Custom Quality Order" feature: you can now define a personalized priority list for video qualities. If enabled, the extension will always try to apply the first available quality from your custom list, instead of just the preferred quality.
+
+### Changed
+- Removed automatic reload of YouTube tabs on extension install. Instead, a clear warning is now displayed on the Welcome page, with a button allowing users to manually reload active YouTube tabs. Hibernating or backgroud tabs are ignored.
+
+
 ## [1.7.0] - 2025-07-25
 
 ### Feature
@@ -63,7 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Default_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.8.0...HEAD
+[1.7.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.4.0...v1.5.0

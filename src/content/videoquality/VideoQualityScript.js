@@ -59,6 +59,15 @@
         return available[0] || null;
     }
 
+    function getPreferredAvailableQuality(preferredList, available) {
+        for (const quality of preferredList) {
+            if (available.includes(quality)) {
+                return quality;
+            }
+        }
+        return available[0] || null;
+    }
+
     /**
      * Set the video quality to the preferred or closest available quality.
      * Reads user preference from localStorage.
@@ -79,8 +88,39 @@
         if (!qualityEnabled) return false;
 
         const preferredQuality = localStorage.getItem('yds-quality-value') || 'auto';
+        const customOrderObj = JSON.parse(localStorage.getItem('yds-quality-customOrder') || '{"enabled":false,"order":[]}');
+        const customOrderEnabled = customOrderObj.enabled;
+        const customOrder = Array.isArray(customOrderObj.order) ? customOrderObj.order : [];
 
         try {
+            // If customOrder is enabled and not empty, use it with priority
+            if (customOrderEnabled && customOrder.length > 0) {
+                if (typeof player.getAvailableQualityLevels !== 'function') {
+                    errorLog('Player does not support quality listing.');
+                    return false;
+                }
+                const availableQualities = player.getAvailableQualityLevels();
+                const qualityToSet = getPreferredAvailableQuality(customOrder, availableQualities);
+                if (!qualityToSet) {
+                    errorLog('No available quality to set from custom order.');
+                    return false;
+                }
+                const currentQuality = typeof player.getPlaybackQuality === 'function'
+                    ? player.getPlaybackQuality()
+                    : null;
+                if (currentQuality === qualityToSet) {
+                    log('Quality already set to:', qualityToSet);
+                    return true;
+                }
+                if (player.setPlaybackQualityRange) {
+                    player.setPlaybackQualityRange(qualityToSet, qualityToSet);
+                    log('Quality set from custom order to:', qualityToSet);
+                    return true;
+                }
+                return false;
+            }
+
+            // If no customOrder, fallback to preferredQuality
             if (preferredQuality === 'auto') {
                 log('Setting quality to auto (not restricting)');
                 return true;
@@ -91,8 +131,6 @@
                 return false;
             }
             const availableQualities = player.getAvailableQualityLevels();
-            //log('Available qualities:', availableQualities);
-
             const qualityToSet = getClosestAvailableQuality(preferredQuality, availableQualities);
             if (!qualityToSet) {
                 errorLog('No available quality to set.');

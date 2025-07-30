@@ -19,6 +19,7 @@ import { loadExtensionSettings } from '../utils/settings';
 const videoQualityFeature = document.getElementById('videoQualityFeature') as HTMLInputElement;
 const videoQualitySelect = document.getElementById('videoQuality') as HTMLSelectElement;
 const videoQualityContainer = document.getElementById('videoQualityContainer') as HTMLDivElement;
+const videoQualityOptionsContainer = document.getElementById('videoQualityOptionsContainer') as HTMLDivElement;
 
 const videoSpeedFeature = document.getElementById('videoSpeedFeature') as HTMLInputElement;
 const videoSpeedSelect = document.getElementById('videoSpeed') as HTMLSelectElement;
@@ -57,6 +58,156 @@ const durationRuleEnabled = document.getElementById('durationRuleEnabled') as HT
 const durationRuleType = document.getElementById('durationRuleType') as HTMLSelectElement;
 const durationRuleMinutes = document.getElementById('durationRuleMinutes') as HTMLInputElement;
 
+const customQualityOrderToggle = document.getElementById('customQualityOrderToggle') as HTMLInputElement;
+const customQualityOrderContainer = document.getElementById('customQualityOrderContainer') as HTMLDivElement;
+const qualityOrderList = document.getElementById('qualityOrderList') as HTMLUListElement;
+
+const videoQualityClassicContainer = document.getElementById('videoQualityContainer') as HTMLDivElement;
+const addQualityBtn = document.getElementById('addQualityBtn') as HTMLButtonElement;
+
+// List of all possible qualities
+const ALL_QUALITIES = [
+    { value: 'hd2160', label: '2160p (4K)' },
+    { value: 'hd1440', label: '1440p (2K)' },
+    { value: 'hd1080', label: '1080p (FHD)' },
+    { value: 'hd720', label: '720p (HD)' },
+    { value: 'large', label: '480p' },
+    { value: 'medium', label: '360p' },
+    { value: 'small', label: '240p' },
+    { value: 'tiny', label: '144p' }
+];
+
+// Render the custom quality order list
+function renderQualityOrderList(order: string[]) {
+    qualityOrderList.innerHTML = '';
+    order.forEach((quality, idx) => {
+        const item = document.createElement('li');
+        item.className = 'bg-gray-700 rounded px-3 py-2 flex items-center justify-between';
+        item.innerHTML = `
+            <span>${ALL_QUALITIES.find(q => q.value === quality)?.label || quality}</span>
+            <div class="flex items-center gap-1">
+                <button type="button" class="move-up-btn text-gray-400 hover:text-blue-400 px-1" data-idx="${idx}" title="Move up" ${idx === 0 ? 'disabled' : ''}>&#8593;</button>
+                <button type="button" class="move-down-btn text-gray-400 hover:text-blue-400 px-1" data-idx="${idx}" title="Move down" ${idx === order.length - 1 ? 'disabled' : ''}>&#8595;</button>
+                <button type="button" class="remove-quality-btn text-red-400 hover:text-red-600 px-1" data-idx="${idx}" title="Remove">&times;</button>
+            </div>
+        `;
+        qualityOrderList.appendChild(item);
+    });
+
+    // Add event listeners for move up/down and remove
+    qualityOrderList.querySelectorAll('.move-up-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = Number((e.currentTarget as HTMLElement).dataset.idx);
+            if (idx > 0) {
+                const order = getCurrentOrder();
+                [order[idx - 1], order[idx]] = [order[idx], order[idx - 1]];
+                renderQualityOrderList(order);
+                saveSettings();
+            }
+        });
+    });
+    qualityOrderList.querySelectorAll('.move-down-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = Number((e.currentTarget as HTMLElement).dataset.idx);
+            const order = getCurrentOrder();
+            if (idx < order.length - 1) {
+                [order[idx + 1], order[idx]] = [order[idx], order[idx + 1]];
+                renderQualityOrderList(order);
+                saveSettings();
+            }
+        });
+    });
+    qualityOrderList.querySelectorAll('.remove-quality-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = Number((e.currentTarget as HTMLElement).dataset.idx);
+            const order = getCurrentOrder();
+            order.splice(idx, 1);
+            renderQualityOrderList(order);
+            saveSettings();
+        });
+    });
+}
+
+// Add quality button logic (shows a select menu)
+addQualityBtn.addEventListener('click', () => {
+    const currentOrder = getCurrentOrder();
+    const available = ALL_QUALITIES.filter(q => !currentOrder.includes(q.value));
+    if (available.length === 0) return;
+
+    // Create a select menu dynamically
+    const select = document.createElement('select');
+    select.className = 'bg-gray-800 text-white rounded px-2 py-1 border border-gray-600';
+    available.forEach(q => {
+        const option = document.createElement('option');
+        option.value = q.value;
+        option.textContent = q.label;
+        select.appendChild(option);
+    });
+
+    const confirmBtn = document.createElement('button');
+    confirmBtn.textContent = 'Add';
+    confirmBtn.className = 'ml-2 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-500';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.className = 'ml-2 px-2 py-1 bg-gray-500 text-white rounded hover:bg-gray-400';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-center mt-2';
+    wrapper.appendChild(select);
+    wrapper.appendChild(confirmBtn);
+    wrapper.appendChild(cancelBtn);
+
+    addQualityBtn.parentElement?.insertBefore(wrapper, addQualityBtn);
+
+    confirmBtn.onclick = () => {
+        currentOrder.push(select.value);
+        renderQualityOrderList(currentOrder);
+        saveSettings();
+        wrapper.remove();
+    };
+    cancelBtn.onclick = () => wrapper.remove();
+});
+
+// Toggle logic: show/hide classic select and custom UI
+customQualityOrderToggle.addEventListener('change', () => {
+    const enabled = customQualityOrderToggle.checked;
+    customQualityOrderContainer.style.display = enabled ? 'block' : 'none';
+    videoQualityClassicContainer.style.display = enabled ? 'none' : 'block';
+    saveSettings();
+});
+
+// Drag and drop logic (identique à avant)
+let dragStartIdx: number | null = null;
+qualityOrderList.addEventListener('dragstart', (e) => {
+    const target = e.target as HTMLLIElement;
+    dragStartIdx = Number(target.dataset.idx);
+});
+qualityOrderList.addEventListener('dragover', (e) => {
+    e.preventDefault();
+});
+qualityOrderList.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const target = e.target as HTMLLIElement;
+    const dropIdx = Number(target.closest('li')?.dataset.idx);
+    if (dragStartIdx !== null && dropIdx !== undefined && dragStartIdx !== dropIdx) {
+        const order = getCurrentOrder();
+        const [moved] = order.splice(dragStartIdx, 1);
+        order.splice(dropIdx, 0, moved);
+        renderQualityOrderList(order);
+        saveSettings();
+    }
+    dragStartIdx = null;
+});
+function getCurrentOrder(): string[] {
+    return Array.from(qualityOrderList.children).map(li => {
+        const text = (li as HTMLLIElement).querySelector('span')?.textContent;
+        // Find value from label
+        const found = ALL_QUALITIES.find(q => q.label === text);
+        return found ? found.value : '';
+    }).filter(Boolean);
+}
+
 // Function to display the extension version
 function displayExtensionVersion() {
     if (extensionVersionElement) {
@@ -72,8 +223,7 @@ async function loadSettings() {
         
         // Apply saved settings to UI
         videoQualityFeature.checked = settings.videoQuality.enabled;
-        videoQualitySelect.value = settings.videoQuality.value;
-        toggleContainer(videoQualityContainer, videoQualityFeature.checked);
+        toggleContainer(videoQualityOptionsContainer, videoQualityFeature.checked);
         
         videoSpeedFeature.checked = settings.videoSpeed.enabled;
         videoSpeedSelect.value = String(settings.videoSpeed.value);
@@ -129,6 +279,13 @@ async function loadSettings() {
         durationRuleEnabled.checked = settings.videoSpeed.durationRuleEnabled ?? false;
         durationRuleType.value = settings.videoSpeed.durationRuleType ?? 'less';
         durationRuleMinutes.value = String(settings.videoSpeed.durationRuleMinutes ?? 5);
+
+        // Quality order settings
+        customQualityOrderToggle.checked = settings.videoQuality.customOrder?.enabled ?? false;
+        customQualityOrderContainer.style.display = customQualityOrderToggle.checked ? 'block' : 'none';
+        videoQualityContainer.style.display = customQualityOrderToggle.checked ? 'none' : 'block';
+        const initialOrder = settings.videoQuality.customOrder?.order ?? [];
+        renderQualityOrderList(initialOrder);
     } catch (error) {
         // Log error if loading settings fails
         console.error('Failed to load settings:', error);
@@ -140,7 +297,11 @@ async function saveSettings() {
     const settings: ExtensionSettings = {
         videoQuality: {
             enabled: videoQualityFeature.checked,
-            value: videoQualitySelect.value
+            value: videoQualitySelect.value,
+            customOrder: {
+                enabled: customQualityOrderToggle.checked,
+                order: getCurrentOrder()
+            }
         },
         videoSpeed: {
             enabled: videoSpeedFeature.checked,
@@ -189,7 +350,7 @@ async function saveSettings() {
 }
 
 // Toggle visibility of container based on checkbox state
-function toggleContainer(container: HTMLDivElement, isVisible: boolean) {
+function toggleContainer(container: HTMLElement, isVisible: boolean) {
     container.style.display = isVisible ? 'block' : 'none';
 }
 
@@ -230,7 +391,7 @@ async function updateActiveTabs(settings: ExtensionSettings) {
 function initEventListeners() {
     // Feature toggles
     videoQualityFeature.addEventListener('change', () => {
-        toggleContainer(videoQualityContainer, videoQualityFeature.checked);
+        toggleContainer(videoQualityOptionsContainer, videoQualityFeature.checked);
         saveSettings();
     });
     
@@ -314,6 +475,13 @@ function initEventListeners() {
 
     // Hide Members Only Videos feature
     hideMembersOnlyVideosFeature.addEventListener('change', saveSettings);
+
+    // Custom quality order
+    customQualityOrderToggle.addEventListener('change', () => {
+        customQualityOrderContainer.style.display = customQualityOrderToggle.checked ? 'block' : 'none';
+        videoQualityContainer.style.display = customQualityOrderToggle.checked ? 'none' : 'block';
+        saveSettings();
+    });
 }
 
 // Initialize on page load
@@ -336,3 +504,58 @@ tooltipGroups.forEach((group) => {
         tooltip.style.marginLeft = `-${tooltipRect.right - bodyWidth + 20}px`;
     }
 });
+
+// Check if this is a welcome page (first install)
+const urlParams = new URLSearchParams(window.location.search);
+const isWelcome = urlParams.get('welcome') === 'true';
+
+if (isWelcome) {
+    const pageTitle = document.getElementById('pageTitle');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+    
+    if (pageTitle) {
+        // Keep the image and change only the text part
+        const imgElement = pageTitle.querySelector('img');
+        if (imgElement) {
+            pageTitle.innerHTML = '';
+            pageTitle.appendChild(imgElement);
+            pageTitle.appendChild(document.createTextNode('Welcome to YouTube No Translation!'));
+            pageTitle.className = 'text-2xl font-semibold text-white flex items-center gap-2 mb-2';
+        }
+    }
+    
+    if (welcomeMessage) {
+        welcomeMessage.classList.remove('hidden');
+    }
+}
+
+// Handle reload of all YouTube tabs from the welcome page
+if (isWelcome) {
+    const reloadBtn = document.getElementById('reloadYoutubeTabsBtn') as HTMLButtonElement | null;
+    if (reloadBtn) {
+        reloadBtn.onclick = async () => {
+            try {
+                const tabs = await browser.tabs.query({
+                    url: [
+                        "*://*.youtube.com/*",
+                        "*://*.youtube-nocookie.com/*"
+                    ]
+                });
+                let count = 0;
+                for (const tab of tabs) {
+                    // Only reload tabs that are not discarded
+                    if (tab.id && tab.discarded === false) {
+                        await browser.tabs.reload(tab.id);
+                        count++;
+                    }
+                }
+                reloadBtn.textContent = `Reloaded ${count} active tab${count !== 1 ? 's' : ''}!`;
+                reloadBtn.disabled = true;
+            } catch (error) {
+                reloadBtn.textContent = "Error reloading tabs";
+                reloadBtn.disabled = true;
+                console.error("[YDS] Failed to reload YouTube tabs:", error);
+            }
+        };
+    }
+}

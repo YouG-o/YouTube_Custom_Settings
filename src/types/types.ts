@@ -7,9 +7,15 @@
  * This program is distributed without any warranty; see the license for details.
  */
 
+export interface CustomOrderSetting {
+    enabled: boolean;
+    order: string[];
+}
+
 export interface FeatureSetting<T> {
     enabled: boolean;
     value: T;
+    customOrder?: CustomOrderSetting;
 }
 
 export interface SpeedSetting extends FeatureSetting<number> {

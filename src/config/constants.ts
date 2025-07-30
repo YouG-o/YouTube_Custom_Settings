@@ -13,7 +13,11 @@ import { ExtensionSettings } from "../types/types";
 export const DEFAULT_SETTINGS: ExtensionSettings = {
     videoQuality: {
         enabled: false,
-        value: 'hd2160'
+        value: 'hd2160',
+        customOrder: {
+            enabled: false,
+            order: []
+        }
     },
     videoSpeed: {
         enabled: false,

@@ -46,18 +46,46 @@
                             <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
-                    <div class="mt-2 audio-language-container" id="videoQualityContainer">
-                        <select id="videoQuality" class="w-full bg-gray-800 text-white text-sm rounded-lg px-2 py-1 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="auto">Auto</option>
-                            <option value="tiny">144p</option>
-                            <option value="small">240p</option>
-                            <option value="medium">360p</option>
-                            <option value="large">480p</option>
-                            <option value="hd720">720p (HD)</option>
-                            <option value="hd1080">1080p (FHD)</option>
-                            <option value="hd1440">1440p (2K)</option>
-                            <option value="hd2160">2160p (4K)</option>
-                        </select>
+                    <div id="videoQualityOptionsContainer" class="mt-2" style="display: none;">
+                        <div id="videoQualityContainer">
+                            <select id="videoQuality" class="w-full bg-gray-800 text-white text-sm rounded-lg px-2 py-1 border border-gray-600 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="auto">Auto</option>
+                                <option value="tiny">144p</option>
+                                <option value="small">240p</option>
+                                <option value="medium">360p</option>
+                                <option value="large">480p</option>
+                                <option value="hd720">720p (HD)</option>
+                                <option value="hd1080">1080p (FHD)</option>
+                                <option value="hd1440">1440p (2K)</option>
+                                <option value="hd2160">2160p (4K)</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between mb-2 mt-4">
+                            <div class="flex gap-2 items-center">
+                                <div class="relative group tooltip">
+                                    <svg class="w-5 h-5 text-gray-400 cursor-help group-hover:text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                                    </svg>
+                                    <span class="absolute z-20 bottom-full left-0 ml-[-20px] mb-2 w-[260px] px-3 py-2 text-xs text-white bg-gray-900/95 rounded-md shadow-lg whitespace-normal opacity-0 pointer-events-none invisible group-hover:opacity-100 group-hover:visible transition-opacity">
+                                        By default, if preferred quality is not available, quality below is used. Enable this to set a custom order for qualities.
+                                    </span>
+                                </div>
+                                <span class="text-sm text-blue-300 font-semibold">Enable Custom Quality Order</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer" id="customQualityOrderToggle">
+                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                        <div id="customQualityOrderContainer" class="mt-2" style="display: none;">
+                            <ul id="qualityOrderList" class="bg-gray-800 rounded-lg p-2 flex flex-col gap-2"></ul>
+                            <button id="addQualityBtn" type="button" class="mt-2 px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs">
+                                + Add Quality
+                            </button>
+                            <p class="text-xs text-gray-400 mt-2">
+                                Add qualities in your preferred order. Drag to reorder. The extension will use the first available quality from your list.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <!-- Video Speed Feature -->
