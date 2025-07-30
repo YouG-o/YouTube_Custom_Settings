@@ -27,26 +27,8 @@ async function toDoOnFirstInstall(details: InstalledDetails) {
         if (details.reason === 'install') {
         // Open the welcome page
         api.tabs.create({
-            url: api.runtime.getURL('dist/popup/settings.html')
+            url: api.runtime.getURL('dist/popup/settings.html?welcome=true')
         });
-
-        /*// Find all open YouTube and YouTube No-Cookie tabs and refresh them
-        const youtubeTabs = await api.tabs.query({ 
-            url: [
-                '*://*.youtube.com/*',
-                '*://*.youtube-nocookie.com/*'
-            ] 
-        });
-        for (const tab of youtubeTabs) {
-            if (tab.id) {
-                try {
-                    await api.tabs.reload(tab.id);
-                    console.log(`[YDS-Debug] Reloaded YouTube tab: ${tab.id}`);
-                } catch (error) {
-                    console.error(`[YDS-Debug] Failed to reload tab ${tab.id}:`, error);
-                }
-            }
-        }*/
     }
 }
 
