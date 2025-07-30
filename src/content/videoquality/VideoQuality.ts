@@ -19,6 +19,7 @@ async function syncVideoQualityPreference() {
         if (settings?.videoQuality) {
             localStorage.setItem('yds-quality-enabled', JSON.stringify(settings.videoQuality.enabled));
             localStorage.setItem('yds-quality-value', settings.videoQuality.value);
+            localStorage.setItem('yds-quality-customOrder', JSON.stringify(settings.videoQuality.customOrder || []));
             videoQualityLog(`Synced video quality preference from extension storage: ${settings.videoQuality.value}`);
         }
     } catch (error) {
