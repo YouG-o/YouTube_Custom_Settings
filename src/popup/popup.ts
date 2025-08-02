@@ -224,6 +224,17 @@ async function loadSettings() {
         // Apply saved settings to UI
         videoQualityFeature.checked = settings.videoQuality.enabled;
         toggleContainer(videoQualityOptionsContainer, videoQualityFeature.checked);
+
+        customQualityOrderToggle.checked = settings.videoQuality.customOrder?.enabled ?? false;
+        customQualityOrderContainer.style.display = customQualityOrderToggle.checked ? 'block' : 'none';
+        videoQualityContainer.style.display = customQualityOrderToggle.checked ? 'none' : 'block';
+
+        if (!customQualityOrderToggle.checked) {
+            videoQualitySelect.value = settings.videoQuality.value ?? 'auto';
+        }
+
+        const initialOrder = settings.videoQuality.customOrder?.order ?? [];
+        renderQualityOrderList(initialOrder);
         
         videoSpeedFeature.checked = settings.videoSpeed.enabled;
         videoSpeedSelect.value = String(settings.videoSpeed.value);
@@ -279,13 +290,6 @@ async function loadSettings() {
         durationRuleEnabled.checked = settings.videoSpeed.durationRuleEnabled ?? false;
         durationRuleType.value = settings.videoSpeed.durationRuleType ?? 'less';
         durationRuleMinutes.value = String(settings.videoSpeed.durationRuleMinutes ?? 5);
-
-        // Quality order settings
-        customQualityOrderToggle.checked = settings.videoQuality.customOrder?.enabled ?? false;
-        customQualityOrderContainer.style.display = customQualityOrderToggle.checked ? 'block' : 'none';
-        videoQualityContainer.style.display = customQualityOrderToggle.checked ? 'none' : 'block';
-        const initialOrder = settings.videoQuality.customOrder?.order ?? [];
-        renderQualityOrderList(initialOrder);
     } catch (error) {
         // Log error if loading settings fails
         console.error('Failed to load settings:', error);
@@ -297,7 +301,7 @@ async function saveSettings() {
     const settings: ExtensionSettings = {
         videoQuality: {
             enabled: videoQualityFeature.checked,
-            value: videoQualitySelect.value,
+            value: customQualityOrderToggle.checked ? 'auto' : videoQualitySelect.value,
             customOrder: {
                 enabled: customQualityOrderToggle.checked,
                 order: getCurrentOrder()
@@ -491,71 +495,3 @@ document.addEventListener('DOMContentLoaded', () => {
     initEventListeners();
 });
 
-
-// Adjust tooltip positions if they overflow the viewport
-const tooltipGroups = document.querySelectorAll('.tooltip') as NodeListOf<HTMLDivElement>;
-
-tooltipGroups.forEach((group) => {
-    const bodyWidth = document.body.clientWidth;  
-    const tooltip = group.querySelector('span') as HTMLSpanElement;
-    const tooltipRect = tooltip.getBoundingClientRect();
-    
-    if (tooltipRect.right > bodyWidth) {
-        tooltip.style.marginLeft = `-${tooltipRect.right - bodyWidth + 20}px`;
-    }
-});
-
-// Check if this is a welcome page (first install)
-const urlParams = new URLSearchParams(window.location.search);
-const isWelcome = urlParams.get('welcome') === 'true';
-
-if (isWelcome) {
-    const pageTitle = document.getElementById('pageTitle');
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    
-    if (pageTitle) {
-        // Keep the image and change only the text part
-        const imgElement = pageTitle.querySelector('img');
-        if (imgElement) {
-            pageTitle.innerHTML = '';
-            pageTitle.appendChild(imgElement);
-            pageTitle.appendChild(document.createTextNode('Welcome to YouTube No Translation!'));
-            pageTitle.className = 'text-2xl font-semibold text-white flex items-center gap-2 mb-2';
-        }
-    }
-    
-    if (welcomeMessage) {
-        welcomeMessage.classList.remove('hidden');
-    }
-}
-
-// Handle reload of all YouTube tabs from the welcome page
-if (isWelcome) {
-    const reloadBtn = document.getElementById('reloadYoutubeTabsBtn') as HTMLButtonElement | null;
-    if (reloadBtn) {
-        reloadBtn.onclick = async () => {
-            try {
-                const tabs = await browser.tabs.query({
-                    url: [
-                        "*://*.youtube.com/*",
-                        "*://*.youtube-nocookie.com/*"
-                    ]
-                });
-                let count = 0;
-                for (const tab of tabs) {
-                    // Only reload tabs that are not discarded
-                    if (tab.id && tab.discarded === false) {
-                        await browser.tabs.reload(tab.id);
-                        count++;
-                    }
-                }
-                reloadBtn.textContent = `Reloaded ${count} active tab${count !== 1 ? 's' : ''}!`;
-                reloadBtn.disabled = true;
-            } catch (error) {
-                reloadBtn.textContent = "Error reloading tabs";
-                reloadBtn.disabled = true;
-                console.error("[YDS] Failed to reload YouTube tabs:", error);
-            }
-        };
-    }
-}
