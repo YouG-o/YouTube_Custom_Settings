@@ -30,15 +30,15 @@
 
     // Ordered list of quality levels from lowest to highest
     const QUALITY_ORDER = [
-        'tiny',    // 144p
-        'small',   // 240p
-        'medium',  // 360p
-        'large',   // 480p
-        'hd720',   // 720p
-        'hd1080',  // 1080p
-        'hd1440',  // 1440p
-        'hd2160',  // 2160p (4K)
-        'highres'  // 4320p (8K)
+        ['tiny', '144p'],
+        ['small', '240p'],
+        ['medium', '360p'],
+        ['large', '480p'],
+        ['hd720', '720p'],
+        ['hd1080', '1080p'],
+        ['hd1440', '2K'],
+        ['hd2160', '4K'],
+        ['highres', '8K']
     ];
 
     /**
@@ -49,12 +49,13 @@
      * @returns {string|null} The closest available quality label, or null if none found.
      */
     function getClosestAvailableQuality(preferred, available) {
+        const order = QUALITY_ORDER.map(q => q[0]);
         if (available.includes(preferred)) return preferred;
-        const prefIndex = QUALITY_ORDER.indexOf(preferred);
+        const prefIndex = order.indexOf(preferred);
         if (prefIndex === -1) return available[0] || null;
         for (let i = prefIndex - 1; i >= 0; i--) {
-            if (available.includes(QUALITY_ORDER[i])) {
-                return QUALITY_ORDER[i];
+            if (available.includes(order[i])) {
+                return order[i];
             }
         }
         return available[0] || null;
@@ -67,6 +68,11 @@
             }
         }
         return available[0] || null;
+    }
+
+    function getQualityLabel(qualityKey) {
+        const found = QUALITY_ORDER.find(q => q[0] === qualityKey);
+        return found ? found[1] : qualityKey;
     }
 
     /**
@@ -110,12 +116,12 @@
                     ? player.getPlaybackQuality()
                     : null;
                 if (currentQuality === qualityToSet) {
-                    log('Quality already set to:', qualityToSet);
+                    log('Quality already set to:', getQualityLabel(qualityToSet));
                     return true;
                 }
                 if (player.setPlaybackQualityRange) {
                     player.setPlaybackQualityRange(qualityToSet, qualityToSet);
-                    log('Quality set from custom order to:', qualityToSet);
+                    log('Quality set from custom order to:', getQualityLabel(qualityToSet));
                     return true;
                 }
                 return false;
@@ -140,7 +146,7 @@
 
             if (player.setPlaybackQualityRange) {
                 player.setPlaybackQualityRange(qualityToSet, qualityToSet);
-                log('Quality set to:', qualityToSet);
+                log('Quality set to:', getQualityLabel(qualityToSet));
                 return true;
             }
 
