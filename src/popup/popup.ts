@@ -67,6 +67,7 @@ const addQualityBtn = document.getElementById('addQualityBtn') as HTMLButtonElem
 
 // List of all possible qualities
 const ALL_QUALITIES = [
+    { value: 'highres', label: '4320p (8K)' },
     { value: 'hd2160', label: '2160p (4K)' },
     { value: 'hd1440', label: '1440p (2K)' },
     { value: 'hd1080', label: '1080p (FHD)' },
