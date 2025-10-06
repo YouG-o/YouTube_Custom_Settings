@@ -1,11 +1,11 @@
 <div align='center'>
 
-  [![Release Version](https://img.shields.io/github/v/release/YouG-o/YouTube_Default_Settings?style=flat&logo=github&color=2ea44f)](https://github.com/YouG-o/YouTube_Default_Settings/releases/latest)
-  [![Github Stargazers](https://img.shields.io/github/stars/YouG-o/YouTube_Default_Settings?style=flat&logo=github&color=f9d71c)](https://github.com/YouG-o/YouTube_Default_Settings/stargazers)
-  [![Github Contributors](https://img.shields.io/github/contributors/YouG-o/YouTube_Default_Settings?style=flat&logo=github&color=blue)](https://github.com/YouG-o/YouTube_Default_Settings/graphs/contributors)
-  [![Mozilla Users](https://img.shields.io/amo/users/youtube-default-settings?label=&style=flat&logo=firefox-browser&logoColor=white&color=ff7139)](https://addons.mozilla.org/firefox/addon/youtube-default-settings/)
+  [![Release Version](https://img.shields.io/github/v/release/YouG-o/YouTube_Custom_Settings?style=flat&logo=github&color=2ea44f)](https://github.com/YouG-o/YouTube_Custom_Settings/releases/latest)
+  [![Github Stargazers](https://img.shields.io/github/stars/YouG-o/YouTube_Custom_Settings?style=flat&logo=github&color=f9d71c)](https://github.com/YouG-o/YouTube_Custom_Settings/stargazers)
+  [![Github Contributors](https://img.shields.io/github/contributors/YouG-o/YouTube_Custom_Settings?style=flat&logo=github&color=blue)](https://github.com/YouG-o/YouTube_Custom_Settings/graphs/contributors)
+  [![Mozilla Users](https://img.shields.io/amo/users/youtube-default-settings?label=&style=flat&logo=firefox-browser&logoColor=white&color=ff7139)](https://addons.mozilla.org/firefox/addon/youtube-custom-settings/)
   [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/dgbmcgmjlphkgepbmjlhohabmhlhhchn?label=&style=flat&logo=google-chrome&logoColor=white&color=4285F4)](https://chromewebstore.google.com/detail/youtube-default-settings/dgbmcgmjlphkgepbmjlhohabmhlhhchn)
-  ![LICENSE](https://img.shields.io/github/license/YouG-o/YouTube_Default_Settings?label=&style=flat&logo=license&logoColor=white&color=3da639)
+  ![LICENSE](https://img.shields.io/github/license/YouG-o/YouTube_Custom_Settings?label=&style=flat&logo=license&logoColor=white&color=3da639)
 
 </div>
 
@@ -17,13 +17,13 @@
 
   ###
 
-  # YouTube Default Settings
+  # YouTube Custom Settings
 
-  A small web-browser Add-On allowing you to set default values to YouTube's video player.
+  A small web-browser Add-On allowing you to set custom settings to YouTube.
 
   <br>
 
-  [![Available on Mozzila](./assets/images/firefox.png)](https://addons.mozilla.org/firefox/addon/youtube-default-settings/)
+  [![Available on Mozzila](./assets/images/firefox.png)](https://addons.mozilla.org/firefox/addon/youtube-custom-settings/)
   [![Available on Chrome Web Store](./assets/images/chrome.png)](https://chromewebstore.google.com/detail/youtube-default-settings/dgbmcgmjlphkgepbmjlhohabmhlhhchn)
 
 
@@ -39,6 +39,7 @@
 </div>
   
   - **Quality**
+  - **Audio Tracks** : Set default language
   - **Speed**
   - **Subtitles**
   - **Audio Normalizer**: Balance sound volume with automatic or manual activation (via player button)
@@ -64,7 +65,7 @@
   ### Installation
   ```bash
   # Clone the repository
-  git clone https://github.com/YouG-o/YouTube_Default_Settings.git
+  git clone https://github.com/YouG-o/YouTube_Custom_Settings.git
   cd YouTube_Default_Settings
 
   # Install dependencies

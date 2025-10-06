@@ -31,7 +31,7 @@
 
 
 (() => {
-    const LOG_PREFIX = '[YDS]';
+    const LOG_PREFIX = '[YCS]';
     const LOG_CONTEXT = '[SUBTITLES]';
     const LOG_COLOR = '#FF9800';  // Orange
     const ERROR_COLOR = '#F44336';  // Red
@@ -195,7 +195,7 @@
         if (!player) return false;
 
         // Get language preference from localStorage
-        const subtitlesLanguage = localStorage.getItem('yds-subtitlesLanguage') || 'original';
+        const subtitlesLanguage = localStorage.getItem('ycs-subtitlesLanguage') || 'original';
         //log(`Using preferred language: ${subtitlesLanguage}`);
 
         // Check if subtitles are disabled

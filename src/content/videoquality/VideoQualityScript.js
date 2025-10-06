@@ -6,7 +6,7 @@
  */
 
 (() => {
-    const LOG_PREFIX = '[YDS]';
+    const LOG_PREFIX = '[YCS]';
     const LOG_CONTEXT = '[VIDEO QUALITY]';
     const LOG_COLOR = '#fcd34d';
     const ERROR_COLOR = '#F44336';
@@ -91,11 +91,11 @@
         const player = document.getElementById(targetId);
         if (!player) return false;
 
-        const qualityEnabled = localStorage.getItem('yds-quality-enabled') === 'true';
+        const qualityEnabled = localStorage.getItem('ycs-quality-enabled') === 'true';
         if (!qualityEnabled) return false;
 
-        const preferredQuality = localStorage.getItem('yds-quality-value') || 'auto';
-        const customOrderObj = JSON.parse(localStorage.getItem('yds-quality-customOrder') || '{"enabled":false,"order":[]}');
+        const preferredQuality = localStorage.getItem('ycs-quality-value') || 'auto';
+        const customOrderObj = JSON.parse(localStorage.getItem('ycs-quality-customOrder') || '{"enabled":false,"order":[]}');
         const customOrderEnabled = customOrderObj.enabled;
         const customOrder = Array.isArray(customOrderObj.order) ? customOrderObj.order : [];
 

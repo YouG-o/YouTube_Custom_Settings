@@ -16,8 +16,8 @@ async function syncVolumePreference() {
         const settings = result.settings as ExtensionSettings;
 
         if (settings?.volume) {
-            localStorage.setItem('yds-volume-enabled', JSON.stringify(settings.volume.enabled));
-            localStorage.setItem('yds-volume-value', settings.volume.value.toString());
+            localStorage.setItem('ycs-volume-enabled', JSON.stringify(settings.volume.enabled));
+            localStorage.setItem('ycs-volume-value', settings.volume.value.toString());
             volumeLog(`Synced volume preference from extension storage: ${settings.volume.value}`);
         }
     } catch (error) {
@@ -29,7 +29,7 @@ async function syncVolumePreference() {
 export async function handleVolume() {
     await syncVolumePreference();
 
-    const volumeEnabled = localStorage.getItem('yds-volume-enabled') === 'true';
+    const volumeEnabled = localStorage.getItem('ycs-volume-enabled') === 'true';
     if (!volumeEnabled) {
         volumeLog('Volume feature is disabled, not injecting script');
         return;

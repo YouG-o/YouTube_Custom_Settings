@@ -17,13 +17,13 @@ async function syncVideoSpeedPreference() {
         const settings = result.settings as ExtensionSettings;
         
         if (settings?.videoSpeed) {
-            localStorage.setItem('yds-speed-enabled', JSON.stringify(settings.videoSpeed.enabled));
-            localStorage.setItem('yds-speed-value', settings.videoSpeed.value.toString());
-            localStorage.setItem('yds-speed-apply-to-shorts', JSON.stringify(settings.videoSpeed.applyToShorts));
+            localStorage.setItem('ycs-speed-enabled', JSON.stringify(settings.videoSpeed.enabled));
+            localStorage.setItem('ycs-speed-value', settings.videoSpeed.value.toString());
+            localStorage.setItem('ycs-speed-apply-to-shorts', JSON.stringify(settings.videoSpeed.applyToShorts));
             // Synchronize duration rule settings
-            localStorage.setItem('yds-speed-duration-rule-enabled', JSON.stringify(settings.videoSpeed.durationRuleEnabled ?? false));
-            localStorage.setItem('yds-speed-duration-rule-type', settings.videoSpeed.durationRuleType ?? 'greater');
-            localStorage.setItem('yds-speed-duration-rule-minutes', (settings.videoSpeed.durationRuleMinutes ?? 5).toString());
+            localStorage.setItem('ycs-speed-duration-rule-enabled', JSON.stringify(settings.videoSpeed.durationRuleEnabled ?? false));
+            localStorage.setItem('ycs-speed-duration-rule-type', settings.videoSpeed.durationRuleType ?? 'greater');
+            localStorage.setItem('ycs-speed-duration-rule-minutes', (settings.videoSpeed.durationRuleMinutes ?? 5).toString());
             //videoSpeedLog(`Synced video speed preference from extension storage: ${settings.videoSpeed.value}`);
         }
     } catch (error) {
@@ -36,7 +36,7 @@ export async function handleVideoSpeed() {
     await syncVideoSpeedPreference(); // Sync speed preference
     
     // Check if we should apply speed to current page
-    const speedEnabled = localStorage.getItem('yds-speed-enabled') === 'true';
+    const speedEnabled = localStorage.getItem('ycs-speed-enabled') === 'true';
     if (!speedEnabled) {
         videoSpeedLog('Video speed feature is disabled, not injecting script');
         return;
@@ -46,7 +46,7 @@ export async function handleVideoSpeed() {
     const isShorts = window.location.pathname.startsWith('/shorts');
     
     // Check if we should apply to shorts
-    const applyToShorts = localStorage.getItem('yds-speed-apply-to-shorts') !== 'false';
+    const applyToShorts = localStorage.getItem('ycs-speed-apply-to-shorts') !== 'false';
     
     // Skip injection if this is a shorts page and we shouldn't apply speed to shorts
     if (isShorts && !applyToShorts) {
@@ -70,12 +70,12 @@ browser.runtime.onMessage.addListener((message: unknown) => {
         
         // Store preference
         videoSpeedLog(`Setting video speed preference to: ${message.speed}, enabled: ${message.enabled}`);
-        localStorage.setItem('yds-speed-enabled', JSON.stringify(message.enabled));
-        localStorage.setItem('yds-speed-value', message.speed.toString());
+        localStorage.setItem('ycs-speed-enabled', JSON.stringify(message.enabled));
+        localStorage.setItem('ycs-speed-value', message.speed.toString());
         
         // Store the "apply to shorts" preference if it exists
         if ('applyToShorts' in message && typeof message.applyToShorts === 'boolean') {
-            localStorage.setItem('yds-speed-apply-to-shorts', JSON.stringify(message.applyToShorts));
+            localStorage.setItem('ycs-speed-apply-to-shorts', JSON.stringify(message.applyToShorts));
         }
         
         // Reapply speed if a video is currently playing

@@ -17,9 +17,9 @@ async function syncVideoQualityPreference() {
         const settings = result.settings as ExtensionSettings;
         
         if (settings?.videoQuality) {
-            localStorage.setItem('yds-quality-enabled', JSON.stringify(settings.videoQuality.enabled));
-            localStorage.setItem('yds-quality-value', settings.videoQuality.value);
-            localStorage.setItem('yds-quality-customOrder', JSON.stringify(settings.videoQuality.customOrder || []));
+            localStorage.setItem('ycs-quality-enabled', JSON.stringify(settings.videoQuality.enabled));
+            localStorage.setItem('ycs-quality-value', settings.videoQuality.value);
+            localStorage.setItem('ycs-quality-customOrder', JSON.stringify(settings.videoQuality.customOrder || []));
             videoQualityLog(`Synced video quality preference from extension storage: ${settings.videoQuality.value}`);
         }
     } catch (error) {
@@ -45,8 +45,8 @@ browser.runtime.onMessage.addListener((message: unknown) => {
         
         // Store preference
         videoQualityLog(`Setting video quality preference to: ${message.quality}, enabled: ${message.enabled}`);
-        localStorage.setItem('yds-quality-enabled', JSON.stringify(message.enabled));
-        localStorage.setItem('yds-quality-value', message.quality);
+        localStorage.setItem('ycs-quality-enabled', JSON.stringify(message.enabled));
+        localStorage.setItem('ycs-quality-value', message.quality);
         
         // Reapply quality if a video is currently playing
         handleVideoQuality();

@@ -17,7 +17,7 @@ async function syncAudioLanguagePreference() {
         const settings = result.settings as ExtensionSettings;
         
         if (settings?.audioTrack?.language) {
-            localStorage.setItem('yds-audioLanguage', settings.audioTrack.language);
+            localStorage.setItem('ycs-audioLanguage', settings.audioTrack.language);
         }
     } catch (error) {
         audioTrackErrorLog('Error syncing audio language preference:', error);

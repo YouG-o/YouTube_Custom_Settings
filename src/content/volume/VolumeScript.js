@@ -8,7 +8,7 @@
  */
 
 (() => {
-    const LOG_PREFIX = '[YDS]';
+    const LOG_PREFIX = '[YCS]';
     const LOG_CONTEXT = '[VOLUME]';
     const LOG_COLOR = '#60a5fa';
 
@@ -28,10 +28,10 @@
 
     function setDefaultVolume() {
         try {
-            const volumeEnabled = localStorage.getItem('yds-volume-enabled') === 'true';
+            const volumeEnabled = localStorage.getItem('ycs-volume-enabled') === 'true';
             if (!volumeEnabled) return;
 
-            const volumeValue = parseFloat(localStorage.getItem('yds-volume-value') || '100');
+            const volumeValue = parseFloat(localStorage.getItem('ycs-volume-value') || '100');
             const clampedVolume = Math.max(0, Math.min(100, volumeValue));
 
             const player = getPlayer();

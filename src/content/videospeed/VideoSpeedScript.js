@@ -6,7 +6,7 @@
  */
 
 (() => {
-    const LOG_PREFIX = '[YDS]';
+    const LOG_PREFIX = '[YCS]';
     const LOG_CONTEXT = '[VIDEO SPEED]';
     const LOG_COLOR = '#fca5a5';  // Light red
     const ERROR_COLOR = '#F44336';  // Red
@@ -70,10 +70,10 @@
     }
 
     function shouldApplySpeed() {
-        const ruleEnabled = localStorage.getItem('yds-speed-duration-rule-enabled') === 'true';
+        const ruleEnabled = localStorage.getItem('ycs-speed-duration-rule-enabled') === 'true';
         if (!ruleEnabled) return true;
-        const ruleType = localStorage.getItem('yds-speed-duration-rule-type') || 'less';
-        const ruleMinutes = parseInt(localStorage.getItem('yds-speed-duration-rule-minutes') || '60', 10);
+        const ruleType = localStorage.getItem('ycs-speed-duration-rule-type') || 'less';
+        const ruleMinutes = parseInt(localStorage.getItem('ycs-speed-duration-rule-minutes') || '60', 10);
 
         let targetId = 'movie_player';
         if (window.location.pathname.startsWith('/shorts')) {
@@ -100,19 +100,19 @@
             }
             
             // Get speed preference from localStorage
-            const speedEnabled = localStorage.getItem('yds-speed-enabled') === 'true';
+            const speedEnabled = localStorage.getItem('ycs-speed-enabled') === 'true';
             if (!speedEnabled) return false;
 
-            const preferredSpeed = parseFloat(localStorage.getItem('yds-speed-value') || '1');
+            const preferredSpeed = parseFloat(localStorage.getItem('ycs-speed-value') || '1');
             
             // For speeds above YouTube's limit (2.0), always use direct HTML5 video element manipulation
             if (preferredSpeed > 2.0 || preferredSpeed < 0.25) {
                 //log('Speed value outside YouTube API limit, using direct video element manipulation');
                 // Check duration rule before applying speed
-                const ruleEnabled = localStorage.getItem('yds-speed-duration-rule-enabled') === 'true';
+                const ruleEnabled = localStorage.getItem('ycs-speed-duration-rule-enabled') === 'true';
                 if (ruleEnabled) {
-                    const ruleType = localStorage.getItem('yds-speed-duration-rule-type') || 'greater';
-                    const ruleMinutes = parseInt(localStorage.getItem('yds-speed-duration-rule-minutes') || '60', 10);
+                    const ruleType = localStorage.getItem('ycs-speed-duration-rule-type') || 'greater';
+                    const ruleMinutes = parseInt(localStorage.getItem('ycs-speed-duration-rule-minutes') || '60', 10);
 
                     const video = document.querySelector('video');
                     if (!video) {
@@ -164,10 +164,10 @@
             }
             
             // Check duration rule before applying speed
-            const ruleEnabled = localStorage.getItem('yds-speed-duration-rule-enabled') === 'true';
+            const ruleEnabled = localStorage.getItem('ycs-speed-duration-rule-enabled') === 'true';
             if (ruleEnabled) {
-                const ruleType = localStorage.getItem('yds-speed-duration-rule-type') || 'greater';
-                const ruleMinutes = parseInt(localStorage.getItem('yds-speed-duration-rule-minutes') || '60', 10);
+                const ruleType = localStorage.getItem('ycs-speed-duration-rule-type') || 'greater';
+                const ruleMinutes = parseInt(localStorage.getItem('ycs-speed-duration-rule-minutes') || '60', 10);
 
                 if (player.getDuration) {
                     const durationSeconds = player.getDuration();

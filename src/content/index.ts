@@ -62,7 +62,7 @@ function applyStoredSettings() {
     if (!currentSettings) return;
     
     window.postMessage({
-        type: 'YDS_SETTINGS_UPDATE',
+        type: 'YCS_SETTINGS_UPDATE',
         settings: currentSettings
     }, '*');
     

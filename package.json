@@ -1,5 +1,5 @@
 {
-  "name": "yds",
+  "name": "ycs",
   "version": "1.8.2",
   "description": "Set default values to YouTube (quality, speed, subtitles, audio), also includes an audio normalizer and members-only video filter.",
   "scripts": {
@@ -26,17 +26,17 @@
     "sync-package-fields-to-manifest": "node scripts/sync-package-fields-to-manifest.js",
     "pre:web-ext:firefox": "cp manifests/manifest.firefox.json manifest.json && npm run sync-package-fields-to-manifest",
     "pre:web-ext:chromium": "cp manifests/manifest.chromium.json manifest.json && npm run sync-package-fields-to-manifest",
-    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=firefox-yds-${npm_package_version}.zip",
-    "web-ext:chromium": "web-ext build --overwrite-dest -a web-ext-artifacts/chromium --filename=chromium-yds-${npm_package_version}.zip",
+    "web-ext:firefox": "web-ext build --overwrite-dest -a web-ext-artifacts/firefox --filename=firefox-ycs-${npm_package_version}.zip",
+    "web-ext:chromium": "web-ext build --overwrite-dest -a web-ext-artifacts/chromium --filename=chromium-ycs-${npm_package_version}.zip",
     "package": "npm run package:firefox && npm run package:chromium",
-    "package:firefox": "npm run build:firefox && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/firefox --filename=firefox-yds-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
+    "package:firefox": "npm run build:firefox && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/firefox --filename=firefox-ycs-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
     "source:mozilla": "node scripts/package-for-mozilla-reviewers.js",
-    "package:chromium": "npm run build:chromium && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/chromium --filename=chromium-yds-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
+    "package:chromium": "npm run build:chromium && rm -rf build-tmp && mkdir build-tmp && cp -r dist build-tmp/ && cp LICENSE build-tmp/ && cp CHANGELOG.md build-tmp/ && cp manifest.json build-tmp/ && (cd build-tmp && web-ext build --overwrite-dest -a ../web-ext-artifacts/chromium --filename=chromium-ycs-${npm_package_version}.zip) && rm -rf build-tmp && npm run clean",
     "post:build": "rimraf dist/config dist/types"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YouG-o/YouTube_Default_Settings.git"
+    "url": "git+https://github.com/YouG-o/YouTube_Custom_Settings.git"
   },
   "keywords": [
     "youtube",
@@ -49,9 +49,9 @@
   "author": "YouGo",
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/YouG-o/YouTube_Default_Settings/issues"
+    "url": "https://github.com/YouG-o/YouTube_Custom_Settings/issues"
   },
-  "homepage": "https://github.com/YouG-o/YouTube_Default_Settings",
+  "homepage": "https://github.com/YouG-o/YouTube_Custom_Settings",
   "devDependencies": {
     "@types/chrome": "^0.0.326",
     "@types/webextension-polyfill": "^0.12.3",
