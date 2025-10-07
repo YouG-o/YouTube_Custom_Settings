@@ -41,8 +41,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./web-ext-artifacts/firefox/firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
-        asset_name: firefox-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_path: ./web-ext-artifacts/firefox/firefox-ycs-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: firefox-ycs-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
         asset_content_type: application/zip
 
     - name: Upload Chromium extension to release
@@ -51,6 +51,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./web-ext-artifacts/chromium/chromium-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
-        asset_name: chromium-yds-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_path: ./web-ext-artifacts/chromium/chromium-ycs-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
+        asset_name: chromium-ycs-${{ steps.package_version.outputs.PACKAGE_VERSION }}.zip
         asset_content_type: application/zip

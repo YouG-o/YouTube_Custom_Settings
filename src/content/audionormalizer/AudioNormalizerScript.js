@@ -6,7 +6,7 @@
  */
 
 (() => {
-    const LOG_PREFIX = '[YDS]';
+    const LOG_PREFIX = '[YCS]';
     const LOG_CONTEXT = '[AUDIO NORMALIZER]';
     const LOG_COLOR = '#4ade80';  // Green
     const ERROR_COLOR = '#F44336';  // Red
