@@ -17,9 +17,16 @@ async function syncVideoQualityPreference() {
         const settings = result.settings as ExtensionSettings;
         
         if (settings?.videoQuality) {
-            localStorage.setItem('ycs-quality-enabled', JSON.stringify(settings.videoQuality.enabled));
-            localStorage.setItem('ycs-quality-value', settings.videoQuality.value);
-            localStorage.setItem('ycs-quality-customOrder', JSON.stringify(settings.videoQuality.customOrder || []));
+            // Read current YCS_SETTINGS object
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
+            
+            // Update only videoQuality property
+            ycsSettings.videoQuality = settings.videoQuality;
+            
+            // Write back
+            localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
+            
             videoQualityLog(`Synced video quality preference from extension storage: ${settings.videoQuality.value}`);
         }
     } catch (error) {
@@ -31,6 +38,17 @@ async function syncVideoQualityPreference() {
 export async function handleVideoQuality() {   
     //videoQualityLog('Initializing video quality management');
     await syncVideoQualityPreference(); // Sync quality preference
+    
+    // Check if enabled
+    const raw = localStorage.getItem('YCS_SETTINGS');
+    const ycsSettings = raw ? JSON.parse(raw) : {};
+    const qualityEnabled = ycsSettings.videoQuality?.enabled === true;
+    
+    if (!qualityEnabled) {
+        videoQualityLog('Video quality feature is disabled, not injecting script');
+        return;
+    }
+    
     const script = document.createElement('script');
     script.src = browser.runtime.getURL('dist/content/scripts/VideoQualityScript.js');
     document.documentElement.appendChild(script);
@@ -43,10 +61,22 @@ browser.runtime.onMessage.addListener((message: unknown) => {
         'quality' in message && typeof message.quality === 'string' &&
         'enabled' in message && typeof message.enabled === 'boolean') {
         
+        // Read current YCS_SETTINGS object
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        
+        // Ensure videoQuality object exists
+        if (!ycsSettings.videoQuality) {
+            ycsSettings.videoQuality = {};
+        }
+        
         // Store preference
         videoQualityLog(`Setting video quality preference to: ${message.quality}, enabled: ${message.enabled}`);
-        localStorage.setItem('ycs-quality-enabled', JSON.stringify(message.enabled));
-        localStorage.setItem('ycs-quality-value', message.quality);
+        ycsSettings.videoQuality.enabled = message.enabled;
+        ycsSettings.videoQuality.value = message.quality;
+        
+        // Write back
+        localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
         
         // Reapply quality if a video is currently playing
         handleVideoQuality();

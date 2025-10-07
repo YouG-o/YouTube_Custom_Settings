@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Feature
+- Added 8K to quality setting
+
+### Refactor
+- Renamed Extension to YouTube Custom Settings (updated everything related)
+- Unified all localStorage settings into a single `YCS_SETTINGS` object for better maintainability and consistency
+
 ## [1.8.2] - 2025-09-22
 
 ### Feature
@@ -76,15 +83,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-*Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Default_Settings/releases).*
+*Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Custom_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.8.2...HEAD
-[1.8.2]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.8.0...v1.8.2
-[1.8.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.7.0...v1.8.0
-[1.7.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.6.0...v1.7.0
-[1.6.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.5.0...v1.6.0
-[1.5.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.4.0...v1.5.0
-[1.4.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.3.0...v1.4.0
-[1.3.0]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.3.0
-[1.2.2]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.12...v1.2.2
-[1.2.12]: https://github.com/YouG-o/YouTube_Default_Settings/compare/v1.2.0...v1.2.12
+[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.8.2...HEAD
+[1.8.2]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.8.0...v1.8.2
+[1.8.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.7.0...v1.8.0
+[1.7.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.6.0...v1.7.0
+[1.6.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.5.0...v1.6.0
+[1.5.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.2.12...v1.3.0
+[1.2.2]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.2.12...v1.2.2
+[1.2.12]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.2.0...v1.2.12

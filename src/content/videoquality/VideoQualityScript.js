@@ -91,11 +91,16 @@
         const player = document.getElementById(targetId);
         if (!player) return false;
 
-        const qualityEnabled = localStorage.getItem('ycs-quality-enabled') === 'true';
+        // Read from YCS_SETTINGS
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        const videoQuality = ycsSettings.videoQuality || {};
+        
+        const qualityEnabled = videoQuality.enabled === true;
         if (!qualityEnabled) return false;
 
-        const preferredQuality = localStorage.getItem('ycs-quality-value') || 'auto';
-        const customOrderObj = JSON.parse(localStorage.getItem('ycs-quality-customOrder') || '{"enabled":false,"order":[]}');
+        const preferredQuality = videoQuality.value || 'auto';
+        const customOrderObj = videoQuality.customOrder || { enabled: false, order: [] };
         const customOrderEnabled = customOrderObj.enabled;
         const customOrder = Array.isArray(customOrderObj.order) ? customOrderObj.order : [];
 

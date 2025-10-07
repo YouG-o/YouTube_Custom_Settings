@@ -28,10 +28,15 @@
 
     function setDefaultVolume() {
         try {
-            const volumeEnabled = localStorage.getItem('ycs-volume-enabled') === 'true';
+            // Read from YCS_SETTINGS
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
+            const volume = ycsSettings.volume || {};
+            
+            const volumeEnabled = volume.enabled === true;
             if (!volumeEnabled) return;
 
-            const volumeValue = parseFloat(localStorage.getItem('ycs-volume-value') || '100');
+            const volumeValue = volume.value || 100;
             const clampedVolume = Math.max(0, Math.min(100, volumeValue));
 
             const player = getPlayer();

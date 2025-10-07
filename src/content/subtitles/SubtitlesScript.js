@@ -194,8 +194,10 @@
         const player = document.getElementById(targetId);
         if (!player) return false;
 
-        // Get language preference from localStorage
-        const subtitlesLanguage = localStorage.getItem('ycs-subtitlesLanguage') || 'original';
+        // Read from YCS_SETTINGS
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        const subtitlesLanguage = ycsSettings.subtitlesPreference?.value || 'original';
         //log(`Using preferred language: ${subtitlesLanguage}`);
 
         // Check if subtitles are disabled

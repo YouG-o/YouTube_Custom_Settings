@@ -17,13 +17,16 @@ async function syncVideoSpeedPreference() {
         const settings = result.settings as ExtensionSettings;
         
         if (settings?.videoSpeed) {
-            localStorage.setItem('ycs-speed-enabled', JSON.stringify(settings.videoSpeed.enabled));
-            localStorage.setItem('ycs-speed-value', settings.videoSpeed.value.toString());
-            localStorage.setItem('ycs-speed-apply-to-shorts', JSON.stringify(settings.videoSpeed.applyToShorts));
-            // Synchronize duration rule settings
-            localStorage.setItem('ycs-speed-duration-rule-enabled', JSON.stringify(settings.videoSpeed.durationRuleEnabled ?? false));
-            localStorage.setItem('ycs-speed-duration-rule-type', settings.videoSpeed.durationRuleType ?? 'greater');
-            localStorage.setItem('ycs-speed-duration-rule-minutes', (settings.videoSpeed.durationRuleMinutes ?? 5).toString());
+            // Read current YCS_SETTINGS object
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
+            
+            // Update only videoSpeed property
+            ycsSettings.videoSpeed = settings.videoSpeed;
+            
+            // Write back
+            localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
+            
             //videoSpeedLog(`Synced video speed preference from extension storage: ${settings.videoSpeed.value}`);
         }
     } catch (error) {
@@ -35,8 +38,11 @@ async function syncVideoSpeedPreference() {
 export async function handleVideoSpeed() {   
     await syncVideoSpeedPreference(); // Sync speed preference
     
-    // Check if we should apply speed to current page
-    const speedEnabled = localStorage.getItem('ycs-speed-enabled') === 'true';
+    // Check if enabled
+    const raw = localStorage.getItem('YCS_SETTINGS');
+    const ycsSettings = raw ? JSON.parse(raw) : {};
+    const speedEnabled = ycsSettings.videoSpeed?.enabled === true;
+    
     if (!speedEnabled) {
         videoSpeedLog('Video speed feature is disabled, not injecting script');
         return;
@@ -46,7 +52,7 @@ export async function handleVideoSpeed() {
     const isShorts = window.location.pathname.startsWith('/shorts');
     
     // Check if we should apply to shorts
-    const applyToShorts = localStorage.getItem('ycs-speed-apply-to-shorts') !== 'false';
+    const applyToShorts = ycsSettings.videoSpeed?.applyToShorts !== false;
     
     // Skip injection if this is a shorts page and we shouldn't apply speed to shorts
     if (isShorts && !applyToShorts) {
@@ -68,15 +74,27 @@ browser.runtime.onMessage.addListener((message: unknown) => {
         'speed' in message && typeof message.speed === 'number' &&
         'enabled' in message && typeof message.enabled === 'boolean') {
         
+        // Read current YCS_SETTINGS object
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        
+        // Ensure videoSpeed object exists
+        if (!ycsSettings.videoSpeed) {
+            ycsSettings.videoSpeed = {};
+        }
+        
         // Store preference
         videoSpeedLog(`Setting video speed preference to: ${message.speed}, enabled: ${message.enabled}`);
-        localStorage.setItem('ycs-speed-enabled', JSON.stringify(message.enabled));
-        localStorage.setItem('ycs-speed-value', message.speed.toString());
+        ycsSettings.videoSpeed.enabled = message.enabled;
+        ycsSettings.videoSpeed.value = message.speed;
         
         // Store the "apply to shorts" preference if it exists
         if ('applyToShorts' in message && typeof message.applyToShorts === 'boolean') {
-            localStorage.setItem('ycs-speed-apply-to-shorts', JSON.stringify(message.applyToShorts));
+            ycsSettings.videoSpeed.applyToShorts = message.applyToShorts;
         }
+        
+        // Write back
+        localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
         
         // Reapply speed if a video is currently playing
         handleVideoSpeed();

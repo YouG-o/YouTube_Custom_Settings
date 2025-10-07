@@ -16,8 +16,18 @@ async function syncAudioLanguagePreference() {
         const result = await browser.storage.local.get('settings');
         const settings = result.settings as ExtensionSettings;
         
-        if (settings?.audioTrack?.language) {
-            localStorage.setItem('ycs-audioLanguage', settings.audioTrack.language);
+        if (settings?.audioTrack) {
+            // Read current YCS_SETTINGS object
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
+            
+            // Update only audioTrack property
+            ycsSettings.audioTrack = settings.audioTrack;
+            
+            // Write back
+            localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
+            
+            audioTrackLog(`Synced audio track preference: language=${settings.audioTrack.language}`);
         }
     } catch (error) {
         audioTrackErrorLog('Error syncing audio language preference:', error);
@@ -26,6 +36,17 @@ async function syncAudioLanguagePreference() {
 
 export async function handleAudioTrack() {   
     await syncAudioLanguagePreference();
+    
+    // Check if enabled
+    const raw = localStorage.getItem('YCS_SETTINGS');
+    const ycsSettings = raw ? JSON.parse(raw) : {};
+    const audioTrackEnabled = ycsSettings.audioTrack?.enabled === true;
+    
+    if (!audioTrackEnabled) {
+        audioTrackLog('Audio track feature is disabled, not injecting script');
+        return;
+    }
+    
     const script = document.createElement('script');
     script.src = browser.runtime.getURL('dist/content/scripts/AudioTrackScript.js');
     document.documentElement.appendChild(script);

@@ -52,22 +52,22 @@
     function cleanupAudioProcessing() {
         try {
             if (currentVideoElement) {
-                // Restore volume handling
                 if (originalVolumeHandler) {
                     Object.defineProperty(currentVideoElement, 'volume', originalVolumeHandler);
                 }
                 
-                // Save the current time and whether video was playing
                 const currentTime = currentVideoElement.currentTime;
                 const wasPlaying = !currentVideoElement.paused;
-                const userVolume = localStorage.getItem('ycs-user-volume') || '1';
                 
-                // Clean up all audio nodes
+                // Read userVolume from YCS_SETTINGS
+                const raw = localStorage.getItem('YCS_SETTINGS');
+                const ycsSettings = raw ? JSON.parse(raw) : {};
+                const userVolume = ycsSettings.audioNormalizer?.userVolume || 1;
+                
                 if (source) source.disconnect();
                 if (compressor) compressor.disconnect();
                 if (gainNode) gainNode.disconnect();
                 
-                // Close the AudioContext
                 if (audioContext && audioContext.state !== 'closed') {
                     try {
                         audioContext.close();
@@ -76,34 +76,26 @@
                     }
                 }
                 
-                // Reset all our references
                 source = null;
                 compressor = null;
                 gainNode = null;
                 audioContext = null;
                 
-                // The most reliable way to restore audio: reload the current src
-                // This completely restores the default audio path
                 const videoElement = currentVideoElement;
                 const originalSrc = videoElement.src;
                 
                 if (originalSrc) {
-                    // Create a one-time event listener for when media is ready
                     videoElement.addEventListener('loadeddata', function restorePlayback() {
-                        // Remove this listener after it executes once
                         videoElement.removeEventListener('loadeddata', restorePlayback);
                         
-                        // Restore time position
                         videoElement.currentTime = currentTime;
                         
-                        // Restore volume
                         try {
                             videoElement.volume = parseFloat(userVolume);
                         } catch (e) {
                             videoElement.volume = 1.0;
                         }
                         
-                        // Resume playback if it was playing
                         if (wasPlaying) {
                             try {
                                 videoElement.play().catch(e => {
@@ -117,8 +109,6 @@
                         log('Video playback restored successfully');
                     });
                     
-                    // Reload the current src to reset audio path
-                    // We're using a small timeout to ensure clean disconnection first
                     setTimeout(() => {
                         try {
                             const tempSrc = originalSrc;
@@ -130,7 +120,6 @@
                     }, 50);
                 }
                 
-                // Clean up other resources
                 if (volumeObserver) {
                     volumeObserver.disconnect();
                     volumeObserver = null;
@@ -142,7 +131,6 @@
             isProcessingActive = false;
             log('Audio processing cleaned up');
             
-            // Update button state if it exists
             updateButtonState(false);
         } catch (error) {
             errorLog(`Error cleaning up audio: ${error.message}`);
@@ -151,22 +139,21 @@
     
     // Get compressor settings based on intensity
     function getCompressorSettings(intensity) {
+        // Read from YCS_SETTINGS
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        const customSettings = ycsSettings.audioNormalizer?.customSettings;
+        
         // Check if we have custom settings stored
-        if (intensity === 'custom') {
+        if (intensity === 'custom' && customSettings) {
             try {
-                const threshold = parseFloat(localStorage.getItem('ycs-custom-threshold') || '0.1');
-                const boost = parseFloat(localStorage.getItem('ycs-custom-boost') || '1.5');
-                const ratio = parseFloat(localStorage.getItem('ycs-custom-ratio') || '4'); // <-- ici
-                const attack = parseFloat(localStorage.getItem('ycs-custom-attack') || '0.01');
-                const release = parseFloat(localStorage.getItem('ycs-custom-release') || '0.25');
-                
                 log('Using custom compressor settings');
                 return {
-                    threshold,
-                    boost,
-                    ratio, // <-- ici
-                    attack,
-                    release
+                    threshold: customSettings.threshold || -30,
+                    boost: customSettings.boost || 1.2,
+                    ratio: customSettings.ratio || 4,
+                    attack: customSettings.attack || 0.01,
+                    release: customSettings.release || 0.25
                 };
             } catch (error) {
                 errorLog('Error reading custom settings, falling back to medium:', error);
@@ -178,26 +165,26 @@
         switch (intensity) {
             case 'light':
                 return {
-                    threshold: -24,   // dB, start compressing above this level
-                    boost: 1.1,       // Slight boost
-                    ratio: 2.5,       // Gentle compression
-                    attack: 0.03,     // Seconds
-                    release: 0.25     // Seconds
+                    threshold: -24,
+                    boost: 1.1,
+                    ratio: 2.5,
+                    attack: 0.03,
+                    release: 0.25
                 };
             case 'medium':
             default:
                 return {
-                    threshold: -30,   // dB, more compression
+                    threshold: -30,
                     boost: 1.2,
-                    ratio: 4,         // Standard compression
+                    ratio: 4,
                     attack: 0.01,
                     release: 0.25
                 };
             case 'strong':
                 return {
-                    threshold: -40,   // dB, compress almost everything
+                    threshold: -40,
                     boost: 1.4,
-                    ratio: 8,         // Heavy compression
+                    ratio: 8,
                     attack: 0.002,
                     release: 0.2
                 };
@@ -221,62 +208,60 @@
     // Set up real audio normalizer using Web Audio API
     function setupAudioNormalizer(forceActivate = false) {
         try {
+            // Read from YCS_SETTINGS
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
+            const audioNormalizer = ycsSettings.audioNormalizer || {};
+            
             // Check if normalization is enabled in extension settings
-            const isEnabled = localStorage.getItem('ycs-audio-normalizer-enabled') === 'true';
+            const isEnabled = audioNormalizer.enabled === true;
             if (!isEnabled) {
                 if (isProcessingActive) {
                     cleanupAudioProcessing();
                     log('Audio normalizer disabled');
                 }
-                // Remove button if feature is disabled completely
                 removeNormalizerButton();
                 return false;
             }
             
             // Get the normalization settings
-            currentIntensity = localStorage.getItem('ycs-audio-normalizer-value') || 'medium';
-            manualActivation = localStorage.getItem('ycs-audio-normalizer-manual') === 'true';
+            currentIntensity = audioNormalizer.value || 'medium';
+            manualActivation = audioNormalizer.manualActivation === true;
             
             // Handle manual activation - just add the button, don't process audio yet
             if (manualActivation) {
                 addNormalizerButton();
                 
                 // Only proceed if force activate or already active
-                const isActive = localStorage.getItem('ycs-audio-normalizer-active') === 'true';
+                const isActive = audioNormalizer.active === true;
                 if (!forceActivate && !isActive) {
-                    // Clean up any existing processing
                     if (isProcessingActive) {
                         cleanupAudioProcessing();
                     }
                     return false;
                 }
             } else {
-                // Auto mode - remove button if exists
                 removeNormalizerButton();
             }
             
-            // Find the video element
             const video = document.querySelector('video');
             if (!video) {
                 errorLog('No video element found');
                 return false;
             }
             
-            // Store current URL (for detecting changes)
             videoUrl = window.location.href;
             
-            // Save the user's current volume level for restoration later
-            localStorage.setItem('ycs-user-volume', video.volume.toString());
+            // Save the user's current volume level
+            ycsSettings.audioNormalizer.userVolume = video.volume;
+            localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
             
-            // First cleanup any existing processing to avoid duplicates
             cleanupAudioProcessing();
             
             log(`Setting up audio normalizer with intensity: ${currentIntensity}`);
             
-            // Store reference to video element
             currentVideoElement = video;
             
-            // Create AudioContext
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 log('Created AudioContext');
@@ -285,7 +270,6 @@
                 return false;
             }
             
-            // Create source node from video element
             try {
                 source = audioContext.createMediaElementSource(video);
                 log('Created audio source from video element');
@@ -295,10 +279,8 @@
                 return false;
             }
             
-            // Get compressor settings based on intensity
             const settings = getCompressorSettings(currentIntensity);
             
-            // Create a compressor node for normalization
             try {
                 compressor = audioContext.createDynamicsCompressor();
                 applyCompressorSettings(compressor, settings);
@@ -309,10 +291,8 @@
                 return false;
             }
 
-            // Create a gain node to apply the boost setting
             try {
                 gainNode = audioContext.createGain();
-                // Apply the boost value from settings
                 gainNode.gain.setValueAtTime(settings.boost, audioContext.currentTime);
                 log('Created GainNode with gain:', settings.boost);
             } catch (e) {
@@ -321,9 +301,7 @@
                 return false;
             }
 
-            // Connect the audio nodes
             try {
-                // Connect source to compressor, compressor to gain, gain to destination
                 source.connect(compressor);
                 compressor.connect(gainNode);
                 gainNode.connect(audioContext.destination);
@@ -334,26 +312,24 @@
                 return false;
             }
             
-            // Store a reference to the original volume property descriptor
             originalVolumeHandler = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume');
             
-            // Create our wrapped volume property to sync volume changes with the gain node
             let rawVolume = video.volume;
             
-            // Override the volume property to maintain our gain when user changes volume
             Object.defineProperty(video, 'volume', {
                 get: function() {
                     return rawVolume;
                 },
                 set: function(newVolume) {
-                    // Store the raw volume value
                     rawVolume = newVolume;
                     
-                    // Update the saved user volume whenever volume is changed
-                    // This ensures we restore to the correct level when disabling
-                    localStorage.setItem('ycs-user-volume', newVolume.toString());
+                    // Update userVolume in YCS_SETTINGS
+                    const raw = localStorage.getItem('YCS_SETTINGS');
+                    const ycsSettings = raw ? JSON.parse(raw) : {};
+                    if (!ycsSettings.audioNormalizer) ycsSettings.audioNormalizer = {};
+                    ycsSettings.audioNormalizer.userVolume = newVolume;
+                    localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
                     
-                    // Call the original setter to maintain expected behavior
                     if (originalVolumeHandler && originalVolumeHandler.set) {
                         originalVolumeHandler.set.call(this, newVolume);
                     }
@@ -361,16 +337,13 @@
                 configurable: true
             });
             
-            // Observe volume changes from YouTube's controls to update our settings
             volumeObserver = new MutationObserver((mutations) => {
                 if (audioContext && gainNode) {
-                    // When YouTube changes volume in the UI, update our gain to match
                     const currentVolume = currentVideoElement.volume;
                     log('Detected volume change:', currentVolume);
                 }
             });
             
-            // Look for YouTube's volume controls and observe changes
             const volumeControl = document.querySelector('.ytp-volume-panel');
             if (volumeControl) {
                 volumeObserver.observe(volumeControl, {
@@ -380,13 +353,11 @@
                 });
             }
             
-            // Update button state to indicate it's active
             updateButtonState(true);
             isProcessingActive = true;
             
             log('Web Audio normalizer setup complete');
             
-            // Show a confirmation message to the user
             if (manualActivation && forceActivate) {
                 showNormalizerStatus(true);
             }
@@ -438,14 +409,17 @@
             
             // Add click handler
             normalizerButton.addEventListener('click', () => {
-                // Toggle the state
-                const currentState = localStorage.getItem('ycs-audio-normalizer-active') === 'true';
+                // Read from YCS_SETTINGS
+                const raw = localStorage.getItem('YCS_SETTINGS');
+                const ycsSettings = raw ? JSON.parse(raw) : {};
+                const currentState = ycsSettings.audioNormalizer?.active === true;
                 const newState = !currentState;
                 
-                // Store the new state
-                localStorage.setItem('ycs-audio-normalizer-active', JSON.stringify(newState));
+                // Update in YCS_SETTINGS
+                if (!ycsSettings.audioNormalizer) ycsSettings.audioNormalizer = {};
+                ycsSettings.audioNormalizer.active = newState;
+                localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
                 
-                // Apply the new state
                 if (newState) {
                     setupAudioNormalizer(true);
                     showNormalizerStatus(true);
@@ -459,7 +433,9 @@
             rightControls.insertBefore(normalizerButton, rightControls.firstChild);
             
             // Initialize button state
-            updateButtonState(localStorage.getItem('ycs-audio-normalizer-active') === 'true');
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
+            updateButtonState(ycsSettings.audioNormalizer?.active === true);
             
         } catch (error) {
             errorLog(`Failed to create normalizer button: ${error.message}`);
@@ -493,7 +469,9 @@
     
     // Provide visual feedback to the user
     function showNormalizerStatus(isActive = true) {
-        const intensity = localStorage.getItem('ycs-audio-normalizer-value') || 'medium';
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        const intensity = ycsSettings.audioNormalizer?.value || 'medium';
         
         // Create or update status indicator
         let indicator = document.getElementById('ycs-audio-normalizer-indicator');
@@ -534,35 +512,37 @@
     // Initialize everything
     function initialize() {
         // When in manual mode, always start inactive
-        if (localStorage.getItem('ycs-audio-normalizer-manual') === 'true') {
-            localStorage.setItem('ycs-audio-normalizer-active', 'false');
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        
+        if (ycsSettings.audioNormalizer?.manualActivation === true) {
+            ycsSettings.audioNormalizer.active = false;
+            localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
         }
         
-        // Initial setup
         setupAudioNormalizer();
         
-        // Listen for loadstart events on video elements
         document.addEventListener('loadstart', (e) => {
             if (e.target instanceof HTMLMediaElement) {
                 log('Video loadstart detected - updating normalizer');
                 
-                // When in manual mode and video changes, reset active state
-                if (localStorage.getItem('ycs-audio-normalizer-manual') === 'true') {
-                    localStorage.setItem('ycs-audio-normalizer-active', 'false');
+                const raw = localStorage.getItem('YCS_SETTINGS');
+                const ycsSettings = raw ? JSON.parse(raw) : {};
+                
+                if (ycsSettings.audioNormalizer?.manualActivation === true) {
+                    ycsSettings.audioNormalizer.active = false;
+                    localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
                     cleanupAudioProcessing();
                 }
                 
-                // Small delay to ensure video has loaded
                 setTimeout(() => {
                     setupAudioNormalizer();
                 }, 100);
             }
         }, true);
         
-        // Listen for messages from the content script
         window.addEventListener('message', (event) => {
-            // Only accept messages from our extension
-            if (event.source !== window || !event.data || event.data.type !== 'ycs_AUDIO_NORMALIZER_UPDATE') {
+            if (event.source !== window || !event.data || event.data.type !== 'YCS_AUDIO_NORMALIZER_UPDATE') {
                 return;
             }
             
@@ -577,12 +557,10 @@
                     showNormalizerStatus(false);
                 }
             } else {
-                // Just regular update
                 setupAudioNormalizer();
             }
         });
     }
     
-    // Execute immediately when script is injected
     initialize();
 })();

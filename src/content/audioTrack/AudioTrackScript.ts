@@ -33,7 +33,11 @@ function setPreferredTrack(): boolean {
     if (!player || typeof player.getAvailableAudioTracks !== 'function') return false;
 
     try {
-        const audioLanguage = localStorage.getItem('ycs-audioLanguage') || 'original';
+        // Read from YCS_SETTINGS
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        const audioLanguage = ycsSettings.audioTrack?.language || 'original';
+        
         const tracks = player.getAvailableAudioTracks();
 
         if (!Array.isArray(tracks) || tracks.length <= 1) {

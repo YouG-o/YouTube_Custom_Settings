@@ -17,24 +17,15 @@ async function syncAudioNormalizerPreference() {
         const settings = result.settings as ExtensionSettings;
         
         if (settings?.audioNormalizer) {
-            localStorage.setItem('ycs-audio-normalizer-enabled', JSON.stringify(settings.audioNormalizer.enabled));
-            localStorage.setItem('ycs-audio-normalizer-value', settings.audioNormalizer.value);
-            localStorage.setItem('ycs-audio-normalizer-manual', JSON.stringify(settings.audioNormalizer.manualActivation));
+            // Read current YCS_SETTINGS object
+            const raw = localStorage.getItem('YCS_SETTINGS');
+            const ycsSettings = raw ? JSON.parse(raw) : {};
             
-            // Store custom settings if present
-            if (settings.audioNormalizer.customSettings) {
-                localStorage.setItem('ycs-custom-threshold', settings.audioNormalizer.customSettings.threshold.toString());
-                localStorage.setItem('ycs-custom-boost', settings.audioNormalizer.customSettings.boost.toString());
-                localStorage.setItem('ycs-custom-ratio', settings.audioNormalizer.customSettings.ratio.toString());
-                localStorage.setItem('ycs-custom-attack', settings.audioNormalizer.customSettings.attack.toString());
-                localStorage.setItem('ycs-custom-release', settings.audioNormalizer.customSettings.release.toString());
-            }
+            // Update only audioNormalizer property
+            ycsSettings.audioNormalizer = settings.audioNormalizer;
             
-            // Reset active state to false ONLY when manual activation is enabled AND not in custom mode
-            // This fixes the issue where custom settings are lost when opening popup
-            if (settings.audioNormalizer.manualActivation && settings.audioNormalizer.value !== 'custom') {
-                localStorage.setItem('ycs-audio-normalizer-active', 'false');
-            }
+            // Write back
+            localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
             
             audioNormalizerLog(`Synced audio normalizer preference from extension storage: ${settings.audioNormalizer.value}, manual: ${settings.audioNormalizer.manualActivation}`);
         }
@@ -45,17 +36,18 @@ async function syncAudioNormalizerPreference() {
 
 // Call this function during initialization
 export async function handleAudioNormalizer() {   
-    await syncAudioNormalizerPreference(); // Sync audio normalizer preference
+    await syncAudioNormalizerPreference();
     
-    // Check if we should apply normalization to current page
-    const normalizerEnabled = localStorage.getItem('ycs-audio-normalizer-enabled') === 'true';
+    // Read from YCS_SETTINGS
+    const raw = localStorage.getItem('YCS_SETTINGS');
+    const ycsSettings = raw ? JSON.parse(raw) : {};
+    const normalizerEnabled = ycsSettings.audioNormalizer?.enabled === true;
+    
     if (!normalizerEnabled) {
         audioNormalizerLog('Audio normalizer feature is disabled, not injecting script');
         return;
     }
     
-    // If we get here, we need to inject the script
-    //audioNormalizerLog('Injecting audio normalizer script');
     const script = document.createElement('script');
     script.src = browser.runtime.getURL('dist/content/scripts/AudioNormalizerScript.js');
     document.documentElement.appendChild(script);
@@ -66,37 +58,41 @@ browser.runtime.onMessage.addListener((message: unknown) => {
     if (typeof message === 'object' && message !== null &&
         'feature' in message && message.feature === 'audioNormalizer') {
         
+        // Read current YCS_SETTINGS object
+        const raw = localStorage.getItem('YCS_SETTINGS');
+        const ycsSettings = raw ? JSON.parse(raw) : {};
+        
+        // Ensure audioNormalizer object exists
+        if (!ycsSettings.audioNormalizer) {
+            ycsSettings.audioNormalizer = {};
+        }
+        
         if ('enabled' in message && typeof message.enabled === 'boolean') {
-            // Store preference
             audioNormalizerLog(`Setting audio normalizer preference: enabled=${message.enabled}`);
-            localStorage.setItem('ycs-audio-normalizer-enabled', JSON.stringify(message.enabled));
+            ycsSettings.audioNormalizer.enabled = message.enabled;
         }
         
-        // Handle value if provided
         if ('value' in message && typeof message.value === 'string') {
-            localStorage.setItem('ycs-audio-normalizer-value', message.value);
+            ycsSettings.audioNormalizer.value = message.value;
         }
         
-        // Handle manual activation preference if provided
         if ('manualActivation' in message && typeof message.manualActivation === 'boolean') {
-            localStorage.setItem('ycs-audio-normalizer-manual', JSON.stringify(message.manualActivation));
-            
-            // Reset active state when changing manual activation setting
-            localStorage.setItem('ycs-audio-normalizer-active', 'false');
+            ycsSettings.audioNormalizer.manualActivation = message.manualActivation;
+            ycsSettings.audioNormalizer.active = false;
         }
         
-        // Handle toggle state if provided (used when button is clicked in player)
         if ('toggleState' in message && typeof message.toggleState === 'boolean') {
-            localStorage.setItem('ycs-audio-normalizer-active', JSON.stringify(message.toggleState));
+            ycsSettings.audioNormalizer.active = message.toggleState;
             
-            // Send message to page script to update state immediately
             window.postMessage({
-                type: 'ycs_AUDIO_NORMALIZER_UPDATE',
+                type: 'YCS_AUDIO_NORMALIZER_UPDATE',
                 toggleState: message.toggleState
             }, '*');
         }
         
-        // Reapply normalization if a video is currently playing
+        // Write back
+        localStorage.setItem('YCS_SETTINGS', JSON.stringify(ycsSettings));
+        
         handleAudioNormalizer();
     }
     return true;
