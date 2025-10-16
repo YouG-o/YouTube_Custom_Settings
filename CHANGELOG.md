@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2025-10-16
+
+### Fix
+- Fixed missing observer initialization after full page reload by manually calling `handleUrlChange()` in `setupUrlObserver`. This ensures all observers and features are correctly set up whether the user navigates via SPA or refreshes the browser.
+
 ## [1.9.0] - 2025-10-07
 
 ### Feature
@@ -87,7 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Custom_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.1...HEAD
+[1.9.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.8.0...v1.8.2
 [1.8.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.7.0...v1.8.0
