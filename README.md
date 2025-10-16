@@ -66,7 +66,7 @@
   ```bash
   # Clone the repository
   git clone https://github.com/YouG-o/YouTube_Custom_Settings.git
-  cd YouTube_Default_Settings
+  cd YouTube_Custom_Settings
 
   # Install dependencies
   npm install

@@ -258,6 +258,9 @@ function observersCleanup() {
 }
 
 // URL OBSERVER -----------------------------------------------------------
+let urlChangeDebounceTimer: number | null = null;
+const URL_CHANGE_DEBOUNCE_MS = 250;
+
 export function setupUrlObserver() {
     coreLog('Setting up URL observer');    
     // --- Standard History API monitoring
@@ -301,10 +304,26 @@ export function setupUrlObserver() {
         coreLog('YouTube SPA navigation completed');
         handleUrlChange();
     */
+
+    // --- Ensure observers are initialized on full page load (not just SPA navigation)
+    handleUrlChange();
 }
 
 
 function handleUrlChange() {
+        // Clear existing debounce timer
+    if (urlChangeDebounceTimer !== null) {
+        clearTimeout(urlChangeDebounceTimer);
+    }
+
+    // Set new debounce timer
+    urlChangeDebounceTimer = window.setTimeout(() => {
+        handleUrlChangeInternal();
+        urlChangeDebounceTimer = null;
+    }, URL_CHANGE_DEBOUNCE_MS);
+}
+
+function handleUrlChangeInternal() {
     //coreLog(`[URL] Current pathname:`, window.location.pathname);
     coreLog(`[URL] Full URL:`, window.location.href);
 
