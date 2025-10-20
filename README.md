@@ -21,12 +21,6 @@
 
   A small web-browser Add-On allowing you to set custom settings to YouTube.
 
-  <br>
-
-  [![Available on Mozzila](./assets/images/firefox.png)](https://addons.mozilla.org/firefox/addon/youtube-custom-settings/)
-  [![Available on Chrome Web Store](./assets/images/chrome.png)](https://chromewebstore.google.com/detail/dgbmcgmjlphkgepbmjlhohabmhlhhchn)
-
-
 </div>
 
 
@@ -34,7 +28,7 @@
 
 <div align="center">
 
-  ## Features:
+  ## Features
 
 </div>
   
@@ -49,6 +43,16 @@
 
 ###
 
+<div align="center">
+
+  ## Download
+
+
+  [![Available on Mozzila](./assets/images/mozilla-firefox_banner.png)](https://addons.mozilla.org/firefox/addon/youtube-custom-settings/)
+  [![Available on Chrome Web Store](./assets/images/chrome-web-store_banner.png)](https://chromewebstore.google.com/detail/dgbmcgmjlphkgepbmjlhohabmhlhhchn)
+  [![Available on Microsoft Store](./assets/images/microsoft-edge_banner.png)](https://microsoftedge.microsoft.com/addons/detail/oakeoebbbbolemjgjbjmbodncimmikfe) 
+
+</div>
 
 <div align="center">
   

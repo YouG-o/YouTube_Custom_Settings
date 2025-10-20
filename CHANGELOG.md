@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.3] - 2025-10-20
+- New icon
+
+
 ## [1.9.2] - 2025-10-16 
 > **Note:** Version 1.9.1 was skipped due to a mistake
 
@@ -93,8 +97,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Custom_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.2...HEAD
-[1.9.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.0...v1.9.2
+[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.3...HEAD
+[1.9.3]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.2...v1.9.3
+[1.9.2]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.0...v1.9.2
 [1.9.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.8.0...v1.8.2
 [1.8.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.7.0...v1.8.0
