@@ -56,7 +56,7 @@
 
 <div align="center">
   
-  # Build it yourself
+  ## Build it yourself
 
 </div>
 
@@ -91,7 +91,7 @@
 
 <div align="center">
   
-  # Support This Project
+  ## Support This Project
 
 </div>  
 
@@ -111,7 +111,7 @@ This extension is completely free and open-source. If you find it valuable, you 
 
 <div align="center">
 
-  # LICENSE
+  ## LICENSE
 
 
 This project is licensed under the [GNU Affero General Public License v3.0](LICENSE)
