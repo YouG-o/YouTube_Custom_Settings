@@ -19,6 +19,7 @@ import { handleVolume } from './volume/Volume';
 import { setupUrlObserver, setupVisibilityChangeListener } from './observers';
 import { injectFetchInterceptor, hideMembersOnlyVideos } from './memberVideos/MemberVideos';
 import { handleAudioTrack } from './audioTrack/AudioTrack';
+import { hideShorts } from './Shorts/hideShorts';
 
 coreLog('Content script starting to load...');
 
@@ -35,6 +36,9 @@ async function initializeFeatures() {
 
     if(currentSettings.hideMembersOnlyVideos.enabled){
         injectFetchInterceptor();
+    }
+
+    if(currentSettings.hideShorts.enabled || currentSettings.hideMembersOnlyVideos.enabled){
         setupUrlObserver();
         setupVisibilityChangeListener();
     }
@@ -93,6 +97,9 @@ function applyStoredSettings() {
 
     if (currentSettings.audioTrack.enabled) {
         handleAudioTrack();
+    }
+    if (currentSettings.hideShorts.enabled) {
+        hideShorts();
     }
 }
 
