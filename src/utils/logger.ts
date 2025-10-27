@@ -41,6 +41,10 @@ const LOG_STYLES = {
     AUDIO_TRACK: {
         context: '[Audio Track]',
         color: '#4CAF50'  // Green
+    },
+    SHORTS: {
+        context: '[Shorts]',
+        color: '#9c27b0'  // Purple
     }
 } as const;
 
@@ -70,26 +74,50 @@ function createErrorLogger(category: { context: string; color: string }) {
 }
 
 // Create standard loggers
-export const coreLog = createLogger(LOG_STYLES.CORE);
-export const coreErrorLog = createErrorLogger(LOG_STYLES.CORE);
+const coreLog = createLogger(LOG_STYLES.CORE);
+const coreErrorLog = createErrorLogger(LOG_STYLES.CORE);
 
-export const videoQualityLog = createLogger(LOG_STYLES.VIDEO_QUALITY);
-export const videoQualityErrorLog = createErrorLogger(LOG_STYLES.VIDEO_QUALITY);
+const videoQualityLog = createLogger(LOG_STYLES.VIDEO_QUALITY);
+const videoQualityErrorLog = createErrorLogger(LOG_STYLES.VIDEO_QUALITY);
 
-export const videoSpeedLog = createLogger(LOG_STYLES.VIDEO_SPEED);
-export const videoSpeedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
+const videoSpeedLog = createLogger(LOG_STYLES.VIDEO_SPEED);
+const videoSpeedErrorLog = createErrorLogger(LOG_STYLES.VIDEO_SPEED);
 
-export const subtitlesLog = createLogger(LOG_STYLES.SUBTITLES);
-export const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
+const subtitlesLog = createLogger(LOG_STYLES.SUBTITLES);
+const subtitlesErrorLog = createErrorLogger(LOG_STYLES.SUBTITLES);
 
-export const audioNormalizerLog = createLogger(LOG_STYLES.AUDIO_NORMALIZER);
-export const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMALIZER);
+const audioNormalizerLog = createLogger(LOG_STYLES.AUDIO_NORMALIZER);
+const audioNormalizerErrorLog = createErrorLogger(LOG_STYLES.AUDIO_NORMALIZER);
 
-export const volumeLog = createLogger(LOG_STYLES.VOLUME);
-export const volumeErrorLog = createErrorLogger(LOG_STYLES.VOLUME);
+const volumeLog = createLogger(LOG_STYLES.VOLUME);
+const volumeErrorLog = createErrorLogger(LOG_STYLES.VOLUME);
 
-export const memberVideosLog = createLogger(LOG_STYLES.MEMBER_VIDEOS);
-export const memberVideosErrorLog = createErrorLogger(LOG_STYLES.MEMBER_VIDEOS);
+const memberVideosLog = createLogger(LOG_STYLES.MEMBER_VIDEOS);
+const memberVideosErrorLog = createErrorLogger(LOG_STYLES.MEMBER_VIDEOS);
 
-export const audioTrackLog = createLogger(LOG_STYLES.AUDIO_TRACK);
-export const audioTrackErrorLog = createErrorLogger(LOG_STYLES.AUDIO_TRACK);
+const audioTrackLog = createLogger(LOG_STYLES.AUDIO_TRACK);
+const audioTrackErrorLog = createErrorLogger(LOG_STYLES.AUDIO_TRACK);
+
+const shortsLog = createLogger(LOG_STYLES.SHORTS);
+const shortsErrorLog = createErrorLogger(LOG_STYLES.SHORTS);
+
+export {
+    coreLog,
+    coreErrorLog,
+    videoQualityLog,
+    videoQualityErrorLog,
+    videoSpeedLog,
+    videoSpeedErrorLog,
+    subtitlesLog,
+    subtitlesErrorLog,
+    audioNormalizerLog,
+    audioNormalizerErrorLog,
+    volumeLog,
+    volumeErrorLog,
+    memberVideosLog,
+    memberVideosErrorLog,
+    audioTrackLog,
+    audioTrackErrorLog,
+    shortsLog,
+    shortsErrorLog
+};
