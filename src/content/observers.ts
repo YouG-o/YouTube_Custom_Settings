@@ -12,6 +12,7 @@ import { currentSettings } from "./index";
 import { applyVideoPlayerSettings } from "../utils/utils";
 import { hideMembersOnlyVideos } from "./memberVideos/MemberVideos";
 import { waitForElement } from "../utils/dom";
+import { hideShorts } from "./Shorts/hideShorts";
 
 
 // Flag to track if a quality change was initiated by the user
@@ -160,7 +161,8 @@ async function pageVideosObserver() {
 
     const allGrids = Array.from(document.querySelectorAll('#contents.ytd-rich-grid-renderer')) as HTMLElement[];
     allGrids.forEach(grid => {
-        hideMembersOnlyVideos();
+        currentSettings?.hideMembersOnlyVideos.enabled && hideMembersOnlyVideos();
+        currentSettings?.hideShorts.enabled && hideShorts();
         const observer = new MutationObserver(() => handleGridMutationDebounced(pageName));
         observer.observe(grid, {
             childList: true,
@@ -187,10 +189,18 @@ function handleGridMutationDebounced(pageName: string) {
     }
     pageVideosDebounceTimer = window.setTimeout(() => {
         coreLog(`${pageName} page mutation detected.`);
-        hideMembersOnlyVideos();
-        setTimeout(() => {
+        if (currentSettings?.hideMembersOnlyVideos.enabled) {
             hideMembersOnlyVideos();
-        }, 650);
+            setTimeout(() => {
+                hideMembersOnlyVideos();
+            }, 650);
+        }
+        if (currentSettings?.hideShorts.enabled) {
+            hideShorts();
+            setTimeout(() => {
+                hideShorts();
+            }, 650);
+        }
         pageVideosDebounceTimer = null;
     }, OBSERVERS_DEBOUNCE_MS);
 }
@@ -202,7 +212,7 @@ function suggestedVidsObserver() {
     waitForElement('#secondary-inner ytd-watch-next-secondary-results-renderer #items').then((contents) => {
         coreLog('Setting up recommended videos observer');
         
-        hideMembersOnlyVideos();
+        currentSettings?.hideMembersOnlyVideos.enabled && hideMembersOnlyVideos();
         
         // Check if we need to observe deeper (when logged in)
         const itemSection = contents.querySelector('ytd-item-section-renderer');
@@ -216,7 +226,7 @@ function suggestedVidsObserver() {
             }
             suggestedVideosDebounceTimer = window.setTimeout(() => {
                 coreLog('Recommended videos mutation debounced (side bar)');
-                hideMembersOnlyVideos();
+                currentSettings?.hideMembersOnlyVideos.enabled && hideMembersOnlyVideos();
                 suggestedVideosDebounceTimer = null;
             }, OBSERVERS_DEBOUNCE_MS);
         });
@@ -255,6 +265,68 @@ function observersCleanup() {
     
     cleanupPageVideosObserver();
     cleanupSuggestedVideosObserver();
+    cleanupSearchResultsVideosObserver();
+}
+
+let searchObserver: MutationObserver | null = null;
+let searchDebounceTimer: number | null = null;
+
+function searchResultsObserver() {
+    cleanupSearchResultsVideosObserver();
+
+    // --- Observer for search results
+    waitForElement('ytd-section-list-renderer #contents').then((contents) => {
+        let pageName = null;
+        if (window.location.pathname === '/results') {
+            pageName = 'Search';
+        } else if (window.location.pathname === '/feed/history') {
+            pageName = 'History';
+        } else if (window.location.pathname === '/feed/subscriptions') {
+            pageName = 'Subscriptions';
+        } else {
+            pageName = 'Unknown';
+        }
+      
+        coreLog(`Setting up ${pageName} results videos observer`);
+
+        currentSettings?.hideShorts.enabled && hideShorts();
+        
+        searchObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList' && 
+                    mutation.addedNodes.length > 0 && 
+                    mutation.target instanceof HTMLElement) {
+                    const titles = mutation.target.querySelectorAll('#video-title');
+                    if (titles.length > 0) {
+                        if (searchDebounceTimer !== null) {
+                            clearTimeout(searchDebounceTimer);
+                        }
+                        searchDebounceTimer = window.setTimeout(() => {
+                            coreLog(`${pageName} page mutation debounced`);
+                            currentSettings?.hideShorts.enabled && hideShorts();
+                            searchDebounceTimer = null;
+                        }, OBSERVERS_DEBOUNCE_MS);
+                        break;
+                    }
+                }
+            }
+        });
+
+        searchObserver.observe(contents, {
+            childList: true,
+            subtree: true
+        });
+    });
+};
+
+function cleanupSearchResultsVideosObserver() {
+    searchObserver?.disconnect();
+    searchObserver = null;
+
+    if (searchDebounceTimer !== null) {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = null;
+    }
 }
 
 // URL OBSERVER -----------------------------------------------------------
@@ -335,25 +407,36 @@ function handleUrlChangeInternal() {
     if (isChannelPage) {
         // --- Handle all new channel page types (videos, featured, shorts, etc.)
         coreLog(`[URL] Detected channel page`);
-        currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
+        if (currentSettings?.hideMembersOnlyVideos.enabled || currentSettings?.hideShorts.enabled) {
+            pageVideosObserver();
+        }
         return;
     }
     
     switch(window.location.pathname) {
         case '/results': // --- Search page
         coreLog(`[URL] Detected search page`);
+            if (currentSettings?.hideMembersOnlyVideos.enabled || currentSettings?.hideShorts.enabled) {
+                searchResultsObserver()
+            }
         break;
         case '/': // --- Home page
             coreLog(`[URL] Detected home page`);
-            currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
+            if (currentSettings?.hideMembersOnlyVideos.enabled || currentSettings?.hideShorts.enabled) {
+                pageVideosObserver();
+            }
             break;        
         case '/feed/subscriptions': // --- Subscriptions page
             coreLog(`[URL] Detected subscriptions page`);
-            currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
+            if (currentSettings?.hideMembersOnlyVideos.enabled || currentSettings?.hideShorts.enabled) {
+                pageVideosObserver();
+            }
             break;
         case '/feed/trending':  // --- Trending page
             coreLog(`[URL] Detected trending page`);
-            currentSettings?.hideMembersOnlyVideos.enabled && pageVideosObserver();
+            if (currentSettings?.hideMembersOnlyVideos.enabled || currentSettings?.hideShorts.enabled) {
+                pageVideosObserver();
+            }
             break;
         case '/feed/history':  // --- History page
             coreLog(`[URL] Detected history page`);
@@ -386,6 +469,7 @@ export function setupVisibilityChangeListener(): void {
         if (document.visibilityState === 'visible') {
             coreLog('Tab became visible, refreshing titles to fix potential duplicates');
             currentSettings?.hideMembersOnlyVideos.enabled && hideMembersOnlyVideos();
+            currentSettings?.hideShorts.enabled && hideShorts();
         }
     };
     
