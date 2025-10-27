@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Feat
+- Hide shorts (from Homepage, Subscriptions and search results page)
+
 ## [1.9.3] - 2025-10-20
 - New icon
 
