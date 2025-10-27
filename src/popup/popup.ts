@@ -38,6 +38,8 @@ const volumeFeature = document.getElementById('volumeFeature') as HTMLInputEleme
 const volumeValue = document.getElementById('volumeValue') as HTMLInputElement;
 const volumeContainer = document.getElementById('volumeContainer') as HTMLDivElement;
 
+const hideShortsFeature = document.getElementById('hideShortsFeature') as HTMLInputElement;
+
 // Custom settings
 const audioNormalizerCustomContainer = document.getElementById('audioNormalizerCustomContainer') as HTMLDivElement;
 const customThreshold = document.getElementById('customThreshold') as HTMLInputElement;
@@ -287,6 +289,11 @@ async function loadSettings() {
             toggleContainer(audioTrackContainer, audioTrackFeature.checked);
         }
 
+        // Hide Shorts setting
+        if (settings.hideShorts) {
+            hideShortsFeature.checked = settings.hideShorts.enabled;
+        }
+
         // Duration rule settings
         durationRuleEnabled.checked = settings.videoSpeed.durationRuleEnabled ?? false;
         durationRuleType.value = settings.videoSpeed.durationRuleType ?? 'less';
@@ -343,6 +350,9 @@ async function saveSettings() {
         audioTrack: {
             enabled: audioTrackFeature.checked,
             language: audioTrackLanguageSelect.value
+        },
+        hideShorts: {
+            enabled: hideShortsFeature.checked
         }
     };
     
@@ -424,6 +434,8 @@ function initEventListeners() {
         toggleContainer(audioTrackContainer, audioTrackFeature.checked);
         saveSettings();
     });
+
+    hideShortsFeature.addEventListener('change', saveSettings);
 
     durationRuleEnabled.addEventListener('change', saveSettings);
     durationRuleType.addEventListener('change', saveSettings);

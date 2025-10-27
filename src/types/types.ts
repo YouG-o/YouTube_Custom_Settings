@@ -47,10 +47,13 @@ export interface ExtensionSettings {
     };
     hideMembersOnlyVideos: {
         enabled: boolean;
-    },
+    };
     audioTrack: {
         enabled: boolean;
         language: string;
+    };
+    hideShorts: {
+        enabled: boolean;
     };
 }
 

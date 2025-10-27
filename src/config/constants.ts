@@ -53,6 +53,9 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     audioTrack: {
         enabled: false,
         language: 'original',
+    },
+    hideShorts: {
+        enabled: false
     }
 };
 
