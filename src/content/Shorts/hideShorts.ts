@@ -88,15 +88,15 @@ function hideIndividualSearchShorts(): void {
  */
 function hideShorts(): void {
     if (isHomePage() || isSubscriptionsPage()) {
-        shortsLog('Hiding Shorts from home feed and subscriptions');
+        //shortsLog('Hiding Shorts from home feed and subscriptions');
         hideHomeFeedAndSubscriptionsShorts();
     }
 
     if (isSearchPage()) {
-        shortsLog('Hiding Shorts from search page');
+        //shortsLog('Hiding Shorts from search page');
         hideSearchPageShorts();
     
-        shortsLog('Hiding individual Shorts from search results');
+        //shortsLog('Hiding individual Shorts from search results');
         hideIndividualSearchShorts();
     }
 
