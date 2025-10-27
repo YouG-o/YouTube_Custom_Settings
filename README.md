@@ -39,6 +39,7 @@
   - **Audio Normalizer**: Balance sound volume with automatic or manual activation (via player button)
   - **Volume**
   - **Members-Only videos**: Hide members-only videos
+  - **Hide Shorts**
 
 
 ###
