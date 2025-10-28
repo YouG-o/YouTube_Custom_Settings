@@ -86,14 +86,49 @@ function renderQualityOrderList(order: string[]) {
     order.forEach((quality, idx) => {
         const item = document.createElement('li');
         item.className = 'bg-gray-700 rounded px-3 py-2 flex items-center justify-between';
-        item.innerHTML = `
-            <span>${ALL_QUALITIES.find(q => q.value === quality)?.label || quality}</span>
-            <div class="flex items-center gap-1">
-                <button type="button" class="move-up-btn text-gray-400 hover:text-blue-400 px-1" data-idx="${idx}" title="Move up" ${idx === 0 ? 'disabled' : ''}>&#8593;</button>
-                <button type="button" class="move-down-btn text-gray-400 hover:text-blue-400 px-1" data-idx="${idx}" title="Move down" ${idx === order.length - 1 ? 'disabled' : ''}>&#8595;</button>
-                <button type="button" class="remove-quality-btn text-red-400 hover:text-red-600 px-1" data-idx="${idx}" title="Remove">&times;</button>
-            </div>
-        `;
+        
+        // Create span for quality label
+        const qualityLabel = document.createElement('span');
+        qualityLabel.textContent = ALL_QUALITIES.find(q => q.value === quality)?.label || quality;
+        
+        // Create buttons container
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.className = 'flex items-center gap-1';
+        
+        // Create move up button
+        const moveUpBtn = document.createElement('button');
+        moveUpBtn.type = 'button';
+        moveUpBtn.className = 'move-up-btn text-gray-400 hover:text-blue-400 px-1';
+        moveUpBtn.dataset.idx = String(idx);
+        moveUpBtn.title = 'Move up';
+        moveUpBtn.textContent = '↑';
+        moveUpBtn.disabled = idx === 0;
+        
+        // Create move down button
+        const moveDownBtn = document.createElement('button');
+        moveDownBtn.type = 'button';
+        moveDownBtn.className = 'move-down-btn text-gray-400 hover:text-blue-400 px-1';
+        moveDownBtn.dataset.idx = String(idx);
+        moveDownBtn.title = 'Move down';
+        moveDownBtn.textContent = '↓';
+        moveDownBtn.disabled = idx === order.length - 1;
+        
+        // Create remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'remove-quality-btn text-red-400 hover:text-red-600 px-1';
+        removeBtn.dataset.idx = String(idx);
+        removeBtn.title = 'Remove';
+        removeBtn.textContent = '×';
+        
+        // Assemble the structure
+        buttonsDiv.appendChild(moveUpBtn);
+        buttonsDiv.appendChild(moveDownBtn);
+        buttonsDiv.appendChild(removeBtn);
+        
+        item.appendChild(qualityLabel);
+        item.appendChild(buttonsDiv);
+        
         qualityOrderList.appendChild(item);
     });
 
