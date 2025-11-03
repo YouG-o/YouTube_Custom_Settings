@@ -56,6 +56,9 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
     },
     hideShorts: {
         enabled: false
+    },
+    preventShortsLoop: {
+        enabled: false
     }
 };
 

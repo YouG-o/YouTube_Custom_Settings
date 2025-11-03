@@ -13,6 +13,7 @@ import { applyVideoPlayerSettings } from "../utils/utils";
 import { hideMembersOnlyVideos } from "./memberVideos/MemberVideos";
 import { waitForElement } from "../utils/dom";
 import { hideShorts } from "./Shorts/hideShorts";
+import { handleShortsLoopPrevention, cleanupLoopPrevention } from "./Shorts/preventShortsLoop";
 
 
 // Flag to track if a quality change was initiated by the user
@@ -266,6 +267,7 @@ function observersCleanup() {
     cleanupPageVideosObserver();
     cleanupSuggestedVideosObserver();
     cleanupSearchResultsVideosObserver();
+    cleanupLoopPrevention();
 }
 
 let searchObserver: MutationObserver | null = null;
@@ -401,6 +403,15 @@ function handleUrlChangeInternal() {
 
     // --- Clean up existing observers
     observersCleanup();
+    
+    // --- Check for Shorts page
+    if (window.location.pathname.startsWith('/shorts/')) {
+        coreLog(`[URL] Detected Shorts page`);
+        if (currentSettings?.preventShortsLoop?.enabled) {
+            handleShortsLoopPrevention();
+        }
+        return;
+    }
     
     // --- Check if URL contains patterns
     const isChannelPage = window.location.pathname.includes('/@');

@@ -39,6 +39,7 @@ const volumeValue = document.getElementById('volumeValue') as HTMLInputElement;
 const volumeContainer = document.getElementById('volumeContainer') as HTMLDivElement;
 
 const hideShortsFeature = document.getElementById('hideShortsFeature') as HTMLInputElement;
+const preventShortsLoopFeature = document.getElementById('preventShortsLoopFeature') as HTMLInputElement;
 
 // Custom settings
 const audioNormalizerCustomContainer = document.getElementById('audioNormalizerCustomContainer') as HTMLDivElement;
@@ -329,12 +330,16 @@ async function loadSettings() {
             hideShortsFeature.checked = settings.hideShorts.enabled;
         }
 
+        // Prevent Shorts Loop setting
+        if (settings.preventShortsLoop) {
+            preventShortsLoopFeature.checked = settings.preventShortsLoop.enabled;
+        }
+
         // Duration rule settings
         durationRuleEnabled.checked = settings.videoSpeed.durationRuleEnabled ?? false;
         durationRuleType.value = settings.videoSpeed.durationRuleType ?? 'less';
         durationRuleMinutes.value = String(settings.videoSpeed.durationRuleMinutes ?? 5);
     } catch (error) {
-        // Log error if loading settings fails
         console.error('Failed to load settings:', error);
     }
 }
@@ -388,6 +393,9 @@ async function saveSettings() {
         },
         hideShorts: {
             enabled: hideShortsFeature.checked
+        },
+        preventShortsLoop: {
+            enabled: preventShortsLoopFeature.checked
         }
     };
     
@@ -471,6 +479,7 @@ function initEventListeners() {
     });
 
     hideShortsFeature.addEventListener('change', saveSettings);
+    preventShortsLoopFeature.addEventListener('change', saveSettings);
 
     durationRuleEnabled.addEventListener('change', saveSettings);
     durationRuleType.addEventListener('change', saveSettings);

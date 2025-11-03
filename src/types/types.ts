@@ -55,6 +55,9 @@ export interface ExtensionSettings {
     hideShorts: {
         enabled: boolean;
     };
+    preventShortsLoop: {
+        enabled: boolean;
+    };
 }
 
 export interface Message {

@@ -38,7 +38,7 @@ async function initializeFeatures() {
         injectFetchInterceptor();
     }
 
-    if(currentSettings.hideShorts.enabled || currentSettings.hideMembersOnlyVideos.enabled){
+    if(currentSettings.hideShorts.enabled || currentSettings.hideMembersOnlyVideos.enabled || currentSettings.preventShortsLoop?.enabled){
         setupUrlObserver();
         setupVisibilityChangeListener();
     }
@@ -98,6 +98,7 @@ function applyStoredSettings() {
     if (currentSettings.audioTrack.enabled) {
         handleAudioTrack();
     }
+
     if (currentSettings.hideShorts.enabled) {
         hideShorts();
     }
