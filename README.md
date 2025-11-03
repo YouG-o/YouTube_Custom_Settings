@@ -40,6 +40,7 @@
   - **Volume**
   - **Members-Only videos**: Hide members-only videos
   - **Hide Shorts**
+  - **Prevent Shorts Loop**
 
 
 ###

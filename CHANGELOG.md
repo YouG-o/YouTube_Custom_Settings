@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0] - 2025-11-03
+
+### Feat
+- Added prevent shorts loop feature
+
 ## [1.10.0] - 2025-10-27
 
 ### Feat
@@ -102,7 +107,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Note: This changelog was introduced in version 1.2.12. For earlier version history, please refer to the [GitHub releases](https://github.com/YouG-o/YouTube_Custom_Settings/releases).*
 
-[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.10.0...v1.11.0
 [1.10.0]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.3...v1.10.0
 [1.9.3]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/YouG-o/YouTube_Custom_Settings/compare/v1.9.0...v1.9.2
